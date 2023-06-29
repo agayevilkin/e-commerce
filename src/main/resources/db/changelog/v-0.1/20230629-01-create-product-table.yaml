@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20230629-01
+      author: agayevi
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: product_pkey
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: VARCHAR(255)
+              - column:
+                  name: info
+                  type: VARCHAR(255)
+              - column:
+                  name: image
+                  type: bigint
+            tableName: products
