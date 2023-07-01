@@ -6,3 +6,6 @@ spring:
     password: &password ${DB_CONNECTION_PASSWORD:password}
   jpa:
     show-sql: true
+
+server:
+  port: 9095
