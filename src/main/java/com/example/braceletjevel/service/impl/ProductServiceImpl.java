@@ -24,7 +24,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ModelMapper mapper;
-    private final ImageService imageService;
 
     @Value("${server.port}")
     private int serverPort;
@@ -33,7 +32,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         Product product = mapper.map(productRequestDto, Product.class);
-        product.setImage(imageService.createImage(productRequestDto.getFile()));
         return mapper.map(productRepository.save(product), ProductResponseDto.class);
     }
 
@@ -46,7 +44,9 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll().stream()
                 .map(product -> {
                     ProductResponseDto responseDto = mapper.map(product, ProductResponseDto.class);
-                    responseDto.setImagePath(urlStart + endpoint + product.getImage().getName());
+                    if (product.getImage() != null) {
+                        responseDto.setImagePath(urlStart + endpoint + product.getImage().getName());
+                    }
                     return responseDto;
                 })
                 .collect(Collectors.toList());
