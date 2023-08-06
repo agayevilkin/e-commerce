@@ -11,4 +11,5 @@ public class ProductRequestDto {
     private String description;
     private String price;
     private String info;
+    private Long fileId;
 }

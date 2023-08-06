@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -20,18 +21,22 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void deleteImage(Long id) {
-
+        Image image = imageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found image"));
+        imageRepository.delete(image);
     }
+
     @Override
-    public Image createImage(MultipartFile file) throws IOException {
-        return imageRepository.save(Image.builder()
+    public void createImage(MultipartFile file) throws IOException {
+        imageRepository.save(Image.builder()
                 .name(file.getOriginalFilename())
                 .imageData(ImageUtil.compressImage(file.getBytes())).build());
     }
 
     @Transactional
-    public byte[] getImage(String name) {
-        Optional<Image> dbImage = imageRepository.findByName(name);
-        return dbImage.map(image -> ImageUtil.decompressImage(image.getImageData())).orElse(null);
+    public byte[] getImage(Long id) {
+        Image dbImage = imageRepository.findById(id).orElseThrow(() -> new RuntimeException("Not Found Image!"));
+        return ImageUtil.decompressImage(dbImage.getImageData());
     }
+
 }

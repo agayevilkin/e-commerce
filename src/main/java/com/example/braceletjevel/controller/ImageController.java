@@ -30,15 +30,15 @@ public class ImageController {
 
     private final ImageService service;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
     public void create(@RequestParam("image") MultipartFile file) throws IOException {
         service.createImage(file);
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<?> getImageByName(@PathVariable("name") String name) {
-        byte[] image = service.getImage(name);
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
+        byte[] image = service.getImage(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/jpg"))
                 .body(image);
