@@ -20,10 +20,10 @@ public class ProductController {
 
     private final ProductService service;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     @ResponseStatus(CREATED)
-    public void create(@RequestBody @Valid ProductRequestDto productRequestDto) {
-         service.createProduct(productRequestDto);
+    public void create(@ModelAttribute @Valid ProductRequestDto productRequestDto) {
+        service.createProduct(productRequestDto);
     }
 
     @GetMapping("/all")

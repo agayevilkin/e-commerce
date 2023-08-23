@@ -4,19 +4,15 @@ import com.example.braceletjevel.domain.Image;
 import com.example.braceletjevel.domain.Product;
 import com.example.braceletjevel.dto.request.ProductRequestDto;
 import com.example.braceletjevel.dto.response.ProductResponseDto;
-import com.example.braceletjevel.repository.ImageRepository;
 import com.example.braceletjevel.repository.ProductRepository;
 import com.example.braceletjevel.service.ImageService;
 import com.example.braceletjevel.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.InetAddress;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,16 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final ModelMapper mapper;
-    private final ImageRepository imageRepository;
-
-    @SneakyThrows
-    @Override
-    public void createProduct(ProductRequestDto productRequestDto) {
-        Image image = imageRepository.findById(productRequestDto.getFileId()).orElseThrow(() -> new RuntimeException("Not found image"));
-        Product product = mapper.map(productRequestDto, Product.class);
-        product.setImage(image);
-        productRepository.save(product);
-    }
+    private final ImageService imageService;
 
     @SneakyThrows
     @Override
@@ -56,6 +43,15 @@ public class ProductServiceImpl implements ProductService {
         if (existsById(id)) {
             productRepository.deleteById(id);
         }
+    }
+
+    @SneakyThrows
+    @Override
+    public void createProduct(ProductRequestDto productRequestDto) {
+        Image image = imageService.createImage(productRequestDto.getFile());
+        Product product = mapper.map(productRequestDto, Product.class);
+        product.setImage(image);
+        productRepository.save(product);
     }
 
     private String createImageUrl(Long id) {

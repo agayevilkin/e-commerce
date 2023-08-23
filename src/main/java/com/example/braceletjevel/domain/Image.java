@@ -33,7 +33,7 @@ public class Image {
     private String name;
 
     @Lob
-    @Column(name = "imagedata",length = 1000)
+    @Column(name = "filedata")
     private byte[] imageData;
 }
 

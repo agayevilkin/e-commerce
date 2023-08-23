@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20230631-05
+      author: agayevi
+      changes:
+        - addColumn:
+            tableName: images
+            columns:
+              - column:
+                  name: filedata
+                  type: LONGBLOB

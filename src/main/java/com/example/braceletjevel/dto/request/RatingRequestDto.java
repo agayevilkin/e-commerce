@@ -5,5 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ImageRequestDto {
+public class RatingRequestDto {
+
+    private String rating;
+    private String count;
 }

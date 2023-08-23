@@ -1,5 +1,6 @@
 package com.example.braceletjevel.controller;
 
+import com.example.braceletjevel.domain.Image;
 import com.example.braceletjevel.dto.response.ImageResponseDto;
 import com.example.braceletjevel.service.ImageService;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,8 @@ public class ImageController {
 
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(CREATED)
-    public void create(@RequestParam("image") MultipartFile file) throws IOException {
-        service.createImage(file);
+    public Image create(@RequestParam("image") MultipartFile file) throws IOException {
+       return service.createImage(file);
     }
 
     @GetMapping("/{id}")

@@ -1,6 +1,5 @@
 package com.example.braceletjevel.dto.response;
 
-import com.example.braceletjevel.domain.Image;
 import lombok.Getter;
 import lombok.Setter;
 

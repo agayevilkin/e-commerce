@@ -5,8 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ImageResponseDto {
+public class DiscountResponseDto {
     private Long id;
-    private String name;
-    private String imagePath;
+    private String currentPrice;
+    private String discountPercentage;
 }
