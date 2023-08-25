@@ -37,6 +37,14 @@ public class RatingServiceImpl implements RatingService {
         }
     }
 
+    @Override
+    public RatingResponseDto update(Long id, RatingRequestDto requestDto) {
+        Rating rating = repository.findById(id).orElseThrow(() -> new NotFoundException("Rating not found!"));
+        mapper.map(requestDto, rating);
+        Rating changedRating = repository.save(rating);
+        return mapper.map(changedRating, RatingResponseDto.class);
+    }
+
     private boolean existsById(Long id) {
         return repository.existsById(id);
     }

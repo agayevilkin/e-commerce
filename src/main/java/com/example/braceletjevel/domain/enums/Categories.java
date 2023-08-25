@@ -1,8 +1,12 @@
 package com.example.braceletjevel.domain.enums;
 
 public enum Categories {
-    COMPUTER,
-    PHONE,
+    COMPUTERS,
+    PHONES,
     CAMERAS,
     ACCESSORIES,
+    BOOKS,
+    TOYS,
+    SPORTS,
+    GAMES
 }

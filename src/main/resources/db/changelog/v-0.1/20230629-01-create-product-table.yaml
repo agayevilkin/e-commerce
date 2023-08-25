@@ -13,18 +13,21 @@ databaseChangeLog:
                   name: id
                   type: bigint
               - column:
-                  name: name
+                  name: product_name
                   type: VARCHAR(255)
               - column:
-                  name: description
+                  name: title
                   type: VARCHAR(255)
               - column:
                   name: price
                   type: VARCHAR(255)
               - column:
-                  name: info
-                  type: VARCHAR(255)
+                  name: create_date
+                  type: timestamp
               - column:
-                  name: image_id
+                  name: rating_id
                   type: bigint
+              - column:
+                  name: categories
+                  type: VARCHAR(255)
             tableName: products

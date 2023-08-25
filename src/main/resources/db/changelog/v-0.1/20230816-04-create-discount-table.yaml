@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20230816-05
+      id: 20230816-04
       author: agayevi
       changes:
         - createTable:
@@ -19,6 +19,6 @@ databaseChangeLog:
                   name: discount_percentage
                   type: VARCHAR(255)
               - column:
-                    name: current_price
-                    type: VARCHAR(255)
+                  name: current_price
+                  type: VARCHAR(255)
             tableName: discount

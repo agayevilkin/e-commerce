@@ -1,12 +1,6 @@
 package com.example.braceletjevel.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,5 +29,12 @@ public class Image {
     @Lob
     @Column(name = "filedata")
     private byte[] imageData;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "computer_product_id")
+    private Product product;
+
+    @Column(name = "path")
+    private String imagePath;
 }
 

@@ -1,15 +1,28 @@
 package com.example.braceletjevel.service;
 
+import com.example.braceletjevel.domain.enums.Categories;
 import com.example.braceletjevel.dto.request.ProductRequestDto;
 import com.example.braceletjevel.dto.response.ProductResponseDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
+    ProductResponseDto createComputerProduct(ProductRequestDto computerProductRequestDto);
 
-    List<ProductResponseDto> getAllProduct();
+    ProductResponseDto updateComputerProduct(ProductRequestDto computerProductRequestDto, Long id);
 
-    void deleteProduct(Long id);
+    List<ProductResponseDto> getAllComputerProduct();
 
-    void createProduct(ProductRequestDto productRequestDto);
+    ProductResponseDto getComputerProductById(Long id);
+
+    void deleteComputerProduct(Long id);
+
+    List<ProductResponseDto> getAllComputerProductByCategory(Categories categories);
+
+    List<ProductResponseDto> getAllNewComputerProduct();
+
+    List<ProductResponseDto> getAllDiscountedComputerProduct();
+
+    void updateDate(Long id, LocalDateTime dateTime);
 }

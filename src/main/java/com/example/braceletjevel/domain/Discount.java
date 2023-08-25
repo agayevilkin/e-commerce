@@ -18,9 +18,9 @@ public class Discount {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "computer_product_id")
-    private ComputerProduct product;
+    private Product product;
 
     @Column(name = "current_price")
     private String currentPrice;

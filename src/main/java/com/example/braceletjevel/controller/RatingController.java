@@ -28,6 +28,11 @@ public class RatingController {
         return service.getRating(id);
     }
 
+    @PutMapping("/{id}")
+    public RatingResponseDto update(@PathVariable Long id, @Valid @RequestBody RatingRequestDto requestDto) {
+        return service.update(id, requestDto);
+    }
+
     @DeleteMapping("/delete/{id}")
     @ResponseStatus(NO_CONTENT)
     public void deleteRating(@PathVariable Long id) {

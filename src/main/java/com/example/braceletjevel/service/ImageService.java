@@ -1,15 +1,15 @@
 package com.example.braceletjevel.service;
 
-import com.example.braceletjevel.domain.Image;
+import com.example.braceletjevel.dto.request.ImageRequestDto;
+import com.example.braceletjevel.dto.response.ImageResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 public interface ImageService {
-    void deleteImage(Long id);
+    ImageResponseDto createImage(ImageRequestDto requestDto);
 
-    Image createImage(MultipartFile file) throws IOException;
+    ImageResponseDto update(MultipartFile file, Long id);
+
+    void delete(Long id);
 
     byte[] getImage(Long id);
-
 }

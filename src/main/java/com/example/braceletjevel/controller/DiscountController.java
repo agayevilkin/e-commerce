@@ -24,6 +24,12 @@ public class DiscountController {
         return service.getDiscount(id);
     }
 
+    @PutMapping("/{id}")
+    public DiscountResponseDto update(@PathVariable Long id, @Valid @RequestBody DiscountRequestDto requestDto){
+        return service.update(id,requestDto);
+
+    }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         service.delete(id);

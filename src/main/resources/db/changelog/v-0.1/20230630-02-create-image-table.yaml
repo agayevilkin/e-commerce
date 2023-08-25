@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20230630-02
+      id: 20230862-02
       author: agayevi
       changes:
         - createTable:
@@ -16,6 +16,12 @@ databaseChangeLog:
                   name: name
                   type: VARCHAR(255)
               - column:
-                  name: imagedata
-                  type: BLOB
+                  name: filedata
+                  type: LONGBLOB
+              - column:
+                  name: path
+                  type: VARCHAR(255)
+              - column:
+                  name: computer_product_id
+                  type: bigint
             tableName: images

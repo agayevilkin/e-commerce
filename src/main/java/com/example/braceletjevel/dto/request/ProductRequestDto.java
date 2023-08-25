@@ -1,16 +1,19 @@
 package com.example.braceletjevel.dto.request;
 
+import com.example.braceletjevel.domain.enums.Categories;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
-@Getter
+import java.time.LocalDateTime;
+
 @Setter
+@Getter
 public class ProductRequestDto {
 
     private String name;
-    private String description;
+    private String title;
     private String price;
-    private String info;
-    private MultipartFile file;
+    private LocalDateTime createDate;
+    private Categories categories;
+    private Long rating;
 }

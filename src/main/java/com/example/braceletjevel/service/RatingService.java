@@ -10,4 +10,6 @@ public interface RatingService {
     RatingResponseDto getRating(Long id);
 
     void deleteRating(Long id);
+
+    RatingResponseDto update(Long id, RatingRequestDto requestDto);
 }

@@ -10,4 +10,6 @@ public interface DiscountService {
     DiscountResponseDto getDiscount(Long id);
 
     void delete(Long id);
+
+    DiscountResponseDto update(Long id, DiscountRequestDto requestDto);
 }

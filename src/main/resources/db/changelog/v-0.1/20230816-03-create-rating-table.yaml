@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 20230630-02
+      id: 20230816-03
       author: agayevi
       changes:
         - createTable:
@@ -9,13 +9,13 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     primaryKey: true
-                    primaryKeyName: image_pkey
+                    primaryKeyName: rating_pkey
                   name: id
                   type: bigint
               - column:
-                  name: name
+                  name: rating
                   type: VARCHAR(255)
               - column:
-                  name: computer_product_id
-                  type: bigint
-            tableName: computer_images
+                  name: count
+                  type: VARCHAR(255)
+            tableName: rating
