@@ -31,7 +31,7 @@ public class Image {
     private byte[] imageData;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "computer_product_id")
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "path")

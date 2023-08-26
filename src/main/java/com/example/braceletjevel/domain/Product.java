@@ -1,6 +1,6 @@
 package com.example.braceletjevel.domain;
 
-import com.example.braceletjevel.domain.enums.Categories;
+import com.example.braceletjevel.domain.enums.StockStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -31,20 +31,44 @@ public class Product {
     @Column(name = "price")
     private String price;
 
+    @Column(name = "product_pic")
+    private String productPic;
+
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
-    @Column(name = "categories")
-    @Enumerated(EnumType.STRING)
-    private Categories categories;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "color_id")
+    private Color color;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_id")
+    private Discount discount;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Discount> discounts;
+    private List<Rating> rating;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "rating_id")
-    private Rating rating;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "stock_status")
+    private StockStatus stockStatus;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductComment> productComment;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinTable(name = "product_attribute",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "attribute_id", referencedColumnName = "id")})
+    private List<Attribute> attribute;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images;
 }

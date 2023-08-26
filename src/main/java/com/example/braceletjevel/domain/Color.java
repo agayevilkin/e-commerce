@@ -7,22 +7,17 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-@Table(name = "rating")
+@Table(name = "color")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
+public class Color {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "star")
-    private int star;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
+    @Column(name = "name")
+    private String name;
 }

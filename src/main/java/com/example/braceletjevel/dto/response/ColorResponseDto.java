@@ -5,9 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RatingResponseDto {
-
-    private Long id;
-    private int star;
-//    private String count;
+public class ColorResponseDto {
 }

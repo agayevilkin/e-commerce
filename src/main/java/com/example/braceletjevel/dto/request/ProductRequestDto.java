@@ -1,6 +1,5 @@
 package com.example.braceletjevel.dto.request;
 
-import com.example.braceletjevel.domain.enums.Categories;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +13,6 @@ public class ProductRequestDto {
     private String title;
     private String price;
     private LocalDateTime createDate;
-    private Categories categories;
+//    private Categories categories;
     private Long rating;
 }

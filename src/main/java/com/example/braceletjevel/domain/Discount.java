@@ -18,10 +18,6 @@ public class Discount {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "computer_product_id")
-    private Product product;
-
     @Column(name = "current_price")
     private String currentPrice;
 

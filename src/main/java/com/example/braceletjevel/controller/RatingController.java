@@ -12,7 +12,7 @@ import java.util.List;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping("/api/rating")
+@RequestMapping("/api/v1/rating")
 @RequiredArgsConstructor
 public class RatingController {
 

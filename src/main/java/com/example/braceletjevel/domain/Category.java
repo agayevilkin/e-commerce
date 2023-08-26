@@ -3,26 +3,23 @@ package com.example.braceletjevel.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "rating")
+@Table(name = "category")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "star")
-    private int star;
-
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "product_id")
-    private Product product;
-
+    @Column(name = "name")
+    private String name;
 }
