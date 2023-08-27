@@ -1,8 +1,8 @@
 package com.example.braceletjevel.service.impl;
 
 import com.example.braceletjevel.domain.Product;
-import com.example.braceletjevel.domain.Rating;
 import com.example.braceletjevel.dto.request.ProductRequestDto;
+import com.example.braceletjevel.dto.response.ProductDetailedResponseDto;
 import com.example.braceletjevel.dto.response.ProductPreviewResponseDto;
 import com.example.braceletjevel.exception.NotFoundException;
 import com.example.braceletjevel.repository.ProductRepository;
@@ -25,38 +25,37 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper mapper;
 
     @Override
-    public ProductPreviewResponseDto createComputerProduct(ProductRequestDto computerProductRequestDto) {
+    public void createComputerProduct(ProductRequestDto computerProductRequestDto) {
         Product product = mapper.map(computerProductRequestDto, Product.class);
         product.setBrand(null);
         product.setCategory(null);
         product.setColor(null);
         product.setCreateDate(LocalDateTime.now());
         productRepository.save(product);
-        return mapper.map(product, ProductPreviewResponseDto.class);
     }
 
     @Override
-    public ProductPreviewResponseDto updateComputerProduct(ProductRequestDto computerProductRequestDto, Long id) {
+    public void updateProduct(ProductRequestDto computerProductRequestDto, Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
         mapper.map(computerProductRequestDto, product);
-        return mapper.map(productRepository.save(product), ProductPreviewResponseDto.class);
+        productRepository.save(product);
     }
 
     @Override
-    public List<ProductPreviewResponseDto> getAllComputerProduct() {
+    public List<ProductPreviewResponseDto> getAllProduct() {
         return productRepository.findAll().stream()
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ProductPreviewResponseDto getComputerProductById(Long id) {
+    public ProductDetailedResponseDto findById(Long id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
-        return mapper.map(product, ProductPreviewResponseDto.class);
+        return mapper.map(product, ProductDetailedResponseDto.class);
     }
 
     @Override
-    public void deleteComputerProduct(Long id) {
+    public void deleteProduct(Long id) {
         if (existsById(id)) {
             productRepository.deleteById(id);
         }
@@ -71,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 //    }
 
     @Override
-    public List<ProductPreviewResponseDto> getAllNewComputerProduct() {
+    public List<ProductPreviewResponseDto> getAllNewProduct() {
         LocalDateTime yesterday = LocalDateTime.now().minusDays(30);
         return productRepository.findAllByCreateDateAfter(yesterday)
                 .stream()
@@ -80,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductPreviewResponseDto> getAllDiscountedComputerProduct() {
+    public List<ProductPreviewResponseDto> getAllDiscountedProduct() {
         return productRepository.findAllByDiscountIsNotNull()
                 .stream()
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class))

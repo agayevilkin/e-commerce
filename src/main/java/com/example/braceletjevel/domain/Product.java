@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 @ToString
 @Table(name = "products")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {

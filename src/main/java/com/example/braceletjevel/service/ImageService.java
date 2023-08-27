@@ -7,9 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 public interface ImageService {
     ImageResponseDto createImage(ImageRequestDto requestDto);
 
-    ImageResponseDto update(MultipartFile file, Long id);
+    ImageResponseDto updateImage(MultipartFile file, Long id);
 
-    void delete(Long id);
+    void deleteImage(Long id);
 
     byte[] getImage(Long id);
 }

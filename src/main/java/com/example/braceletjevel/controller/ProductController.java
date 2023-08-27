@@ -2,8 +2,10 @@ package com.example.braceletjevel.controller;
 
 
 import com.example.braceletjevel.dto.request.ProductRequestDto;
+import com.example.braceletjevel.dto.response.ProductDetailedResponseDto;
 import com.example.braceletjevel.dto.response.ProductPreviewResponseDto;
 import com.example.braceletjevel.service.ProductService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,27 +23,29 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/create")
+    @PostMapping
     @ResponseStatus(CREATED)
-    public ProductPreviewResponseDto createComputerProduct
-            (@RequestBody @Valid ProductRequestDto computerProductRequestDto) {
-        return productService.createComputerProduct(computerProductRequestDto);
+    @Operation(summary = "create")
+    public void create(@RequestBody @Valid ProductRequestDto requestDto) {
+        productService.createComputerProduct(requestDto);
     }
 
-    @PatchMapping("/update/date/{id}")
-    public void updateDate(@PathVariable Long id, @RequestBody LocalDateTime dateTime) {
+    @PatchMapping("/date/{id}")
+    @Operation(summary = "updateCreateDate")
+    public void updateCreateDate(@PathVariable Long id, @RequestBody LocalDateTime dateTime) {
         productService.updateDate(id, dateTime);
     }
 
-    @PutMapping("/update/{id}")
-    public ProductPreviewResponseDto createComputerProduct
-            (@PathVariable Long id, @RequestBody @Valid ProductRequestDto computerProductRequestDto) {
-        return productService.updateComputerProduct(computerProductRequestDto, id);
+    @PutMapping("{id}")
+    @Operation(summary = "update")
+    public void update(@PathVariable Long id, @RequestBody @Valid ProductRequestDto requestDto) {
+        productService.updateProduct(requestDto, id);
     }
 
     @GetMapping("/all")
-    public List<ProductPreviewResponseDto> getAllComputerProduct() {
-        return productService.getAllComputerProduct();
+    @Operation(summary = "getAllProduct")
+    public List<ProductPreviewResponseDto> getAllProduct() {
+        return productService.getAllProduct();
     }
 
 //    @GetMapping("/category/all")
@@ -50,25 +54,27 @@ public class ProductController {
 //    }
 
     @GetMapping("/discounted/all")
-    public List<ProductPreviewResponseDto> getAllDiscountedComputerProduct() {
-        return productService.getAllDiscountedComputerProduct();
+    @Operation(summary = "getAllDiscountedProduct")
+    public List<ProductPreviewResponseDto> getAllDiscountedProduct() {
+        return productService.getAllDiscountedProduct();
     }
 
     @GetMapping("/new-product/all")
-    public List<ProductPreviewResponseDto> getAllNewComputerProduct() {
-        return productService.getAllNewComputerProduct();
+    @Operation(summary = "getAllNewProduct")
+    public List<ProductPreviewResponseDto> getAllNewProduct() {
+        return productService.getAllNewProduct();
     }
 
     @GetMapping("/{id}")
-    public ProductPreviewResponseDto getComputerProduct(@PathVariable Long id) {
-        return productService.getComputerProductById(id);
+    @Operation(summary = "findById")
+    public ProductDetailedResponseDto findById(@PathVariable Long id) {
+        return productService.findById(id);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteComputerProduct(@PathVariable Long id) {
-        productService.deleteComputerProduct(id);
+    @Operation(summary = "delete")
+    public void delete(@PathVariable Long id) {
+        productService.deleteProduct(id);
     }
-
-
 }

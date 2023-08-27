@@ -3,6 +3,7 @@ package com.example.braceletjevel.controller;
 import com.example.braceletjevel.dto.request.ImageRequestDto;
 import com.example.braceletjevel.dto.response.ImageResponseDto;
 import com.example.braceletjevel.service.ImageService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ public class ImageController {
     private final ImageService service;
 
     @GetMapping("/{id}")
+    @Operation(summary = "getImageByName", description = "Post method for create Attribute")
     public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
         byte[] image = service.getImage(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -29,20 +31,23 @@ public class ImageController {
                 .body(image);
     }
 
-    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+    @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(CREATED)
+    @Operation(summary = "create", description = "Post method for create Attribute")
     public ImageResponseDto create(@ModelAttribute ImageRequestDto requestDto) {
         return service.createImage(requestDto);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "update", description = "Post method for create Attribute")
     public ImageResponseDto update(@PathVariable Long id, @RequestParam("image") MultipartFile file) {
-        return service.update(file, id);
+        return service.updateImage(file, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    public void deleteImage(@PathVariable Long id) {
-        service.delete(id);
+    @Operation(summary = "delete", description = "Post method for create Attribute")
+    public void delete(@PathVariable Long id) {
+        service.deleteImage(id);
     }
 }

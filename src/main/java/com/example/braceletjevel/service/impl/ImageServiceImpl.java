@@ -41,7 +41,7 @@ public class ImageServiceImpl implements ImageService {
 
     @SneakyThrows
     @Override
-    public ImageResponseDto update(MultipartFile file, Long id) {
+    public ImageResponseDto updateImage(MultipartFile file, Long id) {
         Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Image not found!"));
         image.setImageData(ImageUtil.compressImage(file.getBytes()));
         Image save = imageRepository.save(image);
@@ -57,7 +57,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void deleteImage(Long id) {
         if (imageRepository.existsById(id)) {
             imageRepository.deleteById(id);
         }

@@ -1,27 +1,28 @@
 package com.example.braceletjevel.service;
 
 import com.example.braceletjevel.dto.request.ProductRequestDto;
+import com.example.braceletjevel.dto.response.ProductDetailedResponseDto;
 import com.example.braceletjevel.dto.response.ProductPreviewResponseDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
-    ProductPreviewResponseDto createComputerProduct(ProductRequestDto computerProductRequestDto);
+    void createComputerProduct(ProductRequestDto computerProductRequestDto);
 
-    ProductPreviewResponseDto updateComputerProduct(ProductRequestDto computerProductRequestDto, Long id);
+    void updateProduct(ProductRequestDto computerProductRequestDto, Long id);
 
-    List<ProductPreviewResponseDto> getAllComputerProduct();
+    List<ProductPreviewResponseDto> getAllProduct();
 
-    ProductPreviewResponseDto getComputerProductById(Long id);
+    ProductDetailedResponseDto findById(Long id);
 
-    void deleteComputerProduct(Long id);
+    void deleteProduct(Long id);
 
 //    List<ProductPreviewResponseDto> getAllComputerProductByCategory(Categories categories);
 
-    List<ProductPreviewResponseDto> getAllNewComputerProduct();
+    List<ProductPreviewResponseDto> getAllNewProduct();
 
-    List<ProductPreviewResponseDto> getAllDiscountedComputerProduct();
+    List<ProductPreviewResponseDto> getAllDiscountedProduct();
 
     void updateDate(Long id, LocalDateTime dateTime);
 }
