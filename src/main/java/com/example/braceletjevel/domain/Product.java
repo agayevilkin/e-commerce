@@ -31,9 +31,6 @@ public class Product {
     @Column(name = "price")
     private String price;
 
-    @Column(name = "product_pic")
-    private String productPic;
-
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
@@ -45,8 +42,7 @@ public class Product {
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "discount_id")
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
     private Discount discount;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)

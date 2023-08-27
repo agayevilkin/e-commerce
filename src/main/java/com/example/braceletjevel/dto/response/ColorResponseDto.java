@@ -6,4 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ColorResponseDto {
+    private String name;
+    private String colorCode;
+
 }

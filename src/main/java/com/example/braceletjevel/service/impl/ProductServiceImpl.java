@@ -26,10 +26,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductPreviewResponseDto createComputerProduct(ProductRequestDto computerProductRequestDto) {
-        Rating rating = ratingRepository.findById(computerProductRequestDto.getRating())
-                .orElseThrow(() -> new NotFoundException("Rating not found!"));
         Product product = mapper.map(computerProductRequestDto, Product.class);
-        product.setRating(rating);
+        product.setBrand(null);
+        product.setCategory(null);
+        product.setColor(null);
         product.setCreateDate(LocalDateTime.now());
         productRepository.save(product);
         return mapper.map(product, ProductPreviewResponseDto.class);
@@ -37,11 +37,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductPreviewResponseDto updateComputerProduct(ProductRequestDto computerProductRequestDto, Long id) {
-        Rating rating = ratingRepository.findById(computerProductRequestDto.getRating())
-                .orElseThrow(() -> new NotFoundException("Rating not found!"));
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
         mapper.map(computerProductRequestDto, product);
-        product.setRating(rating);
         return mapper.map(productRepository.save(product), ProductPreviewResponseDto.class);
     }
 

@@ -23,4 +23,8 @@ public class Discount {
 
     @Column(name = "discount_percentage")
     private String discountPercentage;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "product_id")
+    private Product product;
 }
