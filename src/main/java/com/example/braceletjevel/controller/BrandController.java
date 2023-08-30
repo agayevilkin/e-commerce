@@ -18,26 +18,26 @@ public class BrandController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "create", description = "Post method for create Attribute")
+    @Operation(summary = "create")
     public void create(@Valid @RequestBody BrandRequestDto requestDto) {
         service.createBrand(requestDto);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "findById", description = "Post method for create Attribute")
+    @Operation(summary = "findById")
     public BrandResponseDto findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "update", description = "Post method for create Attribute")
+    @Operation(summary = "update")
     public void update(@PathVariable Long id, @Valid @RequestBody BrandRequestDto requestDto) {
         service.updateBrand(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "delete", description = "Post method for create Attribute")
+    @Operation(summary = "delete")
     public void delete(@PathVariable Long id) {
         service.deleteBrand(id);
     }

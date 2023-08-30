@@ -3,20 +3,22 @@ package com.example.braceletjevel.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "color")
+@Table(name = "colors")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Color {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "color_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "name")
     private String name;

@@ -30,13 +30,7 @@ public class ProductController {
         productService.createComputerProduct(requestDto);
     }
 
-    @PatchMapping("/date/{id}")
-    @Operation(summary = "updateCreateDate")
-    public void updateCreateDate(@PathVariable Long id, @RequestBody LocalDateTime dateTime) {
-        productService.updateDate(id, dateTime);
-    }
-
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     @Operation(summary = "update")
     public void update(@PathVariable Long id, @RequestBody @Valid ProductRequestDto requestDto) {
         productService.updateProduct(requestDto, id);

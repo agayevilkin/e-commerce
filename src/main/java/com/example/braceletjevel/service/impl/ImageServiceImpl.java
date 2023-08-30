@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
@@ -63,7 +65,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-    private String createImageUrl(Long id) {
+    private String createImageUrl(UUID id) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/api/image/")
                 .path(String.valueOf(id))

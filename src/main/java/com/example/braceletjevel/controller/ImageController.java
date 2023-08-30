@@ -23,7 +23,7 @@ public class ImageController {
     private final ImageService service;
 
     @GetMapping("/{id}")
-    @Operation(summary = "getImageByName", description = "Post method for create Attribute")
+    @Operation(summary = "getImageByName")
     public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
         byte[] image = service.getImage(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -33,20 +33,20 @@ public class ImageController {
 
     @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(CREATED)
-    @Operation(summary = "create", description = "Post method for create Attribute")
+    @Operation(summary = "create")
     public ImageResponseDto create(@ModelAttribute ImageRequestDto requestDto) {
         return service.createImage(requestDto);
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "update", description = "Post method for create Attribute")
+    @Operation(summary = "update")
     public ImageResponseDto update(@PathVariable Long id, @RequestParam("image") MultipartFile file) {
         return service.updateImage(file, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    @Operation(summary = "delete", description = "Post method for create Attribute")
+    @Operation(summary = "delete")
     public void delete(@PathVariable Long id) {
         service.deleteImage(id);
     }

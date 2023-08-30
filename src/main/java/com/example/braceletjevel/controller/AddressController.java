@@ -1,8 +1,8 @@
 package com.example.braceletjevel.controller;
 
-import com.example.braceletjevel.dto.request.CategoryRequestDto;
-import com.example.braceletjevel.dto.response.CategoryResponseDto;
-import com.example.braceletjevel.service.CategoryService;
+import com.example.braceletjevel.dto.request.AddressRequestDto;
+import com.example.braceletjevel.dto.response.AddressResponseDto;
+import com.example.braceletjevel.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,35 +10,35 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/category")
+@RequestMapping("/api/v1/address")
 @RequiredArgsConstructor
-public class CategoryController {
+public class AddressController {
 
-    private final CategoryService service;
+    private final AddressService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
-    public void create(@Valid @RequestBody CategoryRequestDto requestDto) {
-        service.createCategory(requestDto);
+    public void create(@Valid @RequestBody AddressRequestDto requestDto) {
+        service.createAddress(requestDto);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public CategoryResponseDto findById(@PathVariable Long id) {
+    public AddressResponseDto findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public void update(@PathVariable Long id, @Valid @RequestBody CategoryRequestDto requestDto) {
-        service.updateCategory(id, requestDto);
+    public void update(@PathVariable Long id, @Valid @RequestBody AddressRequestDto requestDto) {
+        service.updateAddress(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "delete")
     public void delete(@PathVariable Long id) {
-        service.deleteCategory(id);
+        service.deleteAddress(id);
     }
 }

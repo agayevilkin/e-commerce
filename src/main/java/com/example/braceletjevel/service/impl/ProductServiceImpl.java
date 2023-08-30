@@ -30,7 +30,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(null);
         product.setCategory(null);
         product.setColor(null);
-        product.setCreateDate(LocalDateTime.now());
+        product.setCreatedDate(LocalDateTime.now());
         productRepository.save(product);
     }
 
@@ -72,7 +72,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductPreviewResponseDto> getAllNewProduct() {
         LocalDateTime yesterday = LocalDateTime.now().minusDays(30);
-        return productRepository.findAllByCreateDateAfter(yesterday)
+        return productRepository.findAllByCreatedDateAfter(yesterday)
                 .stream()
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class))
                 .collect(Collectors.toList());
@@ -86,12 +86,12 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public void updateDate(Long id, LocalDateTime dateTime) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
-        product.setCreateDate(dateTime);
-        productRepository.save(product);
-    }
+//    @Override
+//    public void updateDate(Long id, LocalDateTime dateTime) {
+//        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
+//        product.setCreatedDate(dateTime);
+//        productRepository.save(product);
+//    }
 
     private boolean existsById(Long id) {
         return productRepository.existsById(id);

@@ -4,30 +4,25 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "product_comment")
+@Table(name = "product_comments")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductComment {
+public class ProductComment extends Audit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "product_comment_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 1000)
     private String content;
-
-    @Column(name = "comment_author")
-    private String commentAuthor;
-
-    @Column(name = "date")
-    private LocalDateTime localDateTime;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_id")

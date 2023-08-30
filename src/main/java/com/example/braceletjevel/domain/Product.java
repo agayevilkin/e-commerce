@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -14,12 +15,12 @@ import java.util.List;
 @Table(name = "products")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Product {
+public class Product extends Audit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @Column(name = "product_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "product_name")
     private String name;
@@ -28,10 +29,7 @@ public class Product {
     private String title;
 
     @Column(name = "price")
-    private String price;
-
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
+    private String price; //ordeer
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
@@ -42,10 +40,7 @@ public class Product {
     private Color color;
 
     @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    private Discount discount;
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Rating> rating;
+    private Discount discount; //order
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "brand_id")
@@ -55,15 +50,18 @@ public class Product {
     @Column(name = "stock_status")
     private StockStatus stockStatus;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProductComment> productComment;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Rating> rating;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinTable(name = "product_attribute",
-            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "attribute_id", referencedColumnName = "id")})
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "attribute_id", referencedColumnName = "attribute_id")})
     private List<Attribute> attribute;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Image> images;
 }

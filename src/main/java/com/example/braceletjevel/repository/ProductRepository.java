@@ -10,7 +10,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 //    List<Product> findAllByCategories(Categories categories);
 
-    List<Product> findAllByCreateDateAfter(LocalDateTime dateTime);
+    List<Product> findAllByCreatedDateAfter(LocalDateTime dateTime);
 
     List<Product> findAllByDiscountIsNotNull();
 }

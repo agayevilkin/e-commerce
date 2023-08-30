@@ -23,6 +23,4 @@ public interface ProductService {
     List<ProductPreviewResponseDto> getAllNewProduct();
 
     List<ProductPreviewResponseDto> getAllDiscountedProduct();
-
-    void updateDate(Long id, LocalDateTime dateTime);
 }

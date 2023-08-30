@@ -3,24 +3,27 @@ package com.example.braceletjevel.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
 @ToString
-@Table(name = "attribute")
+@Table(name = "attributes")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Attribute {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "name")
-    private String name;
+    @Column(name = "attribute_id")
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "value")
     private String value;
+
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "attribute_definition_id")
+    private AttributeDefinition attributeDefinition;
 }

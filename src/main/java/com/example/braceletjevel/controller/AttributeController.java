@@ -20,26 +20,26 @@ public class AttributeController {
 
     @PostMapping
     @ResponseStatus(CREATED)
-    @Operation(summary = "create", description = "Post method for create Attribute")
+    @Operation(summary = "create")
     public void create(@Valid @RequestBody AttributeRequestDto requestDto) {
         service.createAttribute(requestDto);
     }
 
     @GetMapping("/{id}")
-    @Operation(summary = "findById", description = "Get method for find Attribute")
+    @Operation(summary = "findById")
     public AttributeResponseDto findById(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
-    @Operation(summary = "update", description = "Update method for update Attribute")
+    @Operation(summary = "update")
     public void update(@PathVariable Long id, @Valid @RequestBody AttributeRequestDto requestDto) {
         service.updateAttribute(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
-    @Operation(summary = "delete", description = "Delete method for delete Attribute")
+    @Operation(summary = "delete")
     public void delete(@PathVariable Long id) {
         service.deleteAttribute(id);
     }
