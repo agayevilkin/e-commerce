@@ -3,13 +3,15 @@ package com.example.braceletjevel.service;
 import com.example.braceletjevel.dto.request.RatingRequestDto;
 import com.example.braceletjevel.dto.response.RatingResponseDto;
 
+import java.util.UUID;
+
 public interface RatingService {
 
-    RatingResponseDto createRating(RatingRequestDto requestDto);
+    void createRating(RatingRequestDto requestDto);
 
-    RatingResponseDto getRating(Long id);
+    RatingResponseDto getRating(UUID id);
 
-    void deleteRating(Long id);
+    void deleteRating(UUID id);
 
-    RatingResponseDto update(Long id, RatingRequestDto requestDto);
+    void update(UUID id, RatingRequestDto requestDto);
 }

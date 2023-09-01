@@ -3,13 +3,15 @@ package com.example.braceletjevel.service;
 import com.example.braceletjevel.dto.request.AttributeRequestDto;
 import com.example.braceletjevel.dto.response.AttributeResponseDto;
 
+import java.util.UUID;
+
 public interface AttributeService {
 
     void createAttribute(AttributeRequestDto requestDto);
 
-    AttributeResponseDto findById(Long id);
+    AttributeResponseDto findById(UUID id);
 
-    void updateAttribute(Long id, AttributeRequestDto requestDto);
+    void updateAttribute(UUID id, AttributeRequestDto requestDto);
 
-    void deleteAttribute(Long id);
+    void deleteAttribute(UUID id);
 }

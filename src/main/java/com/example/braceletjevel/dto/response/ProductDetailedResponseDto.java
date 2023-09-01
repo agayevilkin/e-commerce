@@ -6,23 +6,24 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
 public class ProductDetailedResponseDto {
 
-    private Long id;
+    private UUID id;
+    private double price;
     private String name;
     private String title;
-    private String price;
+    private StockStatus stockStatus;
     private String productPic;
     private LocalDateTime createDate;
     private CategoryResponseDto category;
     private ColorResponseDto color;
     private DiscountResponseDto discount;
-    private List<RatingResponseDto> rating;
     private BrandResponseDto brand;
-    private StockStatus stockStatus;
+    private List<RatingResponseDto> rating;
     private List<ProductCommentResponseDto> productComment;
     private List<AttributeResponseDto> attribute;
     private List<ImageResponseDto> images;

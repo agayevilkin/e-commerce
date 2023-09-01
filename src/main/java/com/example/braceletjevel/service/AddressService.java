@@ -3,12 +3,14 @@ package com.example.braceletjevel.service;
 import com.example.braceletjevel.dto.request.AddressRequestDto;
 import com.example.braceletjevel.dto.response.AddressResponseDto;
 
+import java.util.UUID;
+
 public interface AddressService {
     void createAddress(AddressRequestDto requestDto);
 
-    AddressResponseDto findById(Long id);
+    AddressResponseDto findById(UUID id);
 
-    void updateAddress(Long id, AddressRequestDto requestDto);
+    void updateAddress(UUID id, AddressRequestDto requestDto);
 
-    void deleteAddress(Long id);
+    void deleteAddress(UUID id);
 }

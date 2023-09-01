@@ -30,13 +30,13 @@ public class Customer {
     @Email
     private String email;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Address> address;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Order> orders;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     @JoinColumn(name = "role_id")
     private Role role;
 }

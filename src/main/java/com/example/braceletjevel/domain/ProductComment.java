@@ -24,7 +24,7 @@ public class ProductComment extends Audit {
     @Column(name = "content", length = 1000)
     private String content;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

@@ -2,16 +2,20 @@ package com.example.braceletjevel.controller;
 
 
 import com.example.braceletjevel.dto.request.ProductRequestDto;
+import com.example.braceletjevel.dto.request.ProductRequestWithCategoryAndBrandDto;
 import com.example.braceletjevel.dto.response.ProductDetailedResponseDto;
 import com.example.braceletjevel.dto.response.ProductPreviewResponseDto;
 import com.example.braceletjevel.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -19,6 +23,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping("/api/v1/product")
 @RequiredArgsConstructor
+@Validated
 public class ProductController {
 
     private final ProductService productService;
@@ -32,7 +37,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public void update(@PathVariable Long id, @RequestBody @Valid ProductRequestDto requestDto) {
+    public void update(@PathVariable UUID id, @RequestBody @Valid ProductRequestDto requestDto) {
         productService.updateProduct(requestDto, id);
     }
 
@@ -42,10 +47,17 @@ public class ProductController {
         return productService.getAllProduct();
     }
 
-//    @GetMapping("/category/all")
-//    public List<ProductPreviewResponseDto> getAllComputerProductByCategory(@RequestParam Categories categories) {
-//        return productService.getAllComputerProductByCategory(categories);
-//    }
+    @GetMapping("/category/all")
+    @Operation(summary = "getAllProductByCategory")
+    public List<ProductPreviewResponseDto> getAllProductByCategory(@NotBlank @RequestParam String category) {
+        return productService.getAllProductByCategory(category);
+    }
+
+    @GetMapping("/category/brand/all")
+    @Operation(summary = "getAllProductByCategoryAndBrand")
+    public List<ProductPreviewResponseDto> getAllProductByCategoryAndBrand(@Valid ProductRequestWithCategoryAndBrandDto request) {
+        return productService.getAllProductByCategoryAndBrand(request);
+    }
 
     @GetMapping("/discounted/all")
     @Operation(summary = "getAllDiscountedProduct")
@@ -61,14 +73,14 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public ProductDetailedResponseDto findById(@PathVariable Long id) {
+    public ProductDetailedResponseDto findById(@PathVariable UUID id) {
         return productService.findById(id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "delete")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         productService.deleteProduct(id);
     }
 }

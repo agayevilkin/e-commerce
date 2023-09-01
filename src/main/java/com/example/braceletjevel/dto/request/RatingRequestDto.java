@@ -1,12 +1,18 @@
 package com.example.braceletjevel.dto.request;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @Getter
 @Setter
 public class RatingRequestDto {
+    @Size(min = 1, max = 5)
+    private int star;
 
-    private String rating;
-    private String count;
+    @NotNull
+    private UUID productId;
 }

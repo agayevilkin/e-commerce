@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -23,8 +24,8 @@ public class ProductRequestDto {
     @NotBlank(message = "Please provide a title")
     private String title;
 
-    @NotBlank(message = "Please provide a price")
-    private String price;
+    @NotNull
+    private double price;
 
     @Size(min = 5, message = "Your user name must have at least 5 characters")
     @NotBlank(message = "Please provide a createdBy")
@@ -40,11 +41,11 @@ public class ProductRequestDto {
     private LocalDateTime createDate;
 
     @NotNull
-    private Long categoryId;
+    private UUID categoryId;
 
     @NotNull
-    private Long colorId;
+    private UUID colorId;
 
     @NotNull
-    private Long brandId;
+    private UUID brandId;
 }

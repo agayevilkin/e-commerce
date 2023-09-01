@@ -22,15 +22,16 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
+
     private final ImageRepository imageRepository;
     private final ProductRepository productRepository;
     private final ModelMapper mapper;
-
 
     @SneakyThrows
     @Override
     @Transactional
     public ImageResponseDto createImage(ImageRequestDto requestDto) {
+        //todo change response type to void and delete Transactional
         Product product = productRepository.findById(requestDto.getProductId()).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
         Image image = new Image();
         image.setImageData(ImageUtil.compressImage(requestDto.getFile().getBytes()));
@@ -43,7 +44,7 @@ public class ImageServiceImpl implements ImageService {
 
     @SneakyThrows
     @Override
-    public ImageResponseDto updateImage(MultipartFile file, Long id) {
+    public ImageResponseDto updateImage(MultipartFile file, UUID id) {
         Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Image not found!"));
         image.setImageData(ImageUtil.compressImage(file.getBytes()));
         Image save = imageRepository.save(image);
@@ -53,13 +54,13 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Transactional
-    public byte[] getImage(Long id) {
+    public byte[] getImage(UUID id) {
         Image dbImage = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Image!"));
         return ImageUtil.decompressImage(dbImage.getImageData());
     }
 
     @Override
-    public void deleteImage(Long id) {
+    public void deleteImage(UUID id) {
         if (imageRepository.existsById(id)) {
             imageRepository.deleteById(id);
         }

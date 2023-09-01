@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -21,26 +23,26 @@ public class RatingController {
     @PostMapping
     @Operation(summary = "create")
     @ResponseStatus(CREATED)
-    public RatingResponseDto create(@Valid @RequestBody RatingRequestDto requestDto) {
-        return service.createRating(requestDto);
+    public void create(@Valid @RequestBody RatingRequestDto requestDto) {
+        service.createRating(requestDto);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public RatingResponseDto findById(@PathVariable Long id) {
+    public RatingResponseDto findById(@PathVariable UUID id) {
         return service.getRating(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public RatingResponseDto update(@PathVariable Long id, @Valid @RequestBody RatingRequestDto requestDto) {
-        return service.update(id, requestDto);
+    public void update(@PathVariable UUID id, @Valid @RequestBody RatingRequestDto requestDto) {
+        service.update(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "delete")
     @ResponseStatus(NO_CONTENT)
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.deleteRating(id);
     }
 

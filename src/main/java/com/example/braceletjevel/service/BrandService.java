@@ -3,12 +3,14 @@ package com.example.braceletjevel.service;
 import com.example.braceletjevel.dto.request.BrandRequestDto;
 import com.example.braceletjevel.dto.response.BrandResponseDto;
 
+import java.util.UUID;
+
 public interface BrandService {
     void createBrand(BrandRequestDto requestDto);
 
-    BrandResponseDto findById(Long id);
+    BrandResponseDto findById(UUID id);
 
-    void updateBrand(Long id, BrandRequestDto requestDto);
+    void updateBrand(UUID id, BrandRequestDto requestDto);
 
-    void deleteBrand(Long id);
+    void deleteBrand(UUID id);
 }

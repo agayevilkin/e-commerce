@@ -31,11 +31,11 @@ public class Order {
             inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")})
     private List<Product> product;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
 }

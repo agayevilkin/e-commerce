@@ -4,12 +4,14 @@ import com.example.braceletjevel.dto.request.ImageRequestDto;
 import com.example.braceletjevel.dto.response.ImageResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 public interface ImageService {
     ImageResponseDto createImage(ImageRequestDto requestDto);
 
-    ImageResponseDto updateImage(MultipartFile file, Long id);
+    ImageResponseDto updateImage(MultipartFile file, UUID id);
 
-    void deleteImage(Long id);
+    void deleteImage(UUID id);
 
-    byte[] getImage(Long id);
+    byte[] getImage(UUID id);
 }

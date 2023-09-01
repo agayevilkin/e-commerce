@@ -32,7 +32,7 @@ public class Image {
     @Column(name = "filedata")
     private byte[] imageData;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 

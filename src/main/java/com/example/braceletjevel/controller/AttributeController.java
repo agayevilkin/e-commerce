@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -27,20 +29,20 @@ public class AttributeController {
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public AttributeResponseDto findById(@PathVariable Long id) {
+    public AttributeResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public void update(@PathVariable Long id, @Valid @RequestBody AttributeRequestDto requestDto) {
+    public void update(@PathVariable UUID id, @Valid @RequestBody AttributeRequestDto requestDto) {
         service.updateAttribute(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "delete")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.deleteAttribute(id);
     }
 }

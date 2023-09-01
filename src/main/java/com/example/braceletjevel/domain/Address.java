@@ -40,7 +40,7 @@ public class Address {
     @Enumerated(EnumType.STRING)
     private District district;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;
 }

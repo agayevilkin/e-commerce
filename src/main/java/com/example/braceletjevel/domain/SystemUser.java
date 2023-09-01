@@ -64,7 +64,7 @@ public class SystemUser {
     private String email;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "user_role",
+    @JoinTable(name = "system_user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "system_user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")})
     private List<Role> roles = new ArrayList<>();

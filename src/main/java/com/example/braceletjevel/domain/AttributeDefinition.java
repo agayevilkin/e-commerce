@@ -20,8 +20,8 @@ public class AttributeDefinition {
     private UUID id;
 
     @Column(name = "name")
-    private String name; //RAM
+    private String name;
 
     @Column(name = "type")
-    private String type; //GB
+    private String type;
 }

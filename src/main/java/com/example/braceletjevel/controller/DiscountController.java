@@ -8,6 +8,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("/api/v1/discount")
 @RequiredArgsConstructor
@@ -17,26 +21,27 @@ public class DiscountController {
 
     @PostMapping
     @Operation(summary = "create")
-    public DiscountResponseDto create(@Valid @RequestBody DiscountRequestDto requestDto) {
-        return service.create(requestDto);
+    @ResponseStatus(CREATED)
+    public void create(@Valid @RequestBody DiscountRequestDto requestDto) {
+        service.create(requestDto);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public DiscountResponseDto findById(@PathVariable Long id) {
+    public DiscountResponseDto findById(@PathVariable UUID id) {
         return service.getDiscount(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public DiscountResponseDto update(@PathVariable Long id, @Valid @RequestBody DiscountRequestDto requestDto) {
-        return service.update(id, requestDto);
+    public void update(@PathVariable UUID id, @Valid @RequestBody DiscountRequestDto requestDto) {
+        service.update(id, requestDto);
 
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "delete")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.delete(id);
     }
 }

@@ -3,5 +3,7 @@ package com.example.braceletjevel.repository;
 import com.example.braceletjevel.domain.Rating;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RatingRepository extends JpaRepository<Rating,Long> {
+import java.util.UUID;
+
+public interface RatingRepository extends JpaRepository<Rating, UUID> {
 }

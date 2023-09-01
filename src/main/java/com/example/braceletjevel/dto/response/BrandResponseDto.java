@@ -1,12 +1,13 @@
 package com.example.braceletjevel.dto.response;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.UUID;
 
 @Getter
 @Setter
 public class BrandResponseDto {
-    private Long id;
+    private UUID id;
     private String name;
 }

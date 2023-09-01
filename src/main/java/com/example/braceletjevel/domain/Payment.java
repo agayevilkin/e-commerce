@@ -20,7 +20,7 @@ public class Payment {
     @Column(name = "payment_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
     private double amount;
     private LocalDateTime paymentDate;
+    //other payment details
 }

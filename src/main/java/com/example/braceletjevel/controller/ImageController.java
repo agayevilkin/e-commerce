@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -19,12 +21,11 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RequiredArgsConstructor
 public class ImageController {
 
-
     private final ImageService service;
 
     @GetMapping("/{id}")
     @Operation(summary = "getImageByName")
-    public ResponseEntity<?> getImageByName(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getImageByName(@PathVariable("id") UUID id) {
         byte[] image = service.getImage(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/jpg"))
@@ -40,14 +41,14 @@ public class ImageController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "update")
-    public ImageResponseDto update(@PathVariable Long id, @RequestParam("image") MultipartFile file) {
+    public ImageResponseDto update(@PathVariable UUID id, @RequestParam("image") MultipartFile file) {
         return service.updateImage(file, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "delete")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.deleteImage(id);
     }
 }

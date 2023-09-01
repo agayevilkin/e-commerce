@@ -29,20 +29,20 @@ public class Product extends Audit {
     private String title;
 
     @Column(name = "price")
-    private String price; //ordeer
+    private double price;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
-    private Discount discount; //order
+    @OneToOne(mappedBy = "product", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    private Discount discount;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
@@ -50,10 +50,10 @@ public class Product extends Audit {
     @Column(name = "stock_status")
     private StockStatus stockStatus;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProductComment> productComment;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Rating> rating;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
@@ -62,6 +62,6 @@ public class Product extends Audit {
             inverseJoinColumns = {@JoinColumn(name = "attribute_id", referencedColumnName = "attribute_id")})
     private List<Attribute> attribute;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Image> images;
 }

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
@@ -24,26 +26,26 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public BrandResponseDto findById(Long id) {
+    public BrandResponseDto findById(UUID id) {
         Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException("Brand not found!"));
         return mapper.map(brand, BrandResponseDto.class);
     }
 
     @Override
-    public void updateBrand(Long id, BrandRequestDto requestDto) {
+    public void updateBrand(UUID id, BrandRequestDto requestDto) {
         Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException("Brand not found!"));
         mapper.map(requestDto, brand);
         repository.save(brand);
     }
 
     @Override
-    public void deleteBrand(Long id) {
+    public void deleteBrand(UUID id) {
         if (checkById(id)) {
             repository.deleteById(id);
         }
     }
 
-    private boolean checkById(Long id) {
+    private boolean checkById(UUID id) {
         return repository.existsById(id);
     }
 }

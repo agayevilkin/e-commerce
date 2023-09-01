@@ -23,7 +23,7 @@ public class Rating {
     @Column(name = "star")
     private int star;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

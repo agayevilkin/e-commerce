@@ -3,13 +3,15 @@ package com.example.braceletjevel.service;
 import com.example.braceletjevel.dto.request.DiscountRequestDto;
 import com.example.braceletjevel.dto.response.DiscountResponseDto;
 
+import java.util.UUID;
+
 public interface DiscountService {
 
-    DiscountResponseDto create(DiscountRequestDto requestDto);
+    void create(DiscountRequestDto requestDto);
 
-    DiscountResponseDto getDiscount(Long id);
+    DiscountResponseDto getDiscount(UUID id);
 
-    void delete(Long id);
+    void delete(UUID id);
 
-    DiscountResponseDto update(Long id, DiscountRequestDto requestDto);
+    void update(UUID id, DiscountRequestDto requestDto);
 }

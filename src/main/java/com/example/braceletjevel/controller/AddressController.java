@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/address")
 @RequiredArgsConstructor
@@ -25,20 +27,20 @@ public class AddressController {
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public AddressResponseDto findById(@PathVariable Long id) {
+    public AddressResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public void update(@PathVariable Long id, @Valid @RequestBody AddressRequestDto requestDto) {
+    public void update(@PathVariable UUID id, @Valid @RequestBody AddressRequestDto requestDto) {
         service.updateAddress(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "delete")
-    public void delete(@PathVariable Long id) {
+    public void delete(@PathVariable UUID id) {
         service.deleteAddress(id);
     }
 }

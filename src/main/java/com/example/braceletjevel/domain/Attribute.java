@@ -23,7 +23,7 @@ public class Attribute {
     @Column(name = "value")
     private String value;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "attribute_definition_id")
     private AttributeDefinition attributeDefinition;
 }

@@ -21,12 +21,12 @@ public class Discount {
     private UUID id;
 
     @Column(name = "current_price")
-    private String currentPrice;
+    private double currentPrice;
 
     @Column(name = "discount_percentage")
-    private String discountPercentage;
+    private int discountPercentage;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;
 }

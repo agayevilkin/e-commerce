@@ -1,15 +1,15 @@
 package com.example.braceletjevel.dto.response;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class ProductCommentResponseDto {
-    private Long id;
+    private UUID id;
     private String content;
     private String commentAuthor;
     private LocalDateTime localDateTime;
