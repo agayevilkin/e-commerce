@@ -43,7 +43,6 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(brand);
         product.setCategory(category);
         product.setColor(color);
-        product.setCreatedDate(LocalDateTime.now());
         //todo set fields which must be auto create
         productRepository.save(product);
     }
@@ -53,19 +52,24 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
         mapper.map(productRequestDto, product);
 
-        if (!checkColorId(productRequestDto.getColorId())) {
+        //todo can be change logic for all if block
+        if (product.getColor() == null && !(checkColorId(productRequestDto.getColorId())
+                && product.getColor().getId().equals(productRequestDto.getColorId()))) {
+            System.out.println("color in the if block");
             Color color = colorRepository.findById(productRequestDto.getColorId())
                     .orElseThrow(() -> new NotFoundException("Color not found!"));
             product.setColor(color);
         }
 
-        if (!checkBrandId(productRequestDto.getBrandId())) {
+        if (product.getBrand() != null && !(checkBrandId(productRequestDto.getBrandId()) && product.getBrand().getId().equals(productRequestDto.getBrandId()))) {
+            System.out.println("brand in the if block");
             Brand brand = brandRepository.findById(productRequestDto.getBrandId())
                     .orElseThrow(() -> new NotFoundException("Brand not found!"));
             product.setBrand(brand);
         }
 
-        if (!checkCategoryId(productRequestDto.getBrandId())) {
+        if (product.getCategory() != null && !(checkCategoryId(productRequestDto.getCategoryId()) && product.getCategory().getId().equals(productRequestDto.getCategoryId()))) {
+            System.out.println("category in the if block");
             Category category = categoryRepository.findById(productRequestDto.getCategoryId())
                     .orElseThrow(() -> new NotFoundException("Category not found!"));
             product.setCategory(category);

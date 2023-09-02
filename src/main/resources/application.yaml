@@ -19,7 +19,7 @@ spring:
 
   jpa:
     open-in-view: false
-    show-sql: false
+    show-sql: true
     properties:
       hibernate:
         hbm2ddl:

@@ -12,5 +12,5 @@ public class ProductCommentResponseDto {
     private UUID id;
     private String content;
     private String commentAuthor;
-    private LocalDateTime localDateTime;
+    private LocalDateTime createdDate;
 }
