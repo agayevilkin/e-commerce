@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ProductService {
-    void createComputerProduct(ProductRequestDto computerProductRequestDto);
+    void createProduct(ProductRequestDto productRequestDto);
 
-    void updateProduct(ProductRequestDto computerProductRequestDto, UUID id);
+    void updateProduct(ProductRequestDto productRequestDto, UUID id);
 
     List<ProductPreviewResponseDto> getAllProduct();
 

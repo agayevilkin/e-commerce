@@ -30,15 +30,6 @@ public class ProductRequestDto {
     private String createdBy;
 
     @NotNull
-    private StockStatus stockStatus;
-
-    @NotNull
-    private LocalDateTime createdDate;
-
-    @NotNull
-    private LocalDateTime createDate;
-
-    @NotNull
     private UUID categoryId;
 
     @NotNull

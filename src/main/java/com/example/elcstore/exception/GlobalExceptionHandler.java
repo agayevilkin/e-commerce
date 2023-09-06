@@ -33,6 +33,13 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         log.trace("Resource not found {}", ex.getMessage());
         return ofType(request, HttpStatus.NOT_FOUND, ex.getMessage());
     }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public final ResponseEntity<Map<String, Object>> handle(AlreadyExistsException ex, WebRequest request) {
+        log.trace("Illegal state {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     protected ResponseEntity<Map<String, Object>> ofType(WebRequest request, HttpStatus status, String message) {
         return ofType(request, status, message, Collections.EMPTY_LIST);
     }

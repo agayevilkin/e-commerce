@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Setter
 @Getter
-public class SystemUserRequestDto {
+public class UserEmployeeRequestDto {
 
     @NotBlank(message = "firstName Description is required")
     private String firstName;

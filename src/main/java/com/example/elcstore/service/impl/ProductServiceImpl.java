@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper mapper;
 
     @Override
-    public void createComputerProduct(ProductRequestDto productRequestDto) {
+    public void createProduct(ProductRequestDto productRequestDto) {
         Color color = colorRepository.findById(productRequestDto.getColorId())
                 .orElseThrow(() -> new NotFoundException("Color not found!"));
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
@@ -43,6 +43,8 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(brand);
         product.setCategory(category);
         product.setColor(color);
+        product.setCreatedDate(LocalDateTime.now());
+//        product.setCreatedBy("userinfo");
         //todo set fields which must be auto create
         productRepository.save(product);
     }

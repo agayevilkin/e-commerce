@@ -1,13 +1,12 @@
 package com.example.elcstore.config.security;
 
-import com.example.elcstore.domain.SystemUser;
+import com.example.elcstore.domain.User;
 import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.repository.SystemUserRepository;
+import com.example.elcstore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,12 +20,12 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    private final SystemUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        SystemUser user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new NotFoundException("User Not Found."));
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
@@ -34,8 +33,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return buildUserForAuthentication(user, authorities);
     }
 
-    private User buildUserForAuthentication(SystemUser user,
-                                            Collection<GrantedAuthority> authorities) {
+    private org.springframework.security.core.userdetails.User buildUserForAuthentication(User user,
+                                                                                          Collection<GrantedAuthority> authorities) {
         String username = user.getUsername();
         String password = user.getPassword();
         boolean enabled = true;

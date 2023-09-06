@@ -31,49 +31,56 @@ public class ProductController {
     @PostMapping
     @ResponseStatus(CREATED)
     @Operation(summary = "create")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public void create(@RequestBody @Valid ProductRequestDto requestDto) {
-        productService.createComputerProduct(requestDto);
+        productService.createProduct(requestDto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public void update(@PathVariable UUID id, @RequestBody @Valid ProductRequestDto requestDto) {
         productService.updateProduct(requestDto, id);
     }
 
     @GetMapping("/all")
     @Operation(summary = "getAllProduct")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("permitAll()")
     public List<ProductPreviewResponseDto> getAllProduct() {
         return productService.getAllProduct();
     }
 
     @GetMapping("/category/all")
     @Operation(summary = "getAllProductByCategory")
+    @PreAuthorize("permitAll()")
     public List<ProductPreviewResponseDto> getAllProductByCategory(@NotBlank @RequestParam String category) {
         return productService.getAllProductByCategory(category);
     }
 
     @GetMapping("/category/brand/all")
     @Operation(summary = "getAllProductByCategoryAndBrand")
+    @PreAuthorize("permitAll()")
     public List<ProductPreviewResponseDto> getAllProductByCategoryAndBrand(@Valid ProductRequestWithCategoryAndBrandDto request) {
         return productService.getAllProductByCategoryAndBrand(request);
     }
 
     @GetMapping("/discounted/all")
     @Operation(summary = "getAllDiscountedProduct")
+    @PreAuthorize("permitAll()")
     public List<ProductPreviewResponseDto> getAllDiscountedProduct() {
         return productService.getAllDiscountedProduct();
     }
 
     @GetMapping("/new-product/all")
     @Operation(summary = "getAllNewProduct")
+    @PreAuthorize("permitAll()")
     public List<ProductPreviewResponseDto> getAllNewProduct() {
         return productService.getAllNewProduct();
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
+    @PreAuthorize("permitAll()")
     public ProductDetailedResponseDto findById(@PathVariable UUID id) {
         return productService.findById(id);
     }
@@ -81,6 +88,7 @@ public class ProductController {
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "delete")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public void delete(@PathVariable UUID id) {
         productService.deleteProduct(id);
     }
