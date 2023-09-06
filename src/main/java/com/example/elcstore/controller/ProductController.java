@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,6 +43,7 @@ public class ProductController {
 
     @GetMapping("/all")
     @Operation(summary = "getAllProduct")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public List<ProductPreviewResponseDto> getAllProduct() {
         return productService.getAllProduct();
     }
