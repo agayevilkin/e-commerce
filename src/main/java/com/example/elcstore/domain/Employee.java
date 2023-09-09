@@ -18,11 +18,11 @@ import java.util.UUID;
 @DynamicUpdate
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "employee_atributes")
-public class EmployeeAtribute {
+@Table(name = "employee")
+public class Employee {
 
     @Id
-    @Column(name = "employee_atribute_id")
+    @Column(name = "employe_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -34,10 +34,6 @@ public class EmployeeAtribute {
 
     @Column(name = "user_description")
     private String userDescription;
-
-    @Column(name = "email", nullable = false)
-    @Email
-    private String email;
 
     @Column(name = "image_id")
     private UUID imageId;
