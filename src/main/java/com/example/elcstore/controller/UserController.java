@@ -23,7 +23,6 @@ public class UserController {
     @PostMapping("/employee")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "createEmployeeUser")
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
     public void create(@Valid @RequestBody UserEmployeeRequestDto requestDto) {
         service.createEmployeeUser(requestDto);
     }
@@ -31,7 +30,6 @@ public class UserController {
     @PostMapping("/customer")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "createCustomerUser")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     public void create(@Valid @RequestBody UserCustomerRequestDto requestDto) {
         service.createCustomerUser(requestDto);
     }

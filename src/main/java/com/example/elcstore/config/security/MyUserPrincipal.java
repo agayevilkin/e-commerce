@@ -11,10 +11,10 @@ import java.util.UUID;
 @Setter
 @Getter
 public class MyUserPrincipal extends User {
-    public MyUserPrincipal(UUID userId, String username, String password, boolean enabled, boolean accountNonExpired,
+    public MyUserPrincipal(UUID userId, String email, String password, boolean enabled, boolean accountNonExpired,
                            boolean credentialsNonExpired, boolean accountNonLocked,
                            Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        super(email, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
         this.userId = userId;
 
     }

@@ -23,9 +23,9 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException("User Not Found."));
         Collection<GrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
@@ -35,14 +35,14 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
     private org.springframework.security.core.userdetails.User buildUserForAuthentication(User user,
                                                                                           Collection<GrantedAuthority> authorities) {
-        String username = user.getUsername();
+        String email = user.getEmail();
         String password = user.getPassword();
         boolean enabled = true;
         boolean accountNonExpired = true;
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
 
-        return new MyUserPrincipal(user.getId(), username, password, enabled, accountNonExpired, credentialsNonExpired,
+        return new MyUserPrincipal(user.getId(), email, password, enabled, accountNonExpired, credentialsNonExpired,
                 accountNonLocked, authorities);
     }
 

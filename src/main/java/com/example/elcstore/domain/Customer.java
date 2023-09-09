@@ -22,20 +22,10 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "password")
-    private String password;
-
-    @Column(name = "email", nullable = false)
-    @Email
-    private String email;
-
     @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Address> address;
 
     @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Order> orders;
 
-    @OneToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
 }

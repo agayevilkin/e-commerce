@@ -1,5 +1,5 @@
 package com.example.elcstore.domain.enums;
 
-public enum Status {
+public enum StateStatus {
     ACTIVE, INACTIVE, DELETED
 }

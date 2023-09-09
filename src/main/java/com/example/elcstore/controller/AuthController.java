@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,5 +25,16 @@ public class AuthController {
         headers.set("Refresh-Token", token.getRefreshToken());
 
         return ResponseEntity.ok().headers(headers).body("authenticated");
+    }
+
+    @PutMapping
+    public ResponseEntity<?> refreshToken(@RequestHeader("Refresh-Token") String refreshToken) {
+        var token = authService.refreshToken(refreshToken);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Access-Token", token.getAccessToken());
+        headers.set("Refresh-Token", token.getRefreshToken());
+
+        return ResponseEntity.ok().headers(headers).body("");
     }
 }
