@@ -10,20 +10,12 @@ import java.util.UUID;
 
 public interface ProductService {
     void createProduct(ProductRequestDto productRequestDto);
-
     void updateProduct(ProductRequestDto productRequestDto, UUID id);
-
     List<ProductPreviewResponseDto> getAllProduct();
-
     ProductDetailedResponseDto findById(UUID id);
-
     void deleteProduct(UUID id);
-
     List<ProductPreviewResponseDto> getAllNewProduct();
-
     List<ProductPreviewResponseDto> getAllDiscountedProduct();
-
     List<ProductPreviewResponseDto> getAllProductByCategory(String category);
-
     List<ProductPreviewResponseDto> getAllProductByCategoryAndBrand(ProductRequestWithCategoryAndBrandDto request);
 }

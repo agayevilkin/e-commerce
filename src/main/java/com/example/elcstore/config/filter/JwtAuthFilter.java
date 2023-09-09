@@ -60,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
                 AbstractAuthenticationToken authenticationToken =
-                        new PreAuthenticatedAuthenticationToken("userInfo", null, authorities);
+                        new PreAuthenticatedAuthenticationToken(username, null, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 

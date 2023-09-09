@@ -49,18 +49,18 @@ public class Product extends Audit {
     @Column(name = "stock_status")
     private StockStatus stockStatus;
 
-    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<ProductComment> productComment;
 
-    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<Rating> rating;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(name = "product_attribute",
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
             inverseJoinColumns = {@JoinColumn(name = "attribute_id", referencedColumnName = "attribute_id")})
     private List<Attribute> attribute;
 
-    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<ProductImageDetail> images;
 }

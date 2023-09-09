@@ -45,9 +45,6 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(category);
         product.setStockStatus(StockStatus.IN_STOCK);
         product.setColor(color);
-        product.setCreatedDate(LocalDateTime.now());
-//        product.setCreatedBy("userinfo");
-        //todo set fields which must be auto create
         productRepository.save(product);
     }
 
@@ -56,28 +53,16 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
         mapper.map(productRequestDto, product);
 
-        //todo can be change logic for all if block
-        if (product.getColor() == null && !(checkColorId(productRequestDto.getColorId())
-                && product.getColor().getId().equals(productRequestDto.getColorId()))) {
-            System.out.println("color in the if block");
-            Color color = colorRepository.findById(productRequestDto.getColorId())
-                    .orElseThrow(() -> new NotFoundException("Color not found!"));
-            product.setColor(color);
-        }
+        Color color = colorRepository.findById(productRequestDto.getColorId())
+                .orElseThrow(() -> new NotFoundException("Color not found!"));
+        Brand brand = brandRepository.findById(productRequestDto.getBrandId())
+                .orElseThrow(() -> new NotFoundException("Brand not found!"));
+        Category category = categoryRepository.findById(productRequestDto.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found!"));
 
-        if (product.getBrand() != null && !(checkBrandId(productRequestDto.getBrandId()) && product.getBrand().getId().equals(productRequestDto.getBrandId()))) {
-            System.out.println("brand in the if block");
-            Brand brand = brandRepository.findById(productRequestDto.getBrandId())
-                    .orElseThrow(() -> new NotFoundException("Brand not found!"));
-            product.setBrand(brand);
-        }
-
-        if (product.getCategory() != null && !(checkCategoryId(productRequestDto.getCategoryId()) && product.getCategory().getId().equals(productRequestDto.getCategoryId()))) {
-            System.out.println("category in the if block");
-            Category category = categoryRepository.findById(productRequestDto.getCategoryId())
-                    .orElseThrow(() -> new NotFoundException("Category not found!"));
-            product.setCategory(category);
-        }
+        product.setBrand(brand);
+        product.setCategory(category);
+        product.setColor(color);
         productRepository.save(product);
     }
 
@@ -92,13 +77,6 @@ public class ProductServiceImpl implements ProductService {
     public ProductDetailedResponseDto findById(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product"));
         return mapper.map(product, ProductDetailedResponseDto.class);
-    }
-
-    @Override
-    public void deleteProduct(UUID id) {
-        if (existsById(id)) {
-            productRepository.deleteById(id);
-        }
     }
 
     @Override
@@ -134,19 +112,14 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void deleteProduct(UUID id) {
+        if (existsById(id)) {
+            productRepository.deleteById(id);
+        }
+    }
+
     private boolean existsById(UUID id) {
         return productRepository.existsById(id);
-    }
-
-    private boolean checkCategoryId(UUID brandId) {
-        return categoryRepository.existsById(brandId);
-    }
-
-    private boolean checkBrandId(UUID brandId) {
-        return brandRepository.existsById(brandId);
-    }
-
-    private boolean checkColorId(UUID colorId) {
-        return colorRepository.existsById(colorId);
     }
 }
