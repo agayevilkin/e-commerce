@@ -4,6 +4,7 @@ import com.example.elcstore.domain.Brand;
 import com.example.elcstore.domain.Category;
 import com.example.elcstore.domain.Color;
 import com.example.elcstore.domain.Product;
+import com.example.elcstore.domain.enums.StockStatus;
 import com.example.elcstore.dto.request.ProductRequestDto;
 import com.example.elcstore.dto.request.ProductRequestWithCategoryAndBrandDto;
 import com.example.elcstore.dto.response.ProductDetailedResponseDto;
@@ -42,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(brand);
         product.setCategory(category);
+        product.setStockStatus(StockStatus.IN_STOCK);
         product.setColor(color);
         product.setCreatedDate(LocalDateTime.now());
 //        product.setCreatedBy("userinfo");

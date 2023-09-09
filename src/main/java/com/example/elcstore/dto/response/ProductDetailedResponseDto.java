@@ -18,7 +18,7 @@ public class ProductDetailedResponseDto {
     private String title;
     private StockStatus stockStatus;
     private String productPic;
-    private LocalDateTime createDate;
+    private LocalDateTime createdDate;
     private CategoryResponseDto category;
     private ColorResponseDto color;
     private DiscountResponseDto discount;
