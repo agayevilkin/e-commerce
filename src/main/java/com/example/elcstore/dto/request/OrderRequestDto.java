@@ -11,9 +11,6 @@ import java.util.UUID;
 public class OrderRequestDto {
 
     @NotNull
-    private UUID customerId;
-
-    @NotNull
     private UUID addressId;
 
     @NotNull

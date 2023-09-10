@@ -1,6 +1,7 @@
 package com.example.elcstore.config.filter;
 
 
+import com.example.elcstore.config.UserInfo;
 import com.example.elcstore.config.security.JwtService;
 import com.example.elcstore.exception.NotFoundException;
 import jakarta.servlet.FilterChain;
@@ -27,7 +28,7 @@ import java.util.List;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-//    private final UserInfo userInfo;
+    private final UserInfo userInfo;
 
     @Override
     protected void doFilterInternal(
@@ -38,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String username;
+        final String email;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -46,21 +47,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        username = jwtService.extractUsername(jwt);
+        email = jwtService.extractUsername(jwt);
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtService.isTokenValid(jwt)) {
-//
-//                userInfo.setUserId(jwtService.extractUserId(jwt));
-//                userInfo.setUsername(username);
+
+                userInfo.setUserId(jwtService.extractUserId(jwt));
+                userInfo.setEmail(email);
 
                 List<String> roles = jwtService.extractRoles(jwt);
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
                 roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
                 AbstractAuthenticationToken authenticationToken =
-                        new PreAuthenticatedAuthenticationToken(username, null, authorities);
+                        new PreAuthenticatedAuthenticationToken(email, null, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 

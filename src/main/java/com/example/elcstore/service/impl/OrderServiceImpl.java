@@ -1,13 +1,16 @@
 package com.example.elcstore.service.impl;
 
+import com.example.elcstore.config.UserInfo;
 import com.example.elcstore.domain.Address;
 import com.example.elcstore.domain.Order;
+import com.example.elcstore.domain.User;
 import com.example.elcstore.domain.enums.OrderStatus;
 import com.example.elcstore.dto.request.OrderRequestDto;
 import com.example.elcstore.dto.response.OrderResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.AddressRepository;
 import com.example.elcstore.repository.OrderRepository;
+import com.example.elcstore.repository.UserRepository;
 import com.example.elcstore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,20 +24,26 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository repository;
     private final AddressRepository addressRepository;
-    //    private final PaymentRepository paymentReposi;
+    //    private final PaymentRepository paymentRepository;
     private final ModelMapper mapper;
+    private final UserRepository userRepository;
+    private final UserInfo userInfo;
 
     @Override
     // TODO: 9/2/2023 complete this after completing Payment and security
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
         Address address = addressRepository.findById(requestDto.getAddressId())
                 .orElseThrow(() -> new NotFoundException("Address not found!"));
+        User user = userRepository.findById(userInfo.getUserId())
+                .orElseThrow(() -> new NotFoundException("User not found!"));
+        System.out.println(user.getEmail());
+        System.out.println(user.getCustomer().getId());
+
         Order order = mapper.map(requestDto, Order.class);
         order.setAddress(address);
 //        order.setPayment();
         order.setOrderStatus(OrderStatus.ORDER_RECEIVED);
-//        order.setCreatedBy("userinfo.name");
-//        order.setCustomer();  //check user
+        order.setCustomer(user.getCustomer());
         return mapper.map(repository.save(order), OrderResponseDto.class);
     }
 
