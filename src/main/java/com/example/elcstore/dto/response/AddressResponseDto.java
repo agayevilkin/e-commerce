@@ -17,5 +17,5 @@ public class AddressResponseDto {
     private String address;
     private String addressTitle;
     private District district;
-    private CustomerResponseDto customer;
+//    private CustomerResponseDto customer;
 }

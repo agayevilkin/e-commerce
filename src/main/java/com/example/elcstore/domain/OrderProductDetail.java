@@ -22,6 +22,7 @@ public class OrderProductDetail {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    //todo fix product logic  (maybe this can be. product Id and Product Option Id)
     private Product product;
 
     @Column(name = "product_piece")

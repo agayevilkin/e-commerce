@@ -9,13 +9,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "attribute_definitions")
+@Table(name = "highlight_definitions")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AttributeDefinition {
+public class HighlightDefinition {
+
     @Id
-    @Column(name = "attribute_definition_id")
+    @Column(name = "highlight_definition_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 

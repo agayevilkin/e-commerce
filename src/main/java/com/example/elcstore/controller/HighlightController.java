@@ -1,8 +1,8 @@
 package com.example.elcstore.controller;
 
-import com.example.elcstore.dto.request.AttributeRequestDto;
-import com.example.elcstore.dto.response.AttributeResponseDto;
-import com.example.elcstore.service.AttributeService;
+import com.example.elcstore.dto.request.HighlightRequestDto;
+import com.example.elcstore.dto.response.HighlightResponseDto;
+import com.example.elcstore.service.HighlightService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,35 +14,35 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping("/api/v1/attribute")
+@RequestMapping("/api/v1/highlight")
 @RequiredArgsConstructor
-public class AttributeController {
+public class HighlightController {
 
-    private final AttributeService service;
+    private final HighlightService service;
 
     @PostMapping
     @ResponseStatus(CREATED)
     @Operation(summary = "create")
-    public void create(@Valid @RequestBody AttributeRequestDto requestDto) {
-        service.createAttribute(requestDto);
+    public void create(@Valid @RequestBody HighlightRequestDto requestDto) {
+        service.createHighlight(requestDto);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public AttributeResponseDto findById(@PathVariable UUID id) {
+    public HighlightResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public void update(@PathVariable UUID id, @Valid @RequestBody AttributeRequestDto requestDto) {
-        service.updateAttribute(id, requestDto);
+    public void update(@PathVariable UUID id, @Valid @RequestBody HighlightRequestDto requestDto) {
+        service.updateHighlight(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(NO_CONTENT)
     @Operation(summary = "delete")
     public void delete(@PathVariable UUID id) {
-        service.deleteAttribute(id);
+        service.deleteHighlight(id);
     }
 }

@@ -9,21 +9,20 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "ratings")
-@Builder
+@Table(name = "technical_characteristics")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
+public class TechnicalCharacteristic {
 
     @Id
-    @Column(name = "rating_id")
+    @Column(name = "tc_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "star")
-    private int star;
+    @Column(name = "content")
+    private String content;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "technical_characteristic_title_id")
+    private TechnicalCharacteristicTitle title;
 }

@@ -5,10 +5,10 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
 @Setter
-public class AttributeResponseDto {
+@Getter
+public class HighlightDefinitionResponseDto {
     private UUID id;
-    private String value;
-    private AttributeDefinitionResponseDto attributeDefinition;
+    private String name;
+    private String type;
 }

@@ -1,10 +1,6 @@
 package com.example.elcstore.service.impl;
 
-import com.example.elcstore.domain.Brand;
-import com.example.elcstore.domain.Category;
-import com.example.elcstore.domain.Color;
-import com.example.elcstore.domain.Product;
-import com.example.elcstore.domain.enums.StockStatus;
+import com.example.elcstore.domain.*;
 import com.example.elcstore.dto.request.ProductRequestDto;
 import com.example.elcstore.dto.request.ProductRequestWithCategoryAndBrandDto;
 import com.example.elcstore.dto.response.ProductDetailedResponseDto;
@@ -33,8 +29,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void createProduct(ProductRequestDto productRequestDto) {
-        Color color = colorRepository.findById(productRequestDto.getColorId())
-                .orElseThrow(() -> new NotFoundException("Color not found!"));
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
                 .orElseThrow(() -> new NotFoundException("Brand not found!"));
         Category category = categoryRepository.findById(productRequestDto.getCategoryId())
@@ -43,18 +37,17 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(brand);
         product.setCategory(category);
-        product.setStockStatus(StockStatus.IN_STOCK);
-        product.setColor(color);
+        product.setHighlight(getHiglightList(productRequestDto.getHighlight()));
+        product.setTechnicalCharacteristics(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
         productRepository.save(product);
     }
+
 
     @Override
     public void updateProduct(ProductRequestDto productRequestDto, UUID id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
         mapper.map(productRequestDto, product);
 
-        Color color = colorRepository.findById(productRequestDto.getColorId())
-                .orElseThrow(() -> new NotFoundException("Color not found!"));
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
                 .orElseThrow(() -> new NotFoundException("Brand not found!"));
         Category category = categoryRepository.findById(productRequestDto.getCategoryId())
@@ -62,7 +55,8 @@ public class ProductServiceImpl implements ProductService {
 
         product.setBrand(brand);
         product.setCategory(category);
-        product.setColor(color);
+        product.setHighlight(getHiglightList(productRequestDto.getHighlight()));
+        product.setTechnicalCharacteristics(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
         productRepository.save(product);
     }
 
@@ -121,5 +115,13 @@ public class ProductServiceImpl implements ProductService {
 
     private boolean existsById(UUID id) {
         return productRepository.existsById(id);
+    }
+
+    private List<TechnicalCharacteristic> getTechnicalCharacteristicsList(List<UUID> technicalCharacteristics) {
+        return null;
+    }
+
+    private List<Highlight> getHiglightList(List<UUID> highlight) {
+        return null;
     }
 }

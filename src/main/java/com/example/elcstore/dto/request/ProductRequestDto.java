@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -16,10 +17,6 @@ public class ProductRequestDto {
     @NotBlank(message = "Please provide a name")
     private String name;
 
-    @Size(min = 5, message = "Your user name must have at least 5 characters")
-    @NotBlank(message = "Please provide a title")
-    private String title;
-
     @NotNull
     private double price;
 
@@ -27,8 +24,9 @@ public class ProductRequestDto {
     private UUID categoryId;
 
     @NotNull
-    private UUID colorId;
-
-    @NotNull
     private UUID brandId;
+
+    private List<UUID> highlight;
+
+    private List<UUID> technicalCharacteristics;
 }

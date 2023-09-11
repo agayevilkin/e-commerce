@@ -20,6 +20,9 @@ public class ProductComment extends Audit {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "star")
+    private int star;
+
     @Column(name = "content", length = 1000)
     private String content;
 

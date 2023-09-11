@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class AttributeDefinitionRequestDto {
+public class HighlightDefinitionRequestDto {
     @NotBlank(message = "Name is required")
     private String name;
 

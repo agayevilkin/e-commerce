@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class AttributeRequestDto {
+public class HighlightRequestDto {
 
     @NotBlank(message = "Please provide a value")
     private String value;

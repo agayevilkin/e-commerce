@@ -24,6 +24,7 @@ public class Order extends Audit {
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
+    //todo can be change to UUID
     private Customer customer;
 
     @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)

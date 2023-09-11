@@ -13,6 +13,5 @@ import java.util.UUID;
 public class CustomerResponseDto {
 
     private UUID id;
-    private List<Address> address;
-    private List<Order> orders;
+    private List<AddressResponseDto> address;
 }

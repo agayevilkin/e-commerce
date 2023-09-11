@@ -1,8 +1,8 @@
 package com.example.elcstore.controller;
 
-import com.example.elcstore.dto.request.AttributeDefinitionRequestDto;
-import com.example.elcstore.dto.response.AttributeDefinitionResponseDto;
-import com.example.elcstore.service.AttributeDefinitionService;
+import com.example.elcstore.dto.request.HighlightDefinitionRequestDto;
+import com.example.elcstore.dto.response.HighlightDefinitionResponseDto;
+import com.example.elcstore.service.HighlightDefinitionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,35 +15,35 @@ import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/api/v1/attribute-definition")
+@RequestMapping("/api/v1/highlight-definition")
 @RequiredArgsConstructor
-public class AttributeDefinitionController {
+public class HighlightDefinitionController {
 
-    private final AttributeDefinitionService service;
+    private final HighlightDefinitionService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
-    public void create(@Valid @RequestBody AttributeDefinitionRequestDto requestDto) {
-        service.createAttributeDefinition(requestDto);
+    public void create(@Valid @RequestBody HighlightDefinitionRequestDto requestDto) {
+        service.createHighlightDefinition(requestDto);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "findById")
-    public AttributeDefinitionResponseDto findById(@PathVariable UUID id) {
+    public HighlightDefinitionResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "update")
-    public void update(@PathVariable UUID id, @Valid @RequestBody AttributeDefinitionRequestDto requestDto) {
-        service.updateAttributeDefinition(id, requestDto);
+    public void update(@PathVariable UUID id, @Valid @RequestBody HighlightDefinitionRequestDto requestDto) {
+        service.updateHighlightDefinition(id, requestDto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "delete")
     public void delete(@PathVariable UUID id) {
-        service.deleteAttributeDefinition(id);
+        service.deleteHighlightDefinition(id);
     }
 }

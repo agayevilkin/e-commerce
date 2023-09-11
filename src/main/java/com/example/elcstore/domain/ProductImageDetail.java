@@ -20,11 +20,16 @@ public class ProductImageDetail {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "image_id")
-    private Image image;
+    @Column(name = "image_id")
+    private UUID imageId;
+
+    @Column(name = "image_path")
+    private String imagePath;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "product_option_id")
+    private ProductOption productOption;
+
+    @Column(name = "order")
+    private int order;
 }

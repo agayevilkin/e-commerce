@@ -9,14 +9,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "attributes")
+@Table(name = "highlight")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Attribute {
+public class Highlight {
 
     @Id
-    @Column(name = "attribute_id")
+    @Column(name = "highlight_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -24,6 +24,6 @@ public class Attribute {
     private String value;
 
     @ManyToOne
-    @JoinColumn(name = "attribute_definition_id")
-    private AttributeDefinition attributeDefinition;
+    @JoinColumn(name = "highlight_definition_id")
+    private HighlightDefinition highlightDefinition;
 }
