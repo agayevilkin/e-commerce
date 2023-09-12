@@ -37,12 +37,8 @@ public class Contact {
     @Column(name = "message")
     private String message;
 
-    @OneToMany(mappedBy = "contact", orphanRemoval = true)
-    private List<CallTimeInterval> callTimeInterval;
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "callTimeInterval_id")
+    private CallTimeInterval callTimeInterval;
 
-
-//    user in dto
-//    @Size(min = 10, max = 15, message = "Phone number must be between 10 and 15 characters")
-//    @Pattern(regexp = "^\\+?[0-9]*$", message = "Phone number must contain only digits and optional leading '+'")
-//    private String phoneNumber;
 }

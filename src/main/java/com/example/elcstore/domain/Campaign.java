@@ -24,7 +24,7 @@ public class Campaign {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "description")
+    @Column(name = "description", length = 1000)
     private String description;
 
     @Column(name = "starting_date")
@@ -36,9 +36,12 @@ public class Campaign {
     @Column(name = "image_id")
     private UUID imageId;
 
+    @Column(name = "thumbnail_image_id")
+    private UUID thumbnailImageId;
+
     @Column(name = "image_path")
     private String imagePath;
 
-    @Column(name = "preview_image_path")
-    private String previewImagePath;
+    @Column(name = "thumbnail_image_path")
+    private String thumbnailImagePath;
 }

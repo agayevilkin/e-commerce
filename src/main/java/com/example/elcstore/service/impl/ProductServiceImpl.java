@@ -24,7 +24,6 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final CategoryRepository categoryRepository;
-    private final ColorRepository colorRepository;
     private final ModelMapper mapper;
 
     @Override
@@ -38,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(brand);
         product.setCategory(category);
         product.setHighlight(getHiglightList(productRequestDto.getHighlight()));
-        product.setTechnicalCharacteristics(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
+        product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
         productRepository.save(product);
     }
 
@@ -56,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
         product.setBrand(brand);
         product.setCategory(category);
         product.setHighlight(getHiglightList(productRequestDto.getHighlight()));
-        product.setTechnicalCharacteristics(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
+        product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
         productRepository.save(product);
     }
 

@@ -16,4 +16,6 @@ public interface ImageService {
 
     String createImageUrl(UUID id);
 
+    MultipartFile resizeImage(byte[] image, int width, int height);
+
 }

@@ -30,6 +30,6 @@ public class ProductImageDetail {
     @JoinColumn(name = "product_option_id")
     private ProductOption productOption;
 
-    @Column(name = "order")
-    private int order;
+    @Column(name = "order_num")
+    private int orderNum;
 }

@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -59,8 +64,25 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String createImageUrl(UUID id) {
         return ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/v1/image/")
+                .path("/images/")
                 .path(String.valueOf(id))
                 .toUriString();
     }
+
+    //todo can be change for user ,product, campaigns
+    @SneakyThrows
+    public MultipartFile resizeImage(byte[] image, int width, int height) {
+        BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(image));
+        java.awt.Image resizedImage = originalImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+
+        BufferedImage bufferedResizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+
+        ByteArrayOutputStream currentImageByte = new ByteArrayOutputStream();
+        ImageIO.write(bufferedResizedImage, "jpg", currentImageByte);
+
+        return (MultipartFile) currentImageByte;
+    }
+
+
 }

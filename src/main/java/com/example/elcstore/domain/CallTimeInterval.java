@@ -22,8 +22,4 @@ public class CallTimeInterval {
 
     @Column(name = "interval")
     private String interval;
-
-    @ManyToOne
-    @JoinColumn(name = "contact_id")
-    private Contact contact;
 }
