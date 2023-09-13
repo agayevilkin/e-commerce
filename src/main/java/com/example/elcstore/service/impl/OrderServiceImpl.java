@@ -65,6 +65,8 @@ public class OrderServiceImpl implements OrderService {
         //do not need for now
     }
 
+    // TODO: 9/13/2023 add order status update method
+
     @Override
     public void deleteOrder(UUID id) {
         if (checkById(id)) {

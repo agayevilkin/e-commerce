@@ -41,8 +41,8 @@ public class ProductOption {
     @OneToMany(mappedBy = "productOption", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductImageDetail> images;
 
-    @Column(name = "preview_image")
-    private String previewImage;
+    @Column(name = "thumbnail_image_id")
+    private String thumbnailImageId;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

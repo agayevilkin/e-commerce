@@ -11,6 +11,7 @@ import java.util.UUID;
 public class ProductCommentResponseDto {
     private UUID id;
     private String content;
-    private String commentAuthor;
+    private int star;
+    private String authorFullName;
     private LocalDateTime createdDate;
 }

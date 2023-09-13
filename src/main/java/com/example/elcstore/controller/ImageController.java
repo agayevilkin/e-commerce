@@ -23,8 +23,8 @@ public class ImageController {
     private final ImageService service;
 
     @GetMapping("/{id}")
-    @Operation(summary = "getImageByName")
-    public ResponseEntity<?> getImageByName(@PathVariable("id") UUID id) {
+    @Operation(summary = "getImageById")
+    public ResponseEntity<?> getImageById(@PathVariable("id") UUID id) {
         byte[] image = service.getImage(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/jpg"))

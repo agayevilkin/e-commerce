@@ -39,9 +39,4 @@ public class Campaign {
     @Column(name = "thumbnail_image_id")
     private UUID thumbnailImageId;
 
-    @Column(name = "image_path")
-    private String imagePath;
-
-    @Column(name = "thumbnail_image_path")
-    private String thumbnailImagePath;
 }

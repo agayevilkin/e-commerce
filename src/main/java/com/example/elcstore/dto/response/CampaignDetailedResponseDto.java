@@ -8,12 +8,12 @@ import java.util.UUID;
 
 @Setter
 @Getter
-public class CampaignResponseDto {
+public class CampaignDetailedResponseDto {
 
     private UUID id;
     private String title;
     private String description;
     private LocalDate startingDate;
     private LocalDate endingDate;
-    private String imagePath;
+    private UUID imageId;
 }

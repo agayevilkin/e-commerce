@@ -4,13 +4,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
-@Getter
 @Setter
-public class CampaignRequestDto {
+@Getter
+public class CampaignUpdateRequestDto {
 
     @NotBlank(message = "Title cannot be blank")
     private String title;
@@ -22,7 +21,4 @@ public class CampaignRequestDto {
 
     @NotNull(message = "Ending date cannot be null")
     private LocalDate endingDate;
-
-    @NotNull
-    private MultipartFile image;
 }

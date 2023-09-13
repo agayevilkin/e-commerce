@@ -2,6 +2,7 @@ package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Image;
 import com.example.elcstore.domain.util.ImageUtil;
+import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.response.ImageResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.ImageRepository;
@@ -18,7 +19,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 import java.util.UUID;
 
 @Service
@@ -31,21 +31,23 @@ public class ImageServiceImpl implements ImageService {
     @SneakyThrows
     @Override
     public ImageResponseDto uploadImage(MultipartFile file) {
-        Image image = new Image();
-        image.setImageData(ImageUtil.compressImage(file.getBytes()));
-        Image save = imageRepository.save(image);
-        return mapper.map(save, ImageResponseDto.class);
+        return createUploadImageObject(file.getBytes());
+    }
+
+    @Override
+    public ImageResponseDto uploadImage(byte[] imageData) {
+        return createUploadImageObject(imageData);
     }
 
     @SneakyThrows
     @Override
     public ImageResponseDto updateImage(MultipartFile file, UUID id) {
-        Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Image not found!"));
-        image.setImageData(ImageUtil.compressImage(file.getBytes()));
-        Image save = imageRepository.save(image);
-        ImageResponseDto responseDto = mapper.map(save, ImageResponseDto.class);
-        responseDto.setImagePath(createImageUrl(image.getId()));
-        return responseDto;
+        return createUpdateImageObject(id, file.getBytes());
+    }
+
+    @Override
+    public ImageResponseDto updateImage(byte[] imageData, UUID id) {
+        return createUpdateImageObject(id, imageData);
     }
 
     @Transactional
@@ -69,9 +71,8 @@ public class ImageServiceImpl implements ImageService {
                 .toUriString();
     }
 
-    //todo can be change for user ,product, campaigns
     @SneakyThrows
-    public MultipartFile resizeImage(byte[] image, int width, int height) {
+    public byte[] resizeImage(byte[] image, int width, int height) {
         BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(image));
         java.awt.Image resizedImage = originalImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
 
@@ -81,8 +82,33 @@ public class ImageServiceImpl implements ImageService {
         ByteArrayOutputStream currentImageByte = new ByteArrayOutputStream();
         ImageIO.write(bufferedResizedImage, "jpg", currentImageByte);
 
-        return (MultipartFile) currentImageByte;
+        return currentImageByte.toByteArray();
     }
 
+    @SneakyThrows
+    @Override
+    public ImageInfoDto getImageWidthAndHeight(byte[] imageBytes) {
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
+        BufferedImage originalImage = ImageIO.read(inputStream);
 
+        int width = originalImage.getWidth();
+        int height = originalImage.getHeight();
+        return ImageInfoDto.builder().width(width).height(height).build();
+    }
+
+    private ImageResponseDto createUploadImageObject(byte[] file) {
+        Image image = new Image();
+        image.setImageData(ImageUtil.compressImage(file));
+        Image save = imageRepository.save(image);
+        return mapper.map(save, ImageResponseDto.class);
+    }
+
+    private ImageResponseDto createUpdateImageObject(UUID id, byte[] bytes) {
+        Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Image not found!"));
+        image.setImageData(ImageUtil.compressImage(bytes));
+        Image save = imageRepository.save(image);
+        ImageResponseDto responseDto = mapper.map(save, ImageResponseDto.class);
+        responseDto.setImagePath(createImageUrl(image.getId()));
+        return responseDto;
+    }
 }
