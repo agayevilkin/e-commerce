@@ -36,13 +36,13 @@ public class ProductOption {
     @JoinTable(name = "product_option_event",
             joinColumns = {@JoinColumn(name = "product_option_id", referencedColumnName = "product_option_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "event_id")})
-    private List<Event> campaigns;
+    private List<Event> events;
 
     @OneToMany(mappedBy = "productOption", orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductImageDetail> images;
 
-    @Column(name = "thumbnail_image_id")
-    private String thumbnailImageId;
+    @Column(name = "thumbnail_id")
+    private UUID thumbnailId;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

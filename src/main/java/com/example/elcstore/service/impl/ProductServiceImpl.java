@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.*;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
@@ -29,9 +31,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void createProduct(ProductRequestDto productRequestDto) {
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
-                .orElseThrow(() -> new NotFoundException("Brand not found!"));
+                .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         Category category = categoryRepository.findById(productRequestDto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found!"));
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
 
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(brand);
@@ -44,13 +46,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProduct(ProductRequestDto productRequestDto, UUID id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Computer Product"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         mapper.map(productRequestDto, product);
 
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
-                .orElseThrow(() -> new NotFoundException("Brand not found!"));
+                .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         Category category = categoryRepository.findById(productRequestDto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found!"));
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
 
         product.setBrand(brand);
         product.setCategory(category);
@@ -68,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailedResponseDto findById(UUID id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Product"));
+        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         return mapper.map(product, ProductDetailedResponseDto.class);
     }
 
@@ -117,10 +119,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private List<TechnicalCharacteristic> getTechnicalCharacteristicsList(List<UUID> technicalCharacteristics) {
-        return null;
+        return null;// TODO: 9/14/2023 complete this
     }
 
     private List<Highlight> getHiglightList(List<UUID> highlight) {
-        return null;
+        return null;// TODO: 9/14/2023 complete this
     }
 }

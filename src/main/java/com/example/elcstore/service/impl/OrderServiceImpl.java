@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.*;
+
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -33,9 +35,9 @@ public class OrderServiceImpl implements OrderService {
     // TODO: 9/2/2023 complete this after completing Payment and security
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
         Address address = addressRepository.findById(requestDto.getAddressId())
-                .orElseThrow(() -> new NotFoundException("Address not found!"));
+                .orElseThrow(() -> new NotFoundException(ADDRESS_NOT_FOUND.getMessage()));
         User user = userRepository.findById(userInfo.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
         System.out.println(user.getEmail());
         System.out.println(user.getCustomer().getId());
 
@@ -49,13 +51,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponseDto findById(UUID id) {
-        Order order = repository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        Order order = repository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
         return mapper.map(order, OrderResponseDto.class);
     }
 
     @Override
     public void updateOrderStatus(UUID id, OrderStatus orderStatus) {
-        Order order = repository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        Order order = repository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
         order.setOrderStatus(orderStatus);
         repository.save(order);
     }

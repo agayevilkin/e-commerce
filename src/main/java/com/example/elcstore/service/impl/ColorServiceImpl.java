@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.COLOR_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class ColorServiceImpl implements ColorService {
@@ -27,13 +29,13 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public ColorResponseDto findById(UUID id) {
-        Color color = repository.findById(id).orElseThrow(() -> new NotFoundException("Color not found!"));
+        Color color = repository.findById(id).orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND.getMessage()));
         return mapper.map(color, ColorResponseDto.class);
     }
 
     @Override
     public void updateColor(UUID id, ColorRequestDto requestDto) {
-        Color color = repository.findById(id).orElseThrow(() -> new NotFoundException("Color not found!"));
+        Color color = repository.findById(id).orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND.getMessage()));
         mapper.map(requestDto, color);
         repository.save(color);
     }

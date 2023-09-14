@@ -21,6 +21,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.IMAGE_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
@@ -31,28 +33,33 @@ public class ImageServiceImpl implements ImageService {
     @SneakyThrows
     @Override
     public ImageResponseDto uploadImage(MultipartFile file) {
-        return createUploadImageObject(file.getBytes());
+        Image image = createUploadImageObject(file.getBytes());
+        //        responseDto.setImagePath(createImageUrl(image.getId()));
+        return mapper.map(image, ImageResponseDto.class);
     }
 
     @Override
-    public ImageResponseDto uploadImage(byte[] imageData) {
+    public Image uploadImageWithByteArray(byte[] imageData) {
         return createUploadImageObject(imageData);
     }
 
     @SneakyThrows
     @Override
     public ImageResponseDto updateImage(MultipartFile file, UUID id) {
-        return createUpdateImageObject(id, file.getBytes());
+        Image image = createUpdateImageObject(id, file.getBytes());
+        ImageResponseDto responseDto = mapper.map(image, ImageResponseDto.class);
+        responseDto.setImagePath(createImageUrl(image.getId()));
+        return responseDto;
     }
 
     @Override
-    public ImageResponseDto updateImage(byte[] imageData, UUID id) {
+    public Image updateImageWithByteArray(byte[] imageData, UUID id) {
         return createUpdateImageObject(id, imageData);
     }
 
     @Transactional
     public byte[] getImage(UUID id) {
-        Image dbImage = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Not Found Image!"));
+        Image dbImage = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
         return ImageUtil.decompressImage(dbImage.getImageData());
     }
 
@@ -96,19 +103,15 @@ public class ImageServiceImpl implements ImageService {
         return ImageInfoDto.builder().width(width).height(height).build();
     }
 
-    private ImageResponseDto createUploadImageObject(byte[] file) {
+    private Image createUploadImageObject(byte[] file) {
         Image image = new Image();
         image.setImageData(ImageUtil.compressImage(file));
-        Image save = imageRepository.save(image);
-        return mapper.map(save, ImageResponseDto.class);
+        return imageRepository.save(image);
     }
 
-    private ImageResponseDto createUpdateImageObject(UUID id, byte[] bytes) {
-        Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException("Image not found!"));
+    private Image createUpdateImageObject(UUID id, byte[] bytes) {
+        Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
         image.setImageData(ImageUtil.compressImage(bytes));
-        Image save = imageRepository.save(image);
-        ImageResponseDto responseDto = mapper.map(save, ImageResponseDto.class);
-        responseDto.setImagePath(createImageUrl(image.getId()));
-        return responseDto;
+        return imageRepository.save(image);
     }
 }

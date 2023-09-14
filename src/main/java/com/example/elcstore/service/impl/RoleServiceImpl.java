@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.ROLE_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
@@ -18,11 +20,11 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role getDefaultRole() {
-        return roleRepository.findByName(USER).orElseThrow(() -> new NotFoundException("Role not found!"));
+        return roleRepository.findByName(USER).orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND.getMessage()));
     }
 
     @Override
     public Role findById(UUID id) {
-        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException("Role not found!"));
+        return roleRepository.findById(id).orElseThrow(() -> new NotFoundException(ROLE_NOT_FOUND.getMessage()));
     }
 }

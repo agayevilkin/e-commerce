@@ -10,6 +10,6 @@ import java.util.UUID;
 public class ProductImageDetailResponseDto {
     private UUID id;
     private UUID imageId;
-    private String imagePath;
+    //todo can be add ProductOption
     private int orderNum;
 }

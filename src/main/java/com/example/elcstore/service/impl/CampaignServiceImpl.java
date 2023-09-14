@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CAMPAIGN_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class CampaignServiceImpl implements CampaignService {
@@ -35,7 +37,7 @@ public class CampaignServiceImpl implements CampaignService {
         // TODO: 9/13/2023 check image uploading for exception state (Transactional)
         MultipartFile originalImage = requestDto.getImage();
         UUID originalImageId = imageService.uploadImage(originalImage).getId();
-        UUID thumbnailImageId = imageService.uploadImage(getResizedImagByte(originalImage)).getId();
+        UUID thumbnailImageId = imageService.uploadImageWithByteArray(getResizedImageByte(originalImage)).getId();
 
         campaign.setImageId(originalImageId);
         campaign.setThumbnailImageId(thumbnailImageId);
@@ -44,27 +46,28 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public CampaignDetailedResponseDto findById(UUID id) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException("Campaign not found!"));
+        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
         return mapper.map(campaign, CampaignDetailedResponseDto.class);
     }
 
     @Override
     public void updateCampaign(UUID id, CampaignUpdateRequestDto requestDto) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException("Campaign not found!"));
+        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
         mapper.map(requestDto, campaign);
         campaignRepository.save(campaign);
     }
 
     @Override
+    @Transactional
     public void updateCampaignImage(UUID id, MultipartFile file) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException("Campaign not found!"));
+        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
 
         UUID originalImageId = campaign.getImageId();
         UUID thumbnailImageId = campaign.getThumbnailImageId();
 
         // TODO: 9/13/2023 check image updating for exception state (Transactional)
         UUID updatedOriginalImageId = imageService.updateImage(file, originalImageId).getId();
-        UUID updatedThumbnailImageId = imageService.updateImage(getResizedImagByte(file), thumbnailImageId).getId();
+        UUID updatedThumbnailImageId = imageService.updateImageWithByteArray(getResizedImageByte(file), thumbnailImageId).getId();
 
         campaign.setImageId(updatedOriginalImageId);
         campaign.setThumbnailImageId(updatedThumbnailImageId);
@@ -75,14 +78,14 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public void deleteCampaign(UUID id) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException("Campaign not found!"));
+        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
         imageService.deleteImage(campaign.getImageId());
         imageService.deleteImage(campaign.getThumbnailImageId());
         campaignRepository.deleteById(id);
     }
 
     @SneakyThrows
-    private byte[] getResizedImagByte(MultipartFile image) {
+    private byte[] getResizedImageByte(MultipartFile image) {
         ImageInfoDto info = imageService.getImageWidthAndHeight(image.getBytes());
         int reducedWidth = info.getWidth() * 2 / 3;
         int reducedHeight = info.getHeight() * 2 / 3;

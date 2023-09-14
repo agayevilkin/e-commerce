@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CATEGORY_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
@@ -27,13 +29,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto findById(UUID id) {
-        Category category = repository.findById(id).orElseThrow(() -> new NotFoundException("Category not found!"));
+        Category category = repository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
         return mapper.map(category, CategoryResponseDto.class);
     }
 
     @Override
     public void updateCategory(UUID id, CategoryRequestDto requestDto) {
-        Category category = repository.findById(id).orElseThrow(() -> new NotFoundException("Category not found!"));
+        Category category = repository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
         mapper.map(requestDto, category);
         repository.save(category);
     }

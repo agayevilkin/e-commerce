@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.HIGHLIGHT_DEFINITION_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class HighlightDefinitionServiceImpl implements HighlightDefinitionService {
@@ -26,13 +28,13 @@ public class HighlightDefinitionServiceImpl implements HighlightDefinitionServic
 
     @Override
     public HighlightDefinitionResponseDto findById(UUID id) {
-        HighlightDefinition highlightDefinition = repository.findById(id).orElseThrow(() -> new NotFoundException(" Attribute Definition not found!"));
+        HighlightDefinition highlightDefinition = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
         return mapper.map(highlightDefinition, HighlightDefinitionResponseDto.class);
     }
 
     @Override
     public void updateHighlightDefinition(UUID id, HighlightDefinitionRequestDto requestDto) {
-        HighlightDefinition highlightDefinition = repository.findById(id).orElseThrow(() -> new NotFoundException(" Attribute Definition not found!"));
+        HighlightDefinition highlightDefinition = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
         mapper.map(requestDto, highlightDefinition);
         repository.save(highlightDefinition);
     }

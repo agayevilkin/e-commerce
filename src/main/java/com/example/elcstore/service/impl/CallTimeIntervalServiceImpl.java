@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CALL_TIME_INTERVAL_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class CallTimeIntervalServiceImpl implements CallTimeIntervalService {
@@ -27,14 +29,14 @@ public class CallTimeIntervalServiceImpl implements CallTimeIntervalService {
     @Override
     public CallTimeIntervalResponseDto findById(UUID id) {
         CallTimeInterval callTimeInterval = callTimeIntervalRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("CallTimeInterval not found!"));
+                .orElseThrow(() -> new NotFoundException(CALL_TIME_INTERVAL_NOT_FOUND.getMessage()));
         return mapper.map(callTimeInterval, CallTimeIntervalResponseDto.class);
     }
 
     @Override
     public void updateCallTimeInterval(UUID id, CallTimeIntervalRequestDto requestDto) {
         CallTimeInterval callTimeInterval = callTimeIntervalRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("CallTimeInterval not found!"));
+                .orElseThrow(() -> new NotFoundException(CALL_TIME_INTERVAL_NOT_FOUND.getMessage()));
         mapper.map(requestDto, callTimeInterval);
         callTimeIntervalRepository.save(callTimeInterval);
     }

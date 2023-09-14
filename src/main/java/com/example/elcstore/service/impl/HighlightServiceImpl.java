@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.HIGHLIGHT_DEFINITION_NOT_FOUND;
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.HIGHLIGHT_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class HighlightServiceImpl implements HighlightService {
@@ -25,7 +28,7 @@ public class HighlightServiceImpl implements HighlightService {
     @Override
     public void createHighlight(HighlightRequestDto requestDto) {
         HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getAttributeDefinitionId())
-                .orElseThrow(() -> new NotFoundException("Highlight Definition not found!"));
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
         Highlight highlight = mapper.map(requestDto, Highlight.class);
         highlight.setHighlightDefinition(highlightDefinition);
         repository.save(highlight);
@@ -33,16 +36,16 @@ public class HighlightServiceImpl implements HighlightService {
 
     @Override
     public HighlightResponseDto findById(UUID id) {
-        Highlight highlight = repository.findById(id).orElseThrow(() -> new NotFoundException("Highlight not found!"));
+        Highlight highlight = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
         return mapper.map(highlight, HighlightResponseDto.class);
     }
 
     @Override
     public void updateHighlight(UUID id, HighlightRequestDto requestDto) {
-        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getAttributeDefinitionId())
-                .orElseThrow(() -> new NotFoundException("Highlight Definition not found!"));
         Highlight highlight = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Highlight not found!"));
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
+        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getAttributeDefinitionId())
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
         mapper.map(requestDto, highlight);
         highlight.setHighlightDefinition(highlightDefinition);
         repository.save(highlight);

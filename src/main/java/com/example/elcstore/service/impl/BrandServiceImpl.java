@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.BRAND_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
@@ -27,13 +29,13 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public BrandResponseDto findById(UUID id) {
-        Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException("Brand not found!"));
+        Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         return mapper.map(brand, BrandResponseDto.class);
     }
 
     @Override
     public void updateBrand(UUID id, BrandRequestDto requestDto) {
-        Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException("Brand not found!"));
+        Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         mapper.map(requestDto, brand);
         repository.save(brand);
     }

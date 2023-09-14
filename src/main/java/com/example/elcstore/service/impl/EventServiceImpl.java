@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.EVENT_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -26,14 +28,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void updateEvent(UUID id, EventRequestDto requestDto) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException("Event not found!"));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage()));
         mapper.map(requestDto, event);
         eventRepository.save(event);
     }
 
     @Override
     public EventResponseDto findById(UUID id) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException("Event not found!"));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage()));
         return mapper.map(event, EventResponseDto.class);
     }
 
