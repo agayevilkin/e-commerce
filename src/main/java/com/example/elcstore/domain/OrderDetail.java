@@ -9,24 +9,25 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "order_product_details")
+@Table(name = "order_details")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderProductDetail {
+public class OrderDetail {
 
     @Id
-    @Column(name = "order_product_details_id")
+    @Column(name = "order_details_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "product_id")
-    //todo fix product logic  (maybe this can be. product Id and Product Option Id)
-    private Product product;
+    @Column(name = "product_id")
+    private UUID productId;
 
-    @Column(name = "product_piece")
-    private int productPiece;
+    @Column(name = "product_option_id")
+    private UUID productOptionId;
+
+    @Column(name = "quantity")
+    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "order_id")

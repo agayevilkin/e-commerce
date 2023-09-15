@@ -23,9 +23,6 @@ public class Customer {
     private UUID id;
 
     @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Address> address;
-
-    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Order> orders;
 
 }

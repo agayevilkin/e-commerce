@@ -8,10 +8,12 @@ import java.util.UUID;
 
 @Setter
 @Getter
-public class OrderProductDetailRequestDto {
+public class OrderDetailRequestDto {
 
     @NotNull
     private UUID productId;
     @NotNull
-    private int productPiece;
+    private UUID productOptionId;
+    @NotNull
+    private int quantity;
 }

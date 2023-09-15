@@ -5,8 +5,12 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
 @Setter
-public class CustomerResponseDto {
+@Getter
+public class OrderDetailResponseDto {
+
     private UUID id;
+    private UUID productId;
+    private UUID productOptionId;
+    private int quantity;
 }

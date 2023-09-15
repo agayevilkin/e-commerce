@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+import static com.example.elcstore.exception.messages.AuthExceptionMessages.INVALID_TOKEN;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -44,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
         final String username;
 
         if (!refreshToken.startsWith("Bearer ")) {
-            throw new RuntimeException("Invalid Token");  // TODO handle
+            throw new RuntimeException(INVALID_TOKEN.getMessage());  // TODO handle
         }
 
         jwt = refreshToken.substring(7);
@@ -57,7 +59,7 @@ public class AuthServiceImpl implements AuthService {
                 return jwtService.generateToken(userDetails);
 
             } else {
-                throw new RuntimeException("Invalid Token");
+                throw new RuntimeException(INVALID_TOKEN.getMessage());
             }
         }
         return null;

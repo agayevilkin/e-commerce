@@ -1,5 +1,6 @@
 package com.example.elcstore.domain;
 
+import com.example.elcstore.domain.enums.City;
 import com.example.elcstore.domain.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -22,25 +23,40 @@ public class Order extends Audit {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "city")
+    @Enumerated(EnumType.STRING)
+    private City city;
+
+    @Column(name = "address")
+    private String address;
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
-    //todo can be change to UUID
     private Customer customer;
 
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
-    private List<OrderProductDetail> orderProductDetail;
+    @Column(name = "total_price")
+    private double totalPrice;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<OrderDetail> orderDetail;
 
     @Column(name = "order_status")
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
-    @ManyToOne
-    @JoinColumn(name = "payment_id")
-    private Payment payment;
-
-    //other details
+//    @ManyToOne
+//    @JoinColumn(name = "payment_id")
+//    private Payment payment;
 }
