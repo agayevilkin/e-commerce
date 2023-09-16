@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -56,6 +57,32 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto findById(UUID id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
         return mapper.map(order, OrderResponseDto.class);
+    }
+
+    @Override
+    public List<OrderResponseDto> getAllOrders() {
+        return orderRepository.findAll()
+                .stream()
+                .map((order -> mapper.map(order, OrderResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    // TODO: 9/16/2023 get customer id from userInfo (add claim customerid in JWT service)
+    // TODO: 9/16/2023 change if logic
+    // TODO: 9/16/2023 change Response Dto to simple Response Dto
+    @Override
+    public List<OrderResponseDto> getAllOrdersByCustomer() {
+        if (userInfo.getUserId() != null) {
+            User user = userRepository.findById(userInfo.getUserId())
+                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+            if (user.getCustomer() != null) {
+                return orderRepository.findByCustomerId(user.getCustomer().getId())
+                        .stream()
+                        .map((order -> mapper.map(order, OrderResponseDto.class)))
+                        .collect(Collectors.toList());
+            }
+        }
+        return Collections.emptyList();
     }
 
     @Override

@@ -19,7 +19,7 @@ public class ProductCommentRequestDto {
     private String authorFullName;
 
     @NotNull
-    @Size(min = 1, max = 5)
+//    @Size(min = 1, max = 5)
     private int star;
 
     @NotNull

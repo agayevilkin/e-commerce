@@ -5,6 +5,7 @@ import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.request.CampaignRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
 import com.example.elcstore.dto.response.CampaignDetailedResponseDto;
+import com.example.elcstore.dto.response.CampaignPreviewResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.CampaignRepository;
 import com.example.elcstore.service.CampaignService;
@@ -16,7 +17,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CAMPAIGN_NOT_FOUND;
 
@@ -28,13 +31,12 @@ public class CampaignServiceImpl implements CampaignService {
     private final ImageService imageService;
     private final ModelMapper mapper;
 
-    @SneakyThrows
-//    @Transactional
+
+    @Transactional
     @Override
     public void createCampaign(CampaignRequestDto requestDto) {
         Campaign campaign = mapper.map(requestDto, Campaign.class);
 
-        // TODO: 9/13/2023 check image uploading for exception state (Transactional)
         MultipartFile originalImage = requestDto.getImage();
         UUID originalImageId = imageService.uploadImage(originalImage).getId();
         UUID thumbnailImageId = imageService.uploadImageWithByteArray(getResizedImageByte(originalImage)).getId();
@@ -65,7 +67,6 @@ public class CampaignServiceImpl implements CampaignService {
         UUID originalImageId = campaign.getImageId();
         UUID thumbnailImageId = campaign.getThumbnailImageId();
 
-        // TODO: 9/13/2023 check image updating for exception state (Transactional)
         UUID updatedOriginalImageId = imageService.updateImage(file, originalImageId).getId();
         UUID updatedThumbnailImageId = imageService.updateImageWithByteArray(getResizedImageByte(file), thumbnailImageId).getId();
 
@@ -73,6 +74,14 @@ public class CampaignServiceImpl implements CampaignService {
         campaign.setThumbnailImageId(updatedThumbnailImageId);
 
         campaignRepository.save(campaign);
+    }
+
+    @Override
+    public List<CampaignPreviewResponseDto> getAllCampaigns() {
+        return campaignRepository.findAll()
+                .stream()
+                .map((c) -> mapper.map(c, CampaignPreviewResponseDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override

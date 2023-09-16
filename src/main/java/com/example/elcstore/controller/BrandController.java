@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,6 +30,12 @@ public class BrandController {
     @Operation(summary = "findById")
     public BrandResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "getAllBrands")
+    public List<BrandResponseDto> getAllBrands() {
+        return service.getAllBrands();
     }
 
     @PutMapping("/{id}")

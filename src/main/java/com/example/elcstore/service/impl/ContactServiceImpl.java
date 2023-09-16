@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CALL_TIME_INTERVAL_NOT_FOUND;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CONTACT_NOT_FOUND;
@@ -38,6 +40,14 @@ public class ContactServiceImpl implements ContactService {
         Contact contact = contactRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CONTACT_NOT_FOUND.getMessage()));
         return mapper.map(contact, ContactResponseDto.class);
+    }
+
+    @Override
+    public List<ContactResponseDto> getAllContacts() {
+        return contactRepository.findAll()
+                .stream()
+                .map((contact -> mapper.map(contact, ContactResponseDto.class)))
+                .collect(Collectors.toList());
     }
 
     @Override

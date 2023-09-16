@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.BRAND_NOT_FOUND;
 
@@ -18,36 +20,45 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 @RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
 
-    private final BrandRepository repository;
+    private final BrandRepository brandRepository;
     private final ModelMapper mapper;
 
     @Override
     public void createBrand(BrandRequestDto requestDto) {
         Brand brand = mapper.map(requestDto, Brand.class);
-        repository.save(brand);
+        brandRepository.save(brand);
     }
 
     @Override
     public BrandResponseDto findById(UUID id) {
-        Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         return mapper.map(brand, BrandResponseDto.class);
     }
 
     @Override
+    public List<BrandResponseDto> getAllBrands() {
+        return brandRepository.findAll()
+                .stream()
+                .map((brand -> mapper.map(brand, BrandResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void updateBrand(UUID id, BrandRequestDto requestDto) {
-        Brand brand = repository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         mapper.map(requestDto, brand);
-        repository.save(brand);
+        brandRepository.save(brand);
     }
 
     @Override
     public void deleteBrand(UUID id) {
         if (checkById(id)) {
-            repository.deleteById(id);
+            brandRepository.deleteById(id);
         }
     }
 
+
     private boolean checkById(UUID id) {
-        return repository.existsById(id);
+        return brandRepository.existsById(id);
     }
 }

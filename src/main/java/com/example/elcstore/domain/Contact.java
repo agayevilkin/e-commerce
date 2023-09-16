@@ -37,7 +37,7 @@ public class Contact {
     @Column(name = "message")
     private String message;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "callTimeInterval_id")
     private CallTimeInterval callTimeInterval;
 

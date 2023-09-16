@@ -3,6 +3,7 @@ package com.example.elcstore.service;
 import com.example.elcstore.dto.request.ProductCommentRequestDto;
 import com.example.elcstore.dto.response.ProductCommentResponseDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ProductCommentService {
@@ -10,7 +11,14 @@ public interface ProductCommentService {
 
     ProductCommentResponseDto getProductComment(UUID id);
 
+    List<ProductCommentResponseDto> getAllProductCommentByProductId(UUID id);
+
+
     void updateProductComment(UUID id, ProductCommentRequestDto requestDto);
 
     void deleteProductComment(UUID id);
+
+    int getCommentCountByProductId(UUID id);
+
+    double getCommentCountAverageByProductId(UUID id);
 }

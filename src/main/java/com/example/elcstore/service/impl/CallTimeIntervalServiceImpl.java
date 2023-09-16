@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CALL_TIME_INTERVAL_NOT_FOUND;
 
@@ -34,6 +36,14 @@ public class CallTimeIntervalServiceImpl implements CallTimeIntervalService {
     }
 
     @Override
+    public List<CallTimeIntervalResponseDto> getAllCallTimeIntervals() {
+        return callTimeIntervalRepository.findAll()
+                .stream()
+                .map((callTimeInterval -> mapper.map(callTimeInterval, CallTimeIntervalResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void updateCallTimeInterval(UUID id, CallTimeIntervalRequestDto requestDto) {
         CallTimeInterval callTimeInterval = callTimeIntervalRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CALL_TIME_INTERVAL_NOT_FOUND.getMessage()));
@@ -47,6 +57,7 @@ public class CallTimeIntervalServiceImpl implements CallTimeIntervalService {
             callTimeIntervalRepository.deleteById(id);
         }
     }
+
 
     private boolean existsById(UUID id) {
         return callTimeIntervalRepository.existsById(id);

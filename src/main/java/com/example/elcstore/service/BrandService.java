@@ -3,6 +3,7 @@ package com.example.elcstore.service;
 import com.example.elcstore.dto.request.BrandRequestDto;
 import com.example.elcstore.dto.response.BrandResponseDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface BrandService {
@@ -13,4 +14,6 @@ public interface BrandService {
     void updateBrand(UUID id, BrandRequestDto requestDto);
 
     void deleteBrand(UUID id);
+
+    List<BrandResponseDto> getAllBrands();
 }

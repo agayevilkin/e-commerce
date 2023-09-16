@@ -3,6 +3,7 @@ package com.example.elcstore.service;
 import com.example.elcstore.dto.request.EventRequestDto;
 import com.example.elcstore.dto.response.EventResponseDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface EventService {
@@ -14,4 +15,5 @@ public interface EventService {
 
     void createEvent(EventRequestDto requestDto);
 
+    List<EventResponseDto> getAllEvents();
 }

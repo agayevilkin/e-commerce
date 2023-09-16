@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -32,11 +33,16 @@ public class DiscountController {
         return service.getDiscount(id);
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "getAllDiscounts")
+    public List<DiscountResponseDto> getAllDiscounts() {
+        return service.getAllDiscounts();
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "update")
     public void update(@PathVariable UUID id, @Valid @RequestBody DiscountRequestDto requestDto) {
         service.update(id, requestDto);
-
     }
 
     @DeleteMapping("/{id}")

@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CATEGORY_NOT_FOUND;
 
@@ -18,36 +20,45 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryRepository repository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper mapper;
 
     @Override
     public void createCategory(CategoryRequestDto requestDto) {
         Category category = mapper.map(requestDto, Category.class);
-        repository.save(category);
+        categoryRepository.save(category);
     }
 
     @Override
     public CategoryResponseDto findById(UUID id) {
-        Category category = repository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
         return mapper.map(category, CategoryResponseDto.class);
     }
 
     @Override
+    public List<CategoryResponseDto> getAllCategories() {
+        return categoryRepository.findAll()
+                .stream()
+                .map((category -> mapper.map(category, CategoryResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void updateCategory(UUID id, CategoryRequestDto requestDto) {
-        Category category = repository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
         mapper.map(requestDto, category);
-        repository.save(category);
+        categoryRepository.save(category);
     }
 
     @Override
     public void deleteCategory(UUID id) {
         if (checkById(id)) {
-            repository.deleteById(id);
+            categoryRepository.deleteById(id);
         }
     }
 
+
     private boolean checkById(UUID id) {
-        return repository.existsById(id);
+        return categoryRepository.existsById(id);
     }
 }

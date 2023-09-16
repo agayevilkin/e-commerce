@@ -3,6 +3,7 @@ package com.example.elcstore.service;
 import com.example.elcstore.dto.request.ContactRequestDto;
 import com.example.elcstore.dto.response.ContactResponseDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ContactService {
@@ -13,4 +14,6 @@ public interface ContactService {
     void updateContact(UUID id, ContactRequestDto requestDto);
 
     void deleteContact(UUID id);
+
+    List<ContactResponseDto> getAllContacts();
 }

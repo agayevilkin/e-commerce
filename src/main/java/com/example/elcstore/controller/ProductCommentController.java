@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -30,6 +31,24 @@ public class ProductCommentController {
     @Operation(summary = "findById")
     public ProductCommentResponseDto findById(@PathVariable UUID id) {
         return service.getProductComment(id);
+    }
+
+    @GetMapping("/all/{id}")
+    @Operation(summary = "getAllProductCommentByProductId")
+    public List<ProductCommentResponseDto> getAllProductCommentByProductId(@PathVariable UUID id) {
+        return service.getAllProductCommentByProductId(id);
+    }
+
+    @GetMapping("/count/{id}")
+    @Operation(summary = "getCommentCountByProductId")
+    public int getCommentCountByProductId(@PathVariable UUID id) {
+        return service.getCommentCountByProductId(id);
+    }
+
+    @GetMapping("/count-average/{id}")
+    @Operation(summary = "getCommentCountAverageByProductId")
+    public double getCommentCountAverageByProductId(@PathVariable UUID id) {
+        return service.getCommentCountAverageByProductId(id);
     }
 
     @PutMapping("/{id}")

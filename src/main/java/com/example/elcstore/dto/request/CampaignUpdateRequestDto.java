@@ -17,8 +17,8 @@ public class CampaignUpdateRequestDto {
     private String description;
 
     @NotNull(message = "Starting date cannot be null")
-    private LocalDate startingDate;
+    private String startingDate;
 
     @NotNull(message = "Ending date cannot be null")
-    private LocalDate endingDate;
+    private String endingDate;
 }

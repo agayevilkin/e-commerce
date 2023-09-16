@@ -27,7 +27,7 @@ public class HighlightServiceImpl implements HighlightService {
 
     @Override
     public void createHighlight(HighlightRequestDto requestDto) {
-        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getAttributeDefinitionId())
+        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getHighlightDefinitionId())
                 .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
         Highlight highlight = mapper.map(requestDto, Highlight.class);
         highlight.setHighlightDefinition(highlightDefinition);
@@ -44,7 +44,7 @@ public class HighlightServiceImpl implements HighlightService {
     public void updateHighlight(UUID id, HighlightRequestDto requestDto) {
         Highlight highlight = repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
-        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getAttributeDefinitionId())
+        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getHighlightDefinitionId())
                 .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
         mapper.map(requestDto, highlight);
         highlight.setHighlightDefinition(highlightDefinition);

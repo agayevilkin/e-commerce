@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,10 +25,17 @@ public class EventController {
     public void create(@Valid @RequestBody EventRequestDto requestDto) {
         service.createEvent(requestDto);
     }
+
     @GetMapping("/{id}")
     @Operation(summary = "findById")
     public EventResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/all")
+    @Operation(summary = "getAllEvents")
+    public List<EventResponseDto> getAllEvents() {
+        return service.getAllEvents();
     }
 
     @PutMapping("/{id}")

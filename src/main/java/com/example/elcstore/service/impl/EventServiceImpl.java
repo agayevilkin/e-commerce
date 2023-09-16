@@ -10,7 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.EVENT_NOT_FOUND;
 
@@ -26,6 +28,7 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(mapper.map(requestDto, Event.class));
     }
 
+
     @Override
     public void updateEvent(UUID id, EventRequestDto requestDto) {
         Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage()));
@@ -39,13 +42,22 @@ public class EventServiceImpl implements EventService {
         return mapper.map(event, EventResponseDto.class);
     }
 
+    @Override
+    public List<EventResponseDto> getAllEvents() {
+        return eventRepository.findAll()
+                .stream()
+                .map((event -> mapper.map(event, EventResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
 
     @Override
     public void deleteEvent(UUID id) {
-        if(existsById(id)){
+        if (existsById(id)) {
             eventRepository.deleteById(id);
         }
     }
+
     private boolean existsById(UUID id) {
         return eventRepository.existsById(id);
     }

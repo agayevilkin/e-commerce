@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.DISCOUNT_NOT_FOUND;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.PRODUCT_NOT_FOUND;
@@ -38,6 +40,14 @@ public class DiscountServiceImpl implements DiscountService {
     public DiscountResponseDto getDiscount(UUID id) {
         Discount discount = discountRepository.findById(id).orElseThrow(() -> new NotFoundException(DISCOUNT_NOT_FOUND.getMessage()));
         return mapper.map(discount, DiscountResponseDto.class);
+    }
+
+    @Override
+    public List<DiscountResponseDto> getAllDiscounts() {
+        return discountRepository.findAll()
+                .stream()
+                .map((discount -> mapper.map(discount, DiscountResponseDto.class)))
+                .collect(Collectors.toList());
     }
 
     @Override

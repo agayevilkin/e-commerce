@@ -16,6 +16,6 @@ public class HighlightRequestDto {
     private String value;
 
     @NotNull
-    private UUID attributeDefinitionId;
+    private UUID highlightDefinitionId;
 
 }

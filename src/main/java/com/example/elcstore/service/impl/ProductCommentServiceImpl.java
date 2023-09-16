@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.PRODUCT_COMMENT_NOT_FOUND;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.PRODUCT_NOT_FOUND;
@@ -22,7 +24,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class ProductCommentServiceImpl implements ProductCommentService {
 
 
-    private final ProductCommentRepository repository;
+    private final ProductCommentRepository productCommentRepository;
     private final ProductRepository productRepository;
     private final ModelMapper mapper;
 
@@ -32,36 +34,60 @@ public class ProductCommentServiceImpl implements ProductCommentService {
                 .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         ProductComment productComment = mapper.map(requestDto, ProductComment.class);
         productComment.setProduct(product);
-        repository.save(productComment);
+        productCommentRepository.save(productComment);
+    }
+
+    @Override
+    public int getCommentCountByProductId(UUID id) {
+        return productCommentRepository.countAllByProduct_Id(id);
+    }
+
+    @Override
+    public double getCommentCountAverageByProductId(UUID id) {
+        int totalCount = 0;
+        List<ProductComment> productComments = productCommentRepository.findAllByProduct_Id(id);
+        for (ProductComment comment : productComments) {
+            totalCount += comment.getStar();
+        }
+        System.out.println(totalCount);
+        return (double) totalCount / productComments.size();
     }
 
     @Override
     public ProductCommentResponseDto getProductComment(UUID id) {
-        ProductComment productComment = repository.findById(id)
+        ProductComment productComment = productCommentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_COMMENT_NOT_FOUND.getMessage()));
         return mapper.map(productComment, ProductCommentResponseDto.class);
     }
 
     @Override
+    public List<ProductCommentResponseDto> getAllProductCommentByProductId(UUID id) {
+        return productCommentRepository.findAllByProduct_Id(id)
+                .stream()
+                .map((productComment -> mapper.map(productComment, ProductCommentResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void updateProductComment(UUID id, ProductCommentRequestDto requestDto) {
-        ProductComment productComment = repository.findById(id)
+        ProductComment productComment = productCommentRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_COMMENT_NOT_FOUND.getMessage()));
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         mapper.map(requestDto, productComment);
         productComment.setProduct(product);
-        repository.save(productComment);
+        productCommentRepository.save(productComment);
     }
 
     @Override
     public void deleteProductComment(UUID id) {
         if (existsById(id)) {
-            repository.deleteById(id);
+            productCommentRepository.deleteById(id);
         }
     }
 
     private boolean existsById(UUID id) {
-        return repository.existsById(id);
+        return productCommentRepository.existsById(id);
     }
 
 }

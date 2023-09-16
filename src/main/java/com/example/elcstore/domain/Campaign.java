@@ -28,10 +28,10 @@ public class Campaign {
     private String description;
 
     @Column(name = "starting_date")
-    private LocalDate startingDate;
+    private String startingDate;
 
     @Column(name = "ending_date")
-    private LocalDate endingDate;
+    private String endingDate;
 
     @Column(name = "image_id")
     private UUID imageId;
