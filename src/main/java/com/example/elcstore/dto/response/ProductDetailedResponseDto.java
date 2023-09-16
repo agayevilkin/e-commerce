@@ -23,9 +23,8 @@ public class ProductDetailedResponseDto {
     private ColorResponseDto color;
     private DiscountResponseDto discount;
     private BrandResponseDto brand;
-    private List<RatingResponseDto> rating;
     private List<ProductCommentResponseDto> productComment;
-    private List<AttributeResponseDto> attribute;
+    private List<HighlightResponseDto> attribute;
     private List<ImageResponseDto> images;
 
 }

@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,6 +36,18 @@ public class OrderController {
         return service.findById(id);
     }
 
+    @GetMapping("/all")
+    @Operation(summary = "getAllOrders")
+    public List<OrderResponseDto> getAllOrders() {
+        return service.getAllOrders();
+    }
+
+    @GetMapping("/customer/all")
+    @Operation(summary = "getAllOrdersByCustomer")
+    public List<OrderResponseDto> getAllOrdersByCustomer() {
+        return service.getAllOrdersByCustomer();
+    }
+
     @PutMapping("/{id}")
     @Operation(summary = "update")
     public void update(@PathVariable UUID id, @Valid @RequestBody OrderRequestDto requestDto) {
@@ -46,6 +59,7 @@ public class OrderController {
     public void updateOrderStatus(@PathVariable UUID id, @NotNull @RequestParam OrderStatus orderStatus) {
         service.updateOrderStatus(id, orderStatus);
     }
+
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

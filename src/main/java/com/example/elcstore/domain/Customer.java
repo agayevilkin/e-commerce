@@ -21,11 +21,8 @@ public class Customer {
     @Column(name = "customer_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Address> address;
-
-    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Order> orders;
+//
+//    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
+//    private List<Order> orders;
 
 }

@@ -24,7 +24,7 @@ spring:
       hibernate:
         hbm2ddl:
           auto: update
-#        default_schema: elcproduct
+      #        default_schema: elcproduct
       schema: elcproduct
 
   liquibase:
@@ -33,4 +33,3 @@ spring:
 
 server:
   port: 9095
-

@@ -16,15 +16,15 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping("/api/v1/image")
+@RequestMapping("/images")
 @RequiredArgsConstructor
 public class ImageController {
 
     private final ImageService service;
 
     @GetMapping("/{id}")
-    @Operation(summary = "getImageByName")
-    public ResponseEntity<?> getImageByName(@PathVariable("id") UUID id) {
+    @Operation(summary = "getImageById")
+    public ResponseEntity<?> getImageById(@PathVariable("id") UUID id) {
         byte[] image = service.getImage(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .contentType(MediaType.valueOf("image/jpg"))

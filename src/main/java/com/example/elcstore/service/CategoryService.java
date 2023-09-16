@@ -3,6 +3,7 @@ package com.example.elcstore.service;
 import com.example.elcstore.dto.request.CategoryRequestDto;
 import com.example.elcstore.dto.response.CategoryResponseDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface CategoryService {
@@ -13,5 +14,7 @@ public interface CategoryService {
     void updateCategory(UUID id, CategoryRequestDto requestDto);
 
     void deleteCategory(UUID id);
+
+    List<CategoryResponseDto> getAllCategories();
 
 }

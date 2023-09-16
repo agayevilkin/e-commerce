@@ -1,63 +1,95 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.config.UserInfo;
-import com.example.elcstore.domain.Address;
 import com.example.elcstore.domain.Order;
+import com.example.elcstore.domain.OrderDetail;
+import com.example.elcstore.domain.ProductOption;
 import com.example.elcstore.domain.User;
 import com.example.elcstore.domain.enums.OrderStatus;
+import com.example.elcstore.dto.request.OrderDetailRequestDto;
 import com.example.elcstore.dto.request.OrderRequestDto;
 import com.example.elcstore.dto.response.OrderResponseDto;
 import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.repository.AddressRepository;
 import com.example.elcstore.repository.OrderRepository;
+import com.example.elcstore.repository.ProductOptionRepository;
+import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.repository.UserRepository;
 import com.example.elcstore.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.*;
 
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepository repository;
-    private final AddressRepository addressRepository;
+    private final OrderRepository orderRepository;
     //    private final PaymentRepository paymentRepository;
+    private final ProductRepository productRepository;
+    private final ProductOptionRepository productOptionRepository;
     private final ModelMapper mapper;
     private final UserRepository userRepository;
     private final UserInfo userInfo;
 
     @Override
-    // TODO: 9/2/2023 complete this after completing Payment and security
+    // TODO: 9/15/2023 Payment pending..
+    // TODO: 9/15/2023 write fake Payment service or not use Payment for now
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        Address address = addressRepository.findById(requestDto.getAddressId())
-                .orElseThrow(() -> new NotFoundException("Address not found!"));
         User user = userRepository.findById(userInfo.getUserId())
-                .orElseThrow(() -> new NotFoundException("User not found!"));
-        System.out.println(user.getEmail());
-        System.out.println(user.getCustomer().getId());
-
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
         Order order = mapper.map(requestDto, Order.class);
-        order.setAddress(address);
-//        order.setPayment();
+        order.setOrderDetail(getOrderProductDetailList(requestDto.getOrderDetailRequestDto(), order));
         order.setOrderStatus(OrderStatus.ORDER_RECEIVED);
         order.setCustomer(user.getCustomer());
-        return mapper.map(repository.save(order), OrderResponseDto.class);
+//        order.setPayment();
+        return mapper.map(orderRepository.save(order), OrderResponseDto.class);
     }
+
 
     @Override
     public OrderResponseDto findById(UUID id) {
-        Order order = repository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
         return mapper.map(order, OrderResponseDto.class);
     }
 
     @Override
+    public List<OrderResponseDto> getAllOrders() {
+        return orderRepository.findAll()
+                .stream()
+                .map((order -> mapper.map(order, OrderResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    // TODO: 9/16/2023 get customer id from userInfo (add claim customerid in JWT service)
+    // TODO: 9/16/2023 change if logic
+    // TODO: 9/16/2023 change Response Dto to simple Response Dto
+    @Override
+    public List<OrderResponseDto> getAllOrdersByCustomer() {
+        if (userInfo.getUserId() != null) {
+            User user = userRepository.findById(userInfo.getUserId())
+                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+            if (user.getCustomer() != null) {
+                return orderRepository.findByCustomerId(user.getCustomer().getId())
+                        .stream()
+                        .map((order -> mapper.map(order, OrderResponseDto.class)))
+                        .collect(Collectors.toList());
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
     public void updateOrderStatus(UUID id, OrderStatus orderStatus) {
-        Order order = repository.findById(id).orElseThrow(() -> new NotFoundException("Order not found!"));
+        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
         order.setOrderStatus(orderStatus);
-        repository.save(order);
+        orderRepository.save(order);
     }
 
     @Override
@@ -68,11 +100,26 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(UUID id) {
         if (checkById(id)) {
-            repository.deleteById(id);
+            orderRepository.deleteById(id);
         }
     }
 
+    // TODO: 9/15/2023 can be change structure for long process
+    private List<OrderDetail> getOrderProductDetailList(List<OrderDetailRequestDto> orderDetailRequestDto, Order order) {
+        return orderDetailRequestDto.stream().map((request) -> {
+            if (!productRepository.existsById(request.getProductId())) {
+                throw new NotFoundException(PRODUCT_NOT_FOUND.getMessage());
+            }
+            if (!productOptionRepository.existsById(request.getProductOptionId())) {
+                throw new NotFoundException(PRODUCT_OPTION_NOT_FOUND.getMessage());
+            }
+            OrderDetail orderDetail = mapper.map(request, OrderDetail.class);
+            orderDetail.setOrder(order);
+            return orderDetail;
+        }).collect(Collectors.toList());
+    }
+
     private boolean checkById(UUID id) {
-        return repository.existsById(id);
+        return orderRepository.existsById(id);
     }
 }

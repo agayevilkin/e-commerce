@@ -25,6 +25,9 @@ public class ProductImageDetail {
     private Image image;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "product_option_id")
+    private ProductOption productOption;
+
+    @Column(name = "order_num")
+    private int orderNum;
 }

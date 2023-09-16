@@ -1,6 +1,5 @@
 package com.example.elcstore.domain;
 
-import com.example.elcstore.domain.enums.StockStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,21 +21,10 @@ public class Product extends Audit {
     private UUID id;
 
     @Column(name = "product_name")
-    private String name;
-
-    @Column(name = "title")
-    private String title;
+    private String name; // iPhone 14 Pro Max
 
     @Column(name = "price")
     private double price;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    @ManyToOne
-    @JoinColumn(name = "color_id")
-    private Color color;
 
     @OneToOne(mappedBy = "product", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private Discount discount;
@@ -45,22 +33,25 @@ public class Product extends Audit {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "stock_status")
-    private StockStatus stockStatus;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @JoinTable(name = "product_highlight",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "highlight_id", referencedColumnName = "highlight_id")})
+    private List<Highlight> highlight;
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @JoinTable(name = "product_technical_characteristic",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "tc_id", referencedColumnName = "tc_id")})
+    private List<TechnicalCharacteristic> technicalCharacteristic;
 
     @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<ProductComment> productComment;
 
     @OneToMany(mappedBy = "product", orphanRemoval = true)
-    private List<Rating> rating;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "product_attribute",
-            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
-            inverseJoinColumns = {@JoinColumn(name = "attribute_id", referencedColumnName = "attribute_id")})
-    private List<Attribute> attribute;
-
-    @OneToMany(mappedBy = "product", orphanRemoval = true)
-    private List<ProductImageDetail> images;
+    private List<ProductOption> productOptions;
 }

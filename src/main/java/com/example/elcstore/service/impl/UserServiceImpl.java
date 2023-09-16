@@ -11,7 +11,6 @@ import com.example.elcstore.dto.request.UserEmployeeRequestDto;
 import com.example.elcstore.dto.response.UserResponseDto;
 import com.example.elcstore.exception.AlreadyExistsException;
 import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.repository.RoleRepository;
 import com.example.elcstore.repository.UserRepository;
 import com.example.elcstore.service.ImageService;
 import com.example.elcstore.service.RoleService;
@@ -27,6 +26,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.example.elcstore.exception.messages.AlreadyExistsExceptionMessages.EMAIL_ALREADY_EXISTS;
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.USER_NOT_FOUND;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void createEmployeeUser(UserEmployeeRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail()))
-            throw new AlreadyExistsException("This email address is already in use. Please try another.");
+            throw new AlreadyExistsException(EMAIL_ALREADY_EXISTS.getMessage());
         User user = mapper.map(requestDto, User.class);
         Employee employee = mapper.map(requestDto, Employee.class);
         user.setRoles(getDefaultRole());
@@ -57,7 +59,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createCustomerUser(UserCustomerRequestDto requestDto) {
         if (userRepository.existsByEmail(requestDto.getEmail()))
-            throw new AlreadyExistsException("This email address is already in use. Please try another.");
+            throw new AlreadyExistsException(EMAIL_ALREADY_EXISTS.getMessage());
         User user = mapper.map(requestDto, User.class);
         Customer customer = mapper.map(requestDto, Customer.class);
         user.setPassword(encoder.encode(requestDto.getPassword()));
@@ -71,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findById(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
         UserResponseDto userResponseDto = mapper.map(user, UserResponseDto.class);
         if (user.getEmployee() != null && user.getEmployee().getImageId() != null) {
             userResponseDto.setAvatar(imageService.createImageUrl(user.getEmployee().getImageId()));
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateUser(UUID id, UserEmployeeRequestDto requestDto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
         Employee employee = user.getEmployee();
         if (requestDto.getImage() != null)
             employee.setImageId(imageService.uploadImage(requestDto.getImage()).getId());
@@ -97,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found!"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
         userRepository.delete(user);
         if (user.getEmployee() != null && user.getEmployee().getImageId() != null) {
             imageService.deleteImage(user.getEmployee().getImageId());
