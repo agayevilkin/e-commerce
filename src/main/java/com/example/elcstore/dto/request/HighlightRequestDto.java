@@ -15,6 +15,9 @@ public class HighlightRequestDto {
     @NotBlank(message = "Please provide a value")
     private String value;
 
+    @NotBlank(message = "Please provide a productIdentificationName")
+    private String productIdentificationName;
+
     @NotNull
     private UUID highlightDefinitionId;
 

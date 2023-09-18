@@ -10,5 +10,4 @@ import java.util.UUID;
 public class HighlightDefinitionResponseDto {
     private UUID id;
     private String name;
-    private String type;
 }

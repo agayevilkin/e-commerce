@@ -24,7 +24,7 @@ public class ProductImageDetail {
     @JoinColumn(name = "image_id")
     private Image image;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
     private ProductOption productOption;
 

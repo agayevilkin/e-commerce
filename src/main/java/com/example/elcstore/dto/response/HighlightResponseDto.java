@@ -10,5 +10,5 @@ import java.util.UUID;
 public class HighlightResponseDto {
     private UUID id;
     private String value;
-    private HighlightDefinitionResponseDto attributeDefinition;
+    private HighlightDefinitionResponseDto highlightDefinition;
 }

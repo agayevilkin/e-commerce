@@ -1,10 +1,8 @@
 package com.example.elcstore.dto.response;
 
-import com.example.elcstore.domain.enums.StockStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,18 +11,13 @@ import java.util.UUID;
 public class ProductDetailedResponseDto {
 
     private UUID id;
-    private double price;
     private String name;
-    private String title;
-    private StockStatus stockStatus;
-    private String productPic;
-    private LocalDateTime createdDate;
-    private CategoryResponseDto category;
-    private ColorResponseDto color;
+    private double price;
     private DiscountResponseDto discount;
-    private BrandResponseDto brand;
-    private List<ProductCommentResponseDto> productComment;
-    private List<HighlightResponseDto> attribute;
-    private List<ImageResponseDto> images;
+    private HighlightResponseDto highlight;
+    private List<EventResponseDto> events;
+    private List<ProductOptionDetailedResponseDto> productOptions;
+    // TODO: 9/18/2023 can be add List<TechnicalCharacteristic>
+    // TODO: 9/18/2023 can be add product comment List
 
 }

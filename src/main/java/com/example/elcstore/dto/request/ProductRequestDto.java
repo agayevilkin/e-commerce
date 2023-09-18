@@ -13,7 +13,6 @@ import java.util.UUID;
 @Getter
 public class ProductRequestDto {
 
-    @Size(min = 5, message = "Your user name must have at least 5 characters")
     @NotBlank(message = "Please provide a name")
     private String name;
 
@@ -26,7 +25,9 @@ public class ProductRequestDto {
     @NotNull
     private UUID brandId;
 
-    private List<UUID> highlight;
+    private List<UUID> events;
 
     private List<UUID> technicalCharacteristics;
+
+    // TODO: 9/18/2023 can be add HighLightRequestDto dto for highlight create
 }

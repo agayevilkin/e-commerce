@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -20,6 +21,10 @@ public class HighlightController {
 
     private final HighlightService service;
 
+    // TODO: 9/17/2023 check all method name
+    // TODO: 9/17/2023 check Request and Response Dto fields
+    // TODO: 9/17/2023 check fetch types
+
     @PostMapping
     @ResponseStatus(CREATED)
     @Operation(summary = "create")
@@ -31,6 +36,12 @@ public class HighlightController {
     @Operation(summary = "findById")
     public HighlightResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/all/{product_identification_name}")
+    @Operation(summary = "getAllByProductIdentificationName")
+    public List<HighlightResponseDto> getAllByProductIdentificationName(@PathVariable String product_identification_name) {
+        return service.getAllByProductIdentificationName(product_identification_name);
     }
 
     @PutMapping("/{id}")

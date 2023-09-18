@@ -30,7 +30,6 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class ProductOptionServiceImpl implements ProductOptionService {
 
     private final ProductOptionRepository productOptionRepository;
-    private final EventRepository eventRepository;
     private final ProductRepository productRepository;
     private final ColorRepository colorRepository;
     private final ImageService imageService;
@@ -45,7 +44,6 @@ public class ProductOptionServiceImpl implements ProductOptionService {
 
         ProductOption productOption = mapper.map(requestDto, ProductOption.class);
         productOption.setThumbnailId(imageService.uploadImageWithByteArray(getResizedImageByte(requestDto.getImage())).getId());
-        productOption.setEvents(getEventList(requestDto.getEvents()));
         productOption.setProduct(product);
         productOption.setColor(color);
 
@@ -70,7 +68,6 @@ public class ProductOptionServiceImpl implements ProductOptionService {
                 .orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND.getMessage()));
 
         mapper.map(requestDto, product);
-        productOption.setEvents(getEventList(requestDto.getEvents()));
         productOption.setProduct(product);
         productOption.setColor(color);
 
@@ -92,14 +89,6 @@ public class ProductOptionServiceImpl implements ProductOptionService {
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND.getMessage()));
         imageService.deleteImage(productOption.getThumbnailId());
         productOptionRepository.delete(productOption);
-    }
-
-
-    private List<Event> getEventList(List<UUID> events) {
-        return events
-                .stream()
-                .map((e) -> eventRepository.findById(e).orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage())))
-                .collect(Collectors.toList());
     }
 
     @SneakyThrows

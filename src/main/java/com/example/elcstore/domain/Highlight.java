@@ -42,9 +42,13 @@ public class Highlight {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(name = "product_identification_name")
+    private String productIdentificationName;
+
     @Column(name = "value")
     private String value;
 
+    //default EAGER
     @ManyToOne
     @JoinColumn(name = "highlight_definition_id")
     private HighlightDefinition highlightDefinition;

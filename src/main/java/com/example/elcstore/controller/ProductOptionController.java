@@ -21,6 +21,10 @@ public class ProductOptionController {
 
     private final ProductOptionService service;
 
+    // TODO: 9/18/2023 check DTO(s)
+    // TODO: 9/18/2023 test apis tOption
+    // TODO: 9/18/2023 check again fetch
+    // TODO: 9/18/2023 write paging if you need
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
