@@ -25,6 +25,8 @@ public class ProductRequestDto {
     @NotNull
     private UUID brandId;
 
+    private UUID highlightId;
+
     private List<UUID> events;
 
     private List<UUID> technicalCharacteristics;

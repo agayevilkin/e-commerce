@@ -25,6 +25,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final HighlightRepository highlightRepository;
     private final TechnicalCharacteristicRepository technicalCharacteristicRepository;
     private final BrandRepository brandRepository;
     private final EventRepository eventRepository;
@@ -37,12 +38,16 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
         Category category = categoryRepository.findById(productRequestDto.getCategoryId())
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+        Highlight highlight = highlightRepository.findById(productRequestDto.getHighlightId())
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
 
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(brand);
         product.setCategory(category);
+        product.setHighlight(highlight);
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
+
         productRepository.save(product);
     }
 
