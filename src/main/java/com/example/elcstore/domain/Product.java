@@ -21,7 +21,7 @@ public class Product extends Audit {
     private UUID id;
 
     @Column(name = "product_name")
-    private String name; // iPhone 14 Pro Max
+    private String name;
 
     @Column(name = "price")
     private double price;
@@ -29,19 +29,24 @@ public class Product extends Audit {
     @OneToOne(mappedBy = "product", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private Discount discount;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "product_highlight",
+    // TODO: 9/18/2023 EAGER for now but will change to LAZY and use @Transactional or other methods
+    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "highlight_id")
+    private Highlight highlight;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinTable(name = "product_event",
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
-            inverseJoinColumns = {@JoinColumn(name = "highlight_id", referencedColumnName = "highlight_id")})
-    private List<Highlight> highlight;
+            inverseJoinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "event_id")})
+    private List<Event> events;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinTable(name = "product_technical_characteristic",
@@ -52,6 +57,6 @@ public class Product extends Audit {
     @OneToMany(mappedBy = "product", orphanRemoval = true)
     private List<ProductComment> productComment;
 
-    @OneToMany(mappedBy = "product", orphanRemoval = true)
+    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProductOption> productOptions;
 }

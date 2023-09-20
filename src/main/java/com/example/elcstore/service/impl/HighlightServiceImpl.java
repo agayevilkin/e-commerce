@@ -12,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.HIGHLIGHT_DEFINITION_NOT_FOUND;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.HIGHLIGHT_NOT_FOUND;
@@ -38,6 +40,14 @@ public class HighlightServiceImpl implements HighlightService {
     public HighlightResponseDto findById(UUID id) {
         Highlight highlight = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
         return mapper.map(highlight, HighlightResponseDto.class);
+    }
+
+    @Override
+    public List<HighlightResponseDto> getAllByProductIdentificationName(String productIdentificationName) {
+        return repository.findAllByProductIdentificationName(productIdentificationName)
+                .stream()
+                .map((idN) -> mapper.map(idN, HighlightResponseDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override

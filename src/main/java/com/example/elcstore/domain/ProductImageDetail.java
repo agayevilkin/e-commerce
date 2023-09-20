@@ -20,11 +20,14 @@ public class ProductImageDetail {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
-    @JoinColumn(name = "image_id")
+    @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @JoinColumn(name = "relational_image_id")
     private Image image;
 
-    @ManyToOne
+    @Column(name = "image_id")
+    private UUID imageId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_option_id")
     private ProductOption productOption;
 

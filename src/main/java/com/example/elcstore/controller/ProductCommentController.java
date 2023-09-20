@@ -2,6 +2,7 @@ package com.example.elcstore.controller;
 
 import com.example.elcstore.dto.request.ProductCommentRequestDto;
 import com.example.elcstore.dto.response.ProductCommentResponseDto;
+import com.example.elcstore.dto.response.ProductCommentUnconfirmedResponseDto;
 import com.example.elcstore.service.ProductCommentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -20,6 +21,9 @@ public class ProductCommentController {
 
     private final ProductCommentService service;
 
+    // TODO: 9/17/2023 check all method name
+    // TODO: 9/17/2023 check Request and Response Dto fields
+    // TODO: 9/17/2023 check fetch types
     @PostMapping
     @Operation(summary = "create")
     @ResponseStatus(CREATED)
@@ -37,6 +41,12 @@ public class ProductCommentController {
     @Operation(summary = "getAllProductCommentByProductId")
     public List<ProductCommentResponseDto> getAllProductCommentByProductId(@PathVariable UUID id) {
         return service.getAllProductCommentByProductId(id);
+    }
+
+    @GetMapping("/unconfirmed/all")
+    @Operation(summary = "getAllUnconfirmedProductComment")
+    public List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComment() {
+        return service.getAllUnconfirmedProductComment();
     }
 
     @GetMapping("/count/{id}")

@@ -1,7 +1,10 @@
 package com.example.elcstore.domain;
 
+import com.example.elcstore.domain.enums.CommentStatus;
+import com.example.elcstore.domain.enums.StockStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
 
 import java.util.UUID;
 
@@ -29,7 +32,11 @@ public class ProductComment extends Audit {
     @Column(name = "content", length = 1000)
     private String content;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
+    @Column(name = "comment_status")
+    private CommentStatus commentStatus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 }

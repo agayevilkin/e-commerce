@@ -26,8 +26,8 @@ public class ProductOptionCreateRequestDto {
     @NotNull
     private UUID productId;
 
-    private List<UUID> events;
-
     @NotNull
-    private MultipartFile image;
+    private MultipartFile thumbnail;
+
+    private List<ProductOptionImageDetailRequestDto> imageDetailRequestDtoList;
 }

@@ -9,5 +9,4 @@ import java.util.UUID;
 @Setter
 public class ImageResponseDto {
     private UUID id;
-    private String imagePath;
 }

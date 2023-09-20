@@ -23,6 +23,4 @@ public class HighlightDefinition {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "type")
-    private String type;
 }

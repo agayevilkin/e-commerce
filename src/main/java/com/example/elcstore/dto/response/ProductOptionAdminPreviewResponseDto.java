@@ -5,10 +5,11 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
 @Setter
-public class HighlightResponseDto {
+@Getter
+public class ProductOptionAdminPreviewResponseDto {
+
     private UUID id;
-    private String value;
-    private HighlightDefinitionResponseDto highlightDefinition;
+    private String title;
+    private UUID thumbnailId;
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -19,6 +20,7 @@ public class ProductImageDetailController {
     private final ProductImageDetailService service;
 
     @PostMapping
+//    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
     public void create(@Valid @RequestBody ProductImageDetailRequestDto requestDto) {
@@ -29,6 +31,12 @@ public class ProductImageDetailController {
     @Operation(summary = "findById")
     public ProductImageDetailResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/{id}/all")
+    @Operation(summary = "findAllByProductOption")
+    public List<ProductImageDetailResponseDto> findAllByProductOption(@PathVariable UUID id) {
+        return service.findAllByProductOption(id);
     }
 
     @PutMapping("/{id}")

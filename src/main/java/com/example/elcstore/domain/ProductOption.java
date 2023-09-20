@@ -32,19 +32,13 @@ public class ProductOption {
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
-    @JoinTable(name = "product_option_event",
-            joinColumns = {@JoinColumn(name = "product_option_id", referencedColumnName = "product_option_id")},
-            inverseJoinColumns = {@JoinColumn(name = "event_id", referencedColumnName = "event_id")})
-    private List<Event> events;
-
-    @OneToMany(mappedBy = "productOption", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ProductImageDetail> images;
+    @OneToMany(mappedBy = "productOption", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<ProductImageDetail> imageDetails;
 
     @Column(name = "thumbnail_id")
     private UUID thumbnailId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 }

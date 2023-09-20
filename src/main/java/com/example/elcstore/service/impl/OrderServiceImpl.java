@@ -105,6 +105,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     // TODO: 9/15/2023 can be change structure for long process
+    // TODO: 9/19/2023 add if statement for null OrderDetailRequestDto
     private List<OrderDetail> getOrderProductDetailList(List<OrderDetailRequestDto> orderDetailRequestDto, Order order) {
         return orderDetailRequestDto.stream().map((request) -> {
             if (!productRepository.existsById(request.getProductId())) {

@@ -2,8 +2,10 @@ package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Product;
 import com.example.elcstore.domain.ProductComment;
+import com.example.elcstore.domain.enums.CommentStatus;
 import com.example.elcstore.dto.request.ProductCommentRequestDto;
 import com.example.elcstore.dto.response.ProductCommentResponseDto;
+import com.example.elcstore.dto.response.ProductCommentUnconfirmedResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.ProductCommentRepository;
 import com.example.elcstore.repository.ProductRepository;
@@ -34,22 +36,24 @@ public class ProductCommentServiceImpl implements ProductCommentService {
                 .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         ProductComment productComment = mapper.map(requestDto, ProductComment.class);
         productComment.setProduct(product);
+        productComment.setCommentStatus(CommentStatus.PENDING);
         productCommentRepository.save(productComment);
     }
 
     @Override
     public int getCommentCountByProductId(UUID id) {
-        return productCommentRepository.countAllByProduct_Id(id);
+        return productCommentRepository.countByProduct_IdAndCommentStatus(id, CommentStatus.VERIFIED);
     }
 
     @Override
     public double getCommentCountAverageByProductId(UUID id) {
         int totalCount = 0;
-        List<ProductComment> productComments = productCommentRepository.findAllByProduct_Id(id);
+        List<ProductComment> productComments = productCommentRepository
+                .findAllByProduct_IdAndCommentStatus(id, CommentStatus.VERIFIED);
+        if (productComments.isEmpty()) return 0;
         for (ProductComment comment : productComments) {
             totalCount += comment.getStar();
         }
-        System.out.println(totalCount);
         return (double) totalCount / productComments.size();
     }
 
@@ -62,9 +66,21 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public List<ProductCommentResponseDto> getAllProductCommentByProductId(UUID id) {
-        return productCommentRepository.findAllByProduct_Id(id)
+        return productCommentRepository.findAllByProduct_IdAndCommentStatus(id, CommentStatus.VERIFIED)
                 .stream()
                 .map((productComment -> mapper.map(productComment, ProductCommentResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComment() {
+        return productCommentRepository.findAllByCommentStatus(CommentStatus.PENDING)
+                .stream()
+                .map((productComment -> {
+                    ProductCommentUnconfirmedResponseDto response = mapper.map(productComment, ProductCommentUnconfirmedResponseDto.class);
+                    response.setProductId(productComment.getProduct().getId());
+                    return response;
+                }))
                 .collect(Collectors.toList());
     }
 

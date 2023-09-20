@@ -3,14 +3,16 @@ package com.example.elcstore.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Setter
 @Getter
 public class ProductPreviewResponseDto {
     private UUID id;
-    private String name;
-    private String productPic;
+    private List<EventResponseDto> events;
+    private List<ProductOptionPreviewResponseDto> productOptions;
     private double price;
     private DiscountResponseDto discount;
+    // TODO: 9/18/2023 can be add product comment star and count
 }

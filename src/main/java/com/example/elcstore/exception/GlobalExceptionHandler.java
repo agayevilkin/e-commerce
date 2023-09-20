@@ -34,6 +34,13 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
+    //todo handle
+    @ExceptionHandler(ImageUploadException.class)
+    public final ResponseEntity<Map<String, Object>> handle(ImageUploadException ex, WebRequest request) {
+        log.trace("Runtime ex {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(AlreadyExistsException.class)
     public final ResponseEntity<Map<String, Object>> handle(AlreadyExistsException ex, WebRequest request) {
         log.trace("Illegal state {}", ex.getMessage());
