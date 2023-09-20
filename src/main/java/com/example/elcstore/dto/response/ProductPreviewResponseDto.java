@@ -14,5 +14,5 @@ public class ProductPreviewResponseDto {
     private List<ProductOptionPreviewResponseDto> productOptions;
     private double price;
     private DiscountResponseDto discount;
-    // TODO: 9/18/2023 can be add product comment List
+    // TODO: 9/18/2023 can be add product comment star and count
 }

@@ -32,8 +32,8 @@ public class ProductOption {
     @JoinColumn(name = "color_id")
     private Color color;
 
-    @OneToMany(mappedBy = "productOption", orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<ProductImageDetail> images;
+    @OneToMany(mappedBy = "productOption", orphanRemoval = true, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    private List<ProductImageDetail> imageDetails;
 
     @Column(name = "thumbnail_id")
     private UUID thumbnailId;

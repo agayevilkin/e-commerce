@@ -1,6 +1,5 @@
 package com.example.elcstore.dto.response;
 
-import com.example.elcstore.domain.Color;
 import com.example.elcstore.domain.enums.StockStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +15,6 @@ public class ProductOptionDetailedResponseDto {
     private String title;
     private StockStatus stockStatus;
     private ColorResponseDto color;
-    private List<ProductImageDetailResponseDto> images;
+    private List<ProductImageDetailResponseDto> imageDetails;
 
 }

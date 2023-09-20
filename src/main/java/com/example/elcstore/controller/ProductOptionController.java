@@ -1,30 +1,32 @@
 package com.example.elcstore.controller;
 
+import com.example.elcstore.domain.enums.StockStatus;
 import com.example.elcstore.dto.request.ProductOptionCreateRequestDto;
 import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
+import com.example.elcstore.dto.response.ProductOptionAdminPreviewResponseDto;
 import com.example.elcstore.dto.response.ProductOptionDetailedResponseDto;
 import com.example.elcstore.service.ProductOptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/product-option")
 @RequiredArgsConstructor
+@Validated
 public class ProductOptionController {
 
     private final ProductOptionService service;
 
-    // TODO: 9/18/2023 check DTO(s)
-    // TODO: 9/18/2023 test apis tOption
-    // TODO: 9/18/2023 check again fetch
-    // TODO: 9/18/2023 write paging if you need
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
@@ -36,6 +38,18 @@ public class ProductOptionController {
     @Operation(summary = "findById")
     public ProductOptionDetailedResponseDto findById(@PathVariable UUID id) {
         return service.findById(id);
+    }
+
+    @GetMapping("/{id}/all")
+    @Operation(summary = "findAllByProductId")
+    public List<ProductOptionAdminPreviewResponseDto> findAllByProductId(@PathVariable UUID id) {
+        return service.findAllByProductId(id);
+    }
+
+    @PutMapping("/stock_status/{id}")
+    @Operation(summary = "updateStockStatus")
+    public void update(@PathVariable UUID id, @NotNull @RequestParam StockStatus stockStatus) {
+        service.updateStockStatus(id, stockStatus);
     }
 
     @PutMapping("/{id}")

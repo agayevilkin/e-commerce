@@ -29,6 +29,8 @@ public class ImageServiceImpl implements ImageService {
 
     private final ImageRepository imageRepository;
     private final ModelMapper mapper;
+    // TODO: 9/19/2023 use try catch for all methods used @SneakyThrows and handle exception
+
 
     @SneakyThrows
     @Override
@@ -47,9 +49,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public ImageResponseDto updateImage(MultipartFile file, UUID id) {
         Image image = createUpdateImageObject(id, file.getBytes());
-        ImageResponseDto responseDto = mapper.map(image, ImageResponseDto.class);
-        responseDto.setImagePath(createImageUrl(image.getId()));
-        return responseDto;
+        return mapper.map(image, ImageResponseDto.class);
     }
 
     @Override

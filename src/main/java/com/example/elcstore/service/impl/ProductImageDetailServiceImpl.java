@@ -1,5 +1,6 @@
 package com.example.elcstore.service.impl;
 
+import com.example.elcstore.domain.Image;
 import com.example.elcstore.domain.ProductImageDetail;
 import com.example.elcstore.domain.ProductOption;
 import com.example.elcstore.dto.request.ProductImageDetailRequestDto;
@@ -15,7 +16,9 @@ import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.PRODUCT_IMAGE_DETAIL_NOT_FOUND;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.PRODUCT_OPTION_NOT_FOUND;
@@ -31,11 +34,14 @@ public class ProductImageDetailServiceImpl implements ProductImageDetailService 
 
     @SneakyThrows
     @Override
+    @Transactional
     public void createProductImageDetail(ProductImageDetailRequestDto requestDto) {
         ProductOption productOption = productOptionRepository.findById(requestDto.getProductOptionId())
                 .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND.getMessage()));
         ProductImageDetail productImageDetail = mapper.map(requestDto, ProductImageDetail.class);
-        productImageDetail.setImage(imageService.uploadImageWithByteArray(requestDto.getImage().getBytes()));
+        Image image = imageService.uploadImageWithByteArray(requestDto.getImage().getBytes());
+        productImageDetail.setImage(image);
+        productImageDetail.setImageId(image.getId());
         productImageDetail.setProductOption(productOption);
         productImageDetailRepository.save(productImageDetail);
     }
@@ -45,6 +51,14 @@ public class ProductImageDetailServiceImpl implements ProductImageDetailService 
         ProductImageDetail productImageDetail = productImageDetailRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(PRODUCT_IMAGE_DETAIL_NOT_FOUND.getMessage()));
         return mapper.map(productImageDetail, ProductImageDetailResponseDto.class);
+    }
+
+    @Override
+    public List<ProductImageDetailResponseDto> findAllByProductOption(UUID id) {
+        return productImageDetailRepository.findAllByProductOption_Id(id)
+                .stream()
+                .map((productImageDetail -> mapper.map(productImageDetail, ProductImageDetailResponseDto.class)))
+                .collect(Collectors.toList());
     }
 
     @SneakyThrows

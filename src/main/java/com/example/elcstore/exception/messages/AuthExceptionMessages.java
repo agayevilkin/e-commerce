@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum AuthExceptionMessages {
 
+    //todo change message to other class
     INVALID_TOKEN("Invalid Token!");
 
     private final String message;
