@@ -16,5 +16,5 @@ public class ContactResponseDto {
     private String email;
     private String company;
     private String message;
-    private CallTimeIntervalResponseDto callTimeInterval;
+    private String callTimeInterval;
 }

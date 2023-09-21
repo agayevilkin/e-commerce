@@ -16,6 +16,8 @@ public class CampaignUpdateRequestDto {
 
     private String description;
 
+    private String note;
+
     @NotNull(message = "Starting date cannot be null")
     private String startingDate;
 

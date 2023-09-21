@@ -25,6 +25,8 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class ProductController {
 
     private final ProductService productService;
+    // TODO: 9/20/2023 add "status" field to Product entity and
+    //  change relational repo method in the productRepo
 
     @PostMapping
     @ResponseStatus(CREATED)

@@ -57,7 +57,6 @@ public class BrandServiceImpl implements BrandService {
         }
     }
 
-
     private boolean checkById(UUID id) {
         return brandRepository.existsById(id);
     }

@@ -1,8 +1,6 @@
 package com.example.elcstore.dto.request;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +17,8 @@ public class ProductCommentRequestDto {
     private String authorFullName;
 
     @NotNull
-//    @Size(min = 1, max = 5)
+    @Min(1)
+    @Max(5)
     private int star;
 
     @NotNull

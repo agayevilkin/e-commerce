@@ -21,10 +21,6 @@ public class HighlightController {
 
     private final HighlightService service;
 
-    // TODO: 9/17/2023 check all method name
-    // TODO: 9/17/2023 check Request and Response Dto fields
-    // TODO: 9/17/2023 check fetch types
-
     @PostMapping
     @ResponseStatus(CREATED)
     @Operation(summary = "create")
