@@ -5,7 +5,6 @@ import lombok.Getter;
 @Getter
 public enum NotFoundExceptionMessages {
     BRAND_NOT_FOUND("Brand not found!"),
-    CALL_TIME_INTERVAL_NOT_FOUND("Call Time Interval not found!"),
     CAMPAIGN_NOT_FOUND("Campaign not found!"),
     CATEGORY_NOT_FOUND("Category not found!"),
     COLOR_NOT_FOUND("Color not found!"),

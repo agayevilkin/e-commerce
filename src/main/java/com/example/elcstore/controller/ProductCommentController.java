@@ -21,9 +21,6 @@ public class ProductCommentController {
 
     private final ProductCommentService service;
 
-    // TODO: 9/17/2023 check all method name
-    // TODO: 9/17/2023 check Request and Response Dto fields
-    // TODO: 9/17/2023 check fetch types
     @PostMapping
     @Operation(summary = "create")
     @ResponseStatus(CREATED)
@@ -38,15 +35,15 @@ public class ProductCommentController {
     }
 
     @GetMapping("/all/{id}")
-    @Operation(summary = "getAllProductCommentByProductId")
-    public List<ProductCommentResponseDto> getAllProductCommentByProductId(@PathVariable UUID id) {
-        return service.getAllProductCommentByProductId(id);
+    @Operation(summary = "getAllProductCommentsByProductId")
+    public List<ProductCommentResponseDto> getAllProductCommentsByProductId(@PathVariable UUID id) {
+        return service.getAllProductCommentsByProductId(id);
     }
 
     @GetMapping("/unconfirmed/all")
-    @Operation(summary = "getAllUnconfirmedProductComment")
-    public List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComment() {
-        return service.getAllUnconfirmedProductComment();
+    @Operation(summary = "getAllUnconfirmedProductComments")
+    public List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComments() {
+        return service.getAllUnconfirmedProductComments();
     }
 
     @GetMapping("/count/{id}")

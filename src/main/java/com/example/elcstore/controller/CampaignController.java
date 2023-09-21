@@ -1,6 +1,6 @@
 package com.example.elcstore.controller;
 
-import com.example.elcstore.dto.request.CampaignRequestDto;
+import com.example.elcstore.dto.request.CampaignCreateRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
 import com.example.elcstore.dto.response.CampaignDetailedResponseDto;
 import com.example.elcstore.dto.response.CampaignPreviewResponseDto;
@@ -27,7 +27,7 @@ public class CampaignController {
 //    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create") //@ModelAttribute
-    public void create(@Valid @RequestBody CampaignRequestDto requestDto) {
+    public void create(@Valid @RequestBody CampaignCreateRequestDto requestDto) {
         service.createCampaign(requestDto);
     }
 

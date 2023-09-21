@@ -50,6 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category);
     }
 
+
     @Override
     public void deleteCategory(UUID id) {
         if (checkById(id)) {

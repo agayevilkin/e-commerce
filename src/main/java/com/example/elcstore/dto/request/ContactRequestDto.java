@@ -28,6 +28,7 @@ public class ContactRequestDto {
     @NotBlank(message = "message is required")
     private String message;
 
-    @NotNull
-    private UUID callTimeIntervalId;
+    @NotBlank(message = "callTimeInterval is required")
+    private String callTimeInterval;
+
 }

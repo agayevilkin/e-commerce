@@ -1,8 +1,9 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Campaign;
+import com.example.elcstore.domain.util.ImageUtil;
 import com.example.elcstore.dto.ImageInfoDto;
-import com.example.elcstore.dto.request.CampaignRequestDto;
+import com.example.elcstore.dto.request.CampaignCreateRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
 import com.example.elcstore.dto.response.CampaignDetailedResponseDto;
 import com.example.elcstore.dto.response.CampaignPreviewResponseDto;
@@ -17,6 +18,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,7 +37,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Transactional
     @Override
-    public void createCampaign(CampaignRequestDto requestDto) {
+    public void createCampaign(CampaignCreateRequestDto requestDto) {
         Campaign campaign = mapper.map(requestDto, Campaign.class);
 
         MultipartFile originalImage = requestDto.getImage();
@@ -93,11 +96,15 @@ public class CampaignServiceImpl implements CampaignService {
         campaignRepository.deleteById(id);
     }
 
-    @SneakyThrows
     private byte[] getResizedImageByte(MultipartFile image) {
-        ImageInfoDto info = imageService.getImageWidthAndHeight(image.getBytes());
-        int reducedWidth = info.getWidth() * 2 / 3;
-        int reducedHeight = info.getHeight() * 2 / 3;
-        return imageService.resizeImage(image.getBytes(), reducedWidth, reducedHeight);
+        try {
+            ImageInfoDto info = imageService.getImageWidthAndHeight(ImageUtil.compressImage(image.getBytes()));
+            int reducedWidth = info.getWidth() * 2 / 3;
+            int reducedHeight = info.getHeight() * 2 / 3;
+
+            return imageService.resizeImage(image.getBytes(), reducedWidth, reducedHeight);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -5,12 +5,14 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,10 +36,34 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request, HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
-    //todo handle
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public final ResponseEntity<Map<String, Object>> handle(MaxUploadSizeExceededException ex, WebRequest request) {
+        log.trace("Maximum upload size exceeded {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(ImageProcessingException.class)
+    public final ResponseEntity<Map<String, Object>> handle(ImageProcessingException ex, WebRequest request) {
+        log.trace("Image processing failed! {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(UnsupportedImageTypeException.class)
+    public final ResponseEntity<Map<String, Object>> handle(UnsupportedImageTypeException ex, WebRequest request) {
+        log.trace("Unsupported image type {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    //todo can be change
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public final ResponseEntity<Map<String, Object>> handle(DataIntegrityViolationException ex, WebRequest request) {
+        log.trace("This data is used by other entity {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, "This data cannot be deleted because it is used");
+    }
+
     @ExceptionHandler(ImageUploadException.class)
     public final ResponseEntity<Map<String, Object>> handle(ImageUploadException ex, WebRequest request) {
-        log.trace("Runtime ex {}", ex.getMessage());
+        log.trace("Image uploading is a failure! {}", ex.getMessage());
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

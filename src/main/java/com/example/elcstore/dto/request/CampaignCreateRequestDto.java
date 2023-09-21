@@ -6,16 +6,16 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
-public class CampaignRequestDto {
+public class CampaignCreateRequestDto {
 
     @NotBlank(message = "Title cannot be blank")
     private String title;
 
     private String description;
+
+    private String note;
 
     @NotNull(message = "Starting date cannot be null")
     private String startingDate;

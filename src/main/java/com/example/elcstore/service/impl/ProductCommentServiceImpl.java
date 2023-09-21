@@ -65,7 +65,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     }
 
     @Override
-    public List<ProductCommentResponseDto> getAllProductCommentByProductId(UUID id) {
+    public List<ProductCommentResponseDto> getAllProductCommentsByProductId(UUID id) {
         return productCommentRepository.findAllByProduct_IdAndCommentStatus(id, CommentStatus.VERIFIED)
                 .stream()
                 .map((productComment -> mapper.map(productComment, ProductCommentResponseDto.class)))
@@ -73,7 +73,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
     }
 
     @Override
-    public List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComment() {
+    public List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComments() {
         return productCommentRepository.findAllByCommentStatus(CommentStatus.PENDING)
                 .stream()
                 .map((productComment -> {

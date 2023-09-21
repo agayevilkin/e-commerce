@@ -4,12 +4,14 @@ import com.example.elcstore.domain.Image;
 import com.example.elcstore.domain.util.ImageUtil;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.response.ImageResponseDto;
+import com.example.elcstore.exception.ImageProcessingException;
+import com.example.elcstore.exception.ImageUploadException;
 import com.example.elcstore.exception.NotFoundException;
+import com.example.elcstore.exception.UnsupportedImageTypeException;
 import com.example.elcstore.repository.ImageRepository;
 import com.example.elcstore.service.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +21,12 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.UUID;
 
+import static com.example.elcstore.exception.ImageProcessingException.FAILED_GET_IMAGE_DIMENSIONS;
+import static com.example.elcstore.exception.ImageProcessingException.FAILED_RESIZE_IMAGE;
+import static com.example.elcstore.exception.UnsupportedImageTypeException.UNSUPPORTED_IMAGE_TYPE;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.IMAGE_NOT_FOUND;
 
 @Service
@@ -29,32 +35,35 @@ public class ImageServiceImpl implements ImageService {
 
     private final ImageRepository imageRepository;
     private final ModelMapper mapper;
-    // TODO: 9/19/2023 use try catch for all methods used @SneakyThrows and handle exception
 
-
-    @SneakyThrows
     @Override
     public ImageResponseDto uploadImage(MultipartFile file) {
-        Image image = createUploadImageObject(file.getBytes());
-        //        responseDto.setImagePath(createImageUrl(image.getId()));
-        return mapper.map(image, ImageResponseDto.class);
+        try {
+            Image image = createUploadImageObject(file.getBytes());
+            return mapper.map(image, ImageResponseDto.class);
+        } catch (IOException e) {
+            throw new ImageUploadException(e.getMessage());
+        }
     }
 
     @Override
-    public Image uploadImageWithByteArray(byte[] imageData) {
-        return createUploadImageObject(imageData);
+    public Image uploadImageWithByteArray(byte[] bytes) {
+        return createUploadImageObject(bytes);
     }
 
-    @SneakyThrows
     @Override
     public ImageResponseDto updateImage(MultipartFile file, UUID id) {
-        Image image = createUpdateImageObject(id, file.getBytes());
-        return mapper.map(image, ImageResponseDto.class);
+        try {
+            Image image = createUpdateImageObject(id, file.getBytes());
+            return mapper.map(image, ImageResponseDto.class);
+        } catch (IOException e) {
+            throw new ImageUploadException(e.getMessage());
+        }
     }
 
     @Override
-    public Image updateImageWithByteArray(byte[] imageData, UUID id) {
-        return createUpdateImageObject(id, imageData);
+    public Image updateImageWithByteArray(byte[] bytes, UUID id) {
+        return createUpdateImageObject(id, bytes);
     }
 
     @Transactional
@@ -78,40 +87,72 @@ public class ImageServiceImpl implements ImageService {
                 .toUriString();
     }
 
-    @SneakyThrows
-    public byte[] resizeImage(byte[] image, int width, int height) {
-        BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(image));
-        java.awt.Image resizedImage = originalImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+    public byte[] resizeImage(byte[] bytes, int width, int height) {
+        try {
+            if (isSupportedImageFormat(bytes)) {
 
-        BufferedImage bufferedResizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+                BufferedImage originalImage = ImageIO.read(new ByteArrayInputStream(bytes));
 
-        ByteArrayOutputStream currentImageByte = new ByteArrayOutputStream();
-        ImageIO.write(bufferedResizedImage, "jpg", currentImageByte);
+                java.awt.Image resizedImage = originalImage.getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
 
-        return currentImageByte.toByteArray();
+                BufferedImage bufferedResizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                bufferedResizedImage.getGraphics().drawImage(resizedImage, 0, 0, null);
+
+                ByteArrayOutputStream currentImageByte = new ByteArrayOutputStream();
+                ImageIO.write(bufferedResizedImage, "jpg", currentImageByte);
+
+                return currentImageByte.toByteArray();
+            }
+            throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
+        } catch (IOException | NullPointerException e) {
+            //todo specify correctly exception type
+            throw new ImageProcessingException(FAILED_RESIZE_IMAGE);
+        }
     }
 
-    @SneakyThrows
     @Override
-    public ImageInfoDto getImageWidthAndHeight(byte[] imageBytes) {
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(imageBytes);
-        BufferedImage originalImage = ImageIO.read(inputStream);
+    public ImageInfoDto getImageWidthAndHeight(byte[] bytes) {
+        try {
+            if (isSupportedImageFormat(bytes)) {
+                ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
+                BufferedImage originalImage = ImageIO.read(inputStream);
+                int width = originalImage.getWidth();
+                int height = originalImage.getHeight();
+                return ImageInfoDto.builder().width(width).height(height).build();
+            } else throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
 
-        int width = originalImage.getWidth();
-        int height = originalImage.getHeight();
-        return ImageInfoDto.builder().width(width).height(height).build();
+        } catch (IOException | NullPointerException e) {
+            //todo specify correctly exception type
+            throw new ImageProcessingException(FAILED_GET_IMAGE_DIMENSIONS + e.getMessage());
+        }
     }
 
-    private Image createUploadImageObject(byte[] file) {
-        Image image = new Image();
-        image.setImageData(ImageUtil.compressImage(file));
-        return imageRepository.save(image);
+    private Image createUploadImageObject(byte[] bytes) {
+        if (isSupportedImageFormat(bytes)) {
+            Image image = new Image();
+            image.setImageData(ImageUtil.compressImage(bytes));
+            return imageRepository.save(image);
+        } else throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
+
     }
 
     private Image createUpdateImageObject(UUID id, byte[] bytes) {
-        Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
-        image.setImageData(ImageUtil.compressImage(bytes));
-        return imageRepository.save(image);
+        if (isSupportedImageFormat(bytes)) {
+            Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
+            image.setImageData(ImageUtil.compressImage(bytes));
+            return imageRepository.save(image);
+        } else throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
+
+    }
+
+    private boolean isSupportedImageFormat(byte[] file) {
+        if (file.length >= 2) {
+            if (file[0] == (byte) 0xFF && file[1] == (byte) 0xD8) {
+                return true; // JPEG
+            } else if (file[0] == (byte) 0x89 && file[1] == (byte) 0x50) {
+                return true; // PNG
+            }
+        }
+        return false;
     }
 }

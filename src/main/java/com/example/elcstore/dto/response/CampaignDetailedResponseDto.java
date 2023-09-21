@@ -13,6 +13,7 @@ public class CampaignDetailedResponseDto {
     private UUID id;
     private String title;
     private String description;
+    private String note;
     private String startingDate;
     private String endingDate;
     private UUID imageId;

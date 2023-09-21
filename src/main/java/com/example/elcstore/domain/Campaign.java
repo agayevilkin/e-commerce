@@ -27,6 +27,9 @@ public class Campaign {
     @Column(name = "description", length = 1000)
     private String description;
 
+    @Column(name = "note")
+    private String note;
+
     @Column(name = "starting_date")
     private String startingDate;
 

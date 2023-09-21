@@ -1,6 +1,6 @@
 package com.example.elcstore.service;
 
-import com.example.elcstore.dto.request.CampaignRequestDto;
+import com.example.elcstore.dto.request.CampaignCreateRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
 import com.example.elcstore.dto.response.CampaignDetailedResponseDto;
 import com.example.elcstore.dto.response.CampaignPreviewResponseDto;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface CampaignService {
-    void createCampaign(CampaignRequestDto requestDto);
+    void createCampaign(CampaignCreateRequestDto requestDto);
 
     CampaignDetailedResponseDto findById(UUID id);
 

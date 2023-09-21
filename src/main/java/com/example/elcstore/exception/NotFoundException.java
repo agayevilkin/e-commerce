@@ -2,7 +2,6 @@ package com.example.elcstore.exception;
 
 public class NotFoundException extends RuntimeException {
     public static final String BRAND_NOT_FOUND = "Brand not found!";
-    public static final String CALL_TIME_INTERVAL_NOT_FOUND = "Call Time Interval not found!";
     public static final String CAMPAIGN_NOT_FOUND = "Campaign not found!";
     public static final String CATEGORY_NOT_FOUND = "Category not found!";
     public static final String COLOR_NOT_FOUND = "Color not found!";

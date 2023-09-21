@@ -12,9 +12,9 @@ public interface ProductCommentService {
 
     ProductCommentResponseDto getProductComment(UUID id);
 
-    List<ProductCommentResponseDto> getAllProductCommentByProductId(UUID id);
+    List<ProductCommentResponseDto> getAllProductCommentsByProductId(UUID id);
 
-    List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComment();
+    List<ProductCommentUnconfirmedResponseDto> getAllUnconfirmedProductComments();
 
     void updateProductComment(UUID id, ProductCommentRequestDto requestDto);
 
