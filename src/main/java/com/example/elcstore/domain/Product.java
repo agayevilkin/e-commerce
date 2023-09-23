@@ -33,12 +33,14 @@ public class Product extends Audit {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @JoinTable(name = "product_category",
+            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "category_id")})
+    private List<Category> categories;
 
     // TODO: 9/18/2023 EAGER for now but will change to LAZY and use @Transactional or other methods
-    @OneToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "highlight_id")
     private Highlight highlight;
 

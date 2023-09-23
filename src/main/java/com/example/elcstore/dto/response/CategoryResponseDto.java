@@ -3,6 +3,7 @@ package com.example.elcstore.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
 @Getter

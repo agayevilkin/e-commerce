@@ -8,6 +8,7 @@ import com.example.elcstore.dto.response.ProductPreviewResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.*;
 import com.example.elcstore.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -36,14 +37,12 @@ public class ProductServiceImpl implements ProductService {
     public void createProduct(ProductRequestDto productRequestDto) {
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
                 .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
-        Category category = categoryRepository.findById(productRequestDto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
         Highlight highlight = highlightRepository.findById(productRequestDto.getHighlightId())
                 .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
 
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(brand);
-        product.setCategory(category);
+        product.setCategories(getCategoryList(productRequestDto.getCategories()));
         product.setHighlight(highlight);
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
@@ -58,13 +57,15 @@ public class ProductServiceImpl implements ProductService {
 
         Brand brand = brandRepository.findById(productRequestDto.getBrandId())
                 .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
-        Category category = categoryRepository.findById(productRequestDto.getCategoryId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+        Highlight highlight = highlightRepository.findById(productRequestDto.getHighlightId())
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
 
         product.setBrand(brand);
-        product.setCategory(category);
+        product.setHighlight(highlight);
+        product.setCategories(getCategoryList(productRequestDto.getCategories()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
+
         productRepository.save(product);
     }
 
@@ -75,6 +76,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDetailedResponseDto findById(UUID id) {
         Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         return mapper.map(product, ProductDetailedResponseDto.class);
@@ -101,15 +103,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public CustomPage<ProductPreviewResponseDto> getAllProductsByCategory(String category, Integer pageIndex, Integer pageSize) {
-        return new CustomPage<>(productRepository.findAllByCategory_Name(category, PageRequest.of(pageIndex, pageSize))
+    public CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize) {
+        return new CustomPage<>(productRepository.findAllByCategoriesId(categoryId, PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
     }
 
     @Override
-    public CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryAndBrand(String category, String brand, Integer pageIndex, Integer pageSize) {
-        return new CustomPage<>(productRepository.findAllByCategory_NameAndBrand_Name(category, brand, PageRequest.of(pageIndex, pageSize))
+    public CustomPage<ProductPreviewResponseDto> getAllProductsByBrandId(UUID brandId, Integer pageIndex, Integer pageSize) {
+        return new CustomPage<>(productRepository.findAllByBrandId(brandId, PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
+
     }
 
     @Override
@@ -141,4 +144,12 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    private List<Category> getCategoryList(List<UUID> categories) {
+        return categories
+                .stream()
+                .map((e) -> categoryRepository
+                        .findById(e)
+                        .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage())))
+                .collect(Collectors.toList());
+    }
 }

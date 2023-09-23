@@ -2,7 +2,6 @@ package com.example.elcstore.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,14 +19,14 @@ public class ProductRequestDto {
     private double price;
 
     @NotNull
-    private UUID categoryId;
-
-    @NotNull
     private UUID brandId;
 
     private UUID highlightId;
 
     private List<UUID> events;
+
+    @NotNull
+    private List<UUID> categories;
 
     private List<UUID> technicalCharacteristics;
 

@@ -25,7 +25,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(CategoryRequestDto requestDto) {
+        Category parent = categoryRepository.findById(requestDto.getParentId())
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
         Category category = mapper.map(requestDto, Category.class);
+        category.setParent(parent);
         categoryRepository.save(category);
     }
 
@@ -36,8 +39,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponseDto> getAllCategories() {
-        return categoryRepository.findAll()
+    public List<CategoryResponseDto> getAllMainCategories() {
+        return categoryRepository.findAllByParentIsNull()
+                .stream()
+                .map((category -> mapper.map(category, CategoryResponseDto.class)))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CategoryResponseDto> getAllSubCategoriesByParentId(UUID parentId) {
+        return categoryRepository.findAllByParentId(parentId)
                 .stream()
                 .map((category -> mapper.map(category, CategoryResponseDto.class)))
                 .collect(Collectors.toList());

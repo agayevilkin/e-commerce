@@ -32,10 +32,16 @@ public class CategoryController {
         return service.findById(id);
     }
 
-    @GetMapping("/all")
-    @Operation(summary = "getAllCategories")
-    public List<CategoryResponseDto> getAllCategories() {
-        return service.getAllCategories();
+    @GetMapping("/main/all")
+    @Operation(summary = "getAllMainCategories")
+    public List<CategoryResponseDto> getAllMainCategories() {
+        return service.getAllMainCategories();
+    }
+
+    @GetMapping("/all/{parent_id}")
+    @Operation(summary = "getAllSubCategoriesByParentId")
+    public List<CategoryResponseDto> getAllSubCategoriesByParentId(@PathVariable UUID parent_id) {
+        return service.getAllSubCategoriesByParentId(parent_id);
     }
 
     @PutMapping("/{id}")
