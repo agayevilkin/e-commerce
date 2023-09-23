@@ -52,25 +52,25 @@ public class ProductController {
         return productService.getAllProducts(pageIndex, pageSize);
     }
 
-    @GetMapping("/{category}/all")
+    @GetMapping("/category/{id}")
     @Operation(summary = "getAllProductsByCategory")
     @PreAuthorize("permitAll()")
     public CustomPage<ProductPreviewResponseDto> getAllProductsByCategory(
-            @PathVariable String category,
+            @PathVariable UUID id,
             @RequestParam Integer pageIndex,
             @RequestParam Integer pageSize) {
-        return productService.getAllProductsByCategory(category, pageIndex, pageSize);
+        return productService.getAllProductsByCategoryId(id, pageIndex, pageSize);
     }
+    // TODO: 9/23/2023 add get ALl Product By Category for Category banner image (with difference DTO)
 
-    @GetMapping("/{category}/{brand}/all")
-    @Operation(summary = "getAllProductsByCategoryAndBrand")
+    @GetMapping("/all/brand/{id}")
+    @Operation(summary = "getAllProductsByBrandId")
     @PreAuthorize("permitAll()")
-    public CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryAndBrand(
-            @PathVariable String category,
-            @PathVariable String brand,
+    public CustomPage<ProductPreviewResponseDto> getAllProductsByBrandId(
+            @PathVariable UUID id,
             @RequestParam Integer pageIndex,
             @RequestParam Integer pageSize) {
-        return productService.getAllProductsByCategoryAndBrand(category, brand, pageIndex, pageSize);
+        return productService.getAllProductsByBrandId(id, pageIndex, pageSize);
     }
 
     @GetMapping("/discounted/all")
@@ -98,6 +98,8 @@ public class ProductController {
         return productService.findById(id);
     }
 
+
+    // TODO: 9/23/2023 change logic
     @GetMapping("/{identification_name}/{highlight}")
     @Operation(summary = "findByProductIdentificationNameAndHighlight")
     @PreAuthorize("permitAll()")

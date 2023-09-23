@@ -11,10 +11,12 @@ public interface CategoryService {
 
     CategoryResponseDto findById(UUID id);
 
+    List<CategoryResponseDto> getAllSubCategoriesByParentId(UUID parentId);
+
     void updateCategory(UUID id, CategoryRequestDto requestDto);
 
     void deleteCategory(UUID id);
 
-    List<CategoryResponseDto> getAllCategories();
+    List<CategoryResponseDto> getAllMainCategories();
 
 }

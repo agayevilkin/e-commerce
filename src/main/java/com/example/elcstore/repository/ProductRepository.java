@@ -12,9 +12,9 @@ import java.util.UUID;
 
 public interface ProductRepository extends JpaRepository<Product, UUID> {
 
-    Page<Product> findAllByCategory_Name(String category, Pageable pageable);
+    Page<Product> findAllByCategoriesId(UUID categoryId, Pageable pageable);
 
-    Page<Product> findAllByCategory_NameAndBrand_Name(String category, String brand, Pageable pageable);
+    Page<Product> findAllByBrandId(UUID brandId, Pageable pageable);
 
     Page<Product> findAllByCreatedDateAfter(LocalDateTime dateTime, Pageable pageable);
 

@@ -45,6 +45,9 @@ public class Highlight {
     @Column(name = "product_identification_name")
     private String productIdentificationName;
 
+//    @Column(name = "feature_name")
+//    private String featureName;
+
     @Column(name = "value")
     private String value;
 

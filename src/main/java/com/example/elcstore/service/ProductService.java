@@ -24,7 +24,7 @@ public interface ProductService {
 
     CustomPage<ProductPreviewResponseDto> getAllDiscountedProducts(Integer pageIndex, Integer pageSize);
 
-    CustomPage<ProductPreviewResponseDto> getAllProductsByCategory(String category, Integer pageIndex, Integer pageSize);
+    CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize);
 
-    CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryAndBrand(String category, String brand, Integer pageIndex, Integer pageSize);
+    CustomPage<ProductPreviewResponseDto> getAllProductsByBrandId(UUID brandId, Integer pageIndex, Integer pageSize);
 }
