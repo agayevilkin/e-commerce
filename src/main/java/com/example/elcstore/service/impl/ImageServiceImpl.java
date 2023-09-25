@@ -146,8 +146,15 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private boolean isSupportedImageFormat(byte[] file) {
-        if (file.length >= 2) {
-            if (file[0] == (byte) 0xFF && file[1] == (byte) 0xD8) {
+        if (file.length >= 6) {
+            if (file[0] == (byte) 0x47 && // 'G'
+                    file[1] == (byte) 0x49 && // 'I'
+                    file[2] == (byte) 0x46 && // 'F'
+                    file[3] == (byte) 0x38 && // '8'
+                    (file[4] == (byte) 0x37 || file[4] == (byte) 0x39) && // '7' or '9'
+                    file[5] == (byte) 0x61) { // 'a'
+                return true; // GIF
+            } else if (file[0] == (byte) 0xFF && file[1] == (byte) 0xD8) {
                 return true; // JPEG
             } else if (file[0] == (byte) 0x89 && file[1] == (byte) 0x50) {
                 return true; // PNG

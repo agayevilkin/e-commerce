@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -19,8 +20,8 @@ public class CampaignUpdateRequestDto {
     private String note;
 
     @NotNull(message = "Starting date cannot be null")
-    private String startingDate;
+    private LocalDateTime startingDate;
 
     @NotNull(message = "Ending date cannot be null")
-    private String endingDate;
+    private LocalDateTime endingDate;
 }

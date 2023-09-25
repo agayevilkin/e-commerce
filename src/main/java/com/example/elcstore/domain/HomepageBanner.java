@@ -9,20 +9,20 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "brands")
+@Table(name = "homepage_banner")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Brand {
+public class HomepageBanner {
 
     @Id
-    @Column(name = "brand_id")
+    @Column(name = "homepage_banner_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "image_id")
     private UUID imageId;
+
+    @Column(name = "link")
+    private String link;
 }

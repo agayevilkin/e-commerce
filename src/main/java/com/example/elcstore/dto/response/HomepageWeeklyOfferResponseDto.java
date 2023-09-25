@@ -8,11 +8,9 @@ import java.util.UUID;
 
 @Setter
 @Getter
-public class CampaignPreviewResponseDto {
+public class HomepageWeeklyOfferResponseDto {
 
     private UUID id;
-    private String title;
-    private LocalDateTime startingDate;
-    private LocalDateTime endingDate;
-    private UUID thumbnailImageId;
+    private LocalDateTime deadline;
+    private ProductOptionWeeklyOfferResponseDto productOption;
 }

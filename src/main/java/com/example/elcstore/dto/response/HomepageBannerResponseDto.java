@@ -5,10 +5,11 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
 @Setter
-public class BrandResponseDto {
+@Getter
+public class HomepageBannerResponseDto {
+
     private UUID id;
-    private String name;
     private UUID imageId;
+    private String link;
 }
