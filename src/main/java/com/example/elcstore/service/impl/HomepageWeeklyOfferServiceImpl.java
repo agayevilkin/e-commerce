@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -46,7 +47,7 @@ public class HomepageWeeklyOfferServiceImpl implements HomepageWeeklyOfferServic
     @Override
     @Transactional // TODO: 9/25/2023 check again lazy state and remove Transactional or use other way
     public List<HomepageWeeklyOfferResponseDto> getAllHomepageWeeklyOffers() {
-        return homepageWeeklyOfferRepository.findAll()
+        return homepageWeeklyOfferRepository.findAllByDeadlineAfter(LocalDateTime.now())
                 .stream()
                 .map((homepageWeeklyOffer -> mapper.map(homepageWeeklyOffer, HomepageWeeklyOfferResponseDto.class)))
                 .collect(Collectors.toList());

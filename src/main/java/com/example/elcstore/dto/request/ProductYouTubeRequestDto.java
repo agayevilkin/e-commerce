@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class ProductVideoRequestDto {
+public class ProductYouTubeRequestDto {
 
     @NotBlank(message = "Title is required")
     @Size(max = 255, message = "Title must be at most 255 characters")

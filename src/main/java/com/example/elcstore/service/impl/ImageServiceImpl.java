@@ -68,8 +68,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Transactional
     public byte[] getImage(UUID id) {
-        Image dbImage = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
-        return ImageUtil.decompressImage(dbImage.getImageData());
+        return ImageUtil.decompressImage(getImageById(id).getImageData());
     }
 
     @Override
@@ -138,7 +137,7 @@ public class ImageServiceImpl implements ImageService {
 
     private Image createUpdateImageObject(UUID id, byte[] bytes) {
         if (isSupportedImageFormat(bytes)) {
-            Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
+            Image image = getImageById(id);
             image.setImageData(ImageUtil.compressImage(bytes));
             return imageRepository.save(image);
         } else throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
@@ -161,5 +160,10 @@ public class ImageServiceImpl implements ImageService {
             }
         }
         return false;
+    }
+
+    private Image getImageById(UUID id) {
+        return imageRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
     }
 }

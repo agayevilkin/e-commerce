@@ -32,10 +32,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public void createProductComment(ProductCommentRequestDto requestDto) {
-        Product product = productRepository.findById(requestDto.getProductId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         ProductComment productComment = mapper.map(requestDto, ProductComment.class);
-        productComment.setProduct(product);
+        productComment.setProduct(getProductById(requestDto.getProductId()));
         productComment.setCommentStatus(CommentStatus.PENDING);
         productCommentRepository.save(productComment);
     }
@@ -59,9 +57,7 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public ProductCommentResponseDto getProductComment(UUID id) {
-        ProductComment productComment = productCommentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_COMMENT_NOT_FOUND.getMessage()));
-        return mapper.map(productComment, ProductCommentResponseDto.class);
+        return mapper.map(getProductCommentById(id), ProductCommentResponseDto.class);
     }
 
     @Override
@@ -86,10 +82,8 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     @Override
     public void updateProductComment(UUID id, ProductCommentRequestDto requestDto) {
-        ProductComment productComment = productCommentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_COMMENT_NOT_FOUND.getMessage()));
-        Product product = productRepository.findById(requestDto.getProductId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
+        ProductComment productComment = getProductCommentById(id);
+        Product product = getProductById(requestDto.getProductId());
         mapper.map(requestDto, productComment);
         productComment.setProduct(product);
         productCommentRepository.save(productComment);
@@ -104,6 +98,16 @@ public class ProductCommentServiceImpl implements ProductCommentService {
 
     private boolean existsById(UUID id) {
         return productCommentRepository.existsById(id);
+    }
+
+    private Product getProductById(UUID id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
+    }
+
+    private ProductComment getProductCommentById(UUID id) {
+        return productCommentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_COMMENT_NOT_FOUND.getMessage()));
     }
 
 }

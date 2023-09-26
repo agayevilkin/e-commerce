@@ -1,6 +1,7 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Campaign;
+import com.example.elcstore.domain.Category;
 import com.example.elcstore.domain.util.ImageUtil;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.request.CampaignCreateRequestDto;
@@ -51,13 +52,12 @@ public class CampaignServiceImpl implements CampaignService {
 
     @Override
     public CampaignDetailedResponseDto findById(UUID id) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
-        return mapper.map(campaign, CampaignDetailedResponseDto.class);
+        return mapper.map(getCampaignById(id), CampaignDetailedResponseDto.class);
     }
 
     @Override
     public void updateCampaign(UUID id, CampaignUpdateRequestDto requestDto) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
+        Campaign campaign = getCampaignById(id);
         mapper.map(requestDto, campaign);
         campaignRepository.save(campaign);
     }
@@ -65,7 +65,7 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public void updateCampaignImage(UUID id, MultipartFile file) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
+        Campaign campaign = getCampaignById(id);
 
         UUID originalImageId = campaign.getImageId();
         UUID thumbnailImageId = campaign.getThumbnailImageId();
@@ -90,7 +90,7 @@ public class CampaignServiceImpl implements CampaignService {
     @Override
     @Transactional
     public void deleteCampaign(UUID id) {
-        Campaign campaign = campaignRepository.findById(id).orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
+        Campaign campaign = getCampaignById(id);
         imageService.deleteImage(campaign.getImageId());
         imageService.deleteImage(campaign.getThumbnailImageId());
         campaignRepository.deleteById(id);
@@ -106,5 +106,10 @@ public class CampaignServiceImpl implements CampaignService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Campaign getCampaignById(UUID id) {
+        return campaignRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
     }
 }

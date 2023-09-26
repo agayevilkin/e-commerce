@@ -27,28 +27,21 @@ public class TechnicalCharacteristicServiceImpl implements TechnicalCharacterist
 
     @Override
     public void createTechnicalCharacteristic(TechnicalCharacteristicRequestDto requestDto) {
-        TechnicalCharacteristicTitle title = titleRepository.findById(requestDto.getTechnicalCharacteristicTitleId())
-                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND.getMessage()));
         TechnicalCharacteristic characteristic = mapper.map(requestDto, TechnicalCharacteristic.class);
-        characteristic.setTitle(title);
+        characteristic.setTitle(getTechnicalCharacteristicTitleById(requestDto.getTechnicalCharacteristicTitleId()));
         technicalCharacteristicRepository.save(characteristic);
     }
 
     @Override
     public TechnicalCharacteristicResponseDto getTechnicalCharacteristic(UUID id) {
-        TechnicalCharacteristic characteristic = technicalCharacteristicRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_NOT_FOUND.getMessage()));
-        return mapper.map(characteristic, TechnicalCharacteristicResponseDto.class);
+        return mapper.map(getTechnicalCharacteristicById(id), TechnicalCharacteristicResponseDto.class);
     }
 
     @Override
     public void updateTechnicalCharacteristic(UUID id, TechnicalCharacteristicRequestDto requestDto) {
-        TechnicalCharacteristic characteristic = technicalCharacteristicRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_NOT_FOUND.getMessage()));
-        TechnicalCharacteristicTitle title = titleRepository.findById(requestDto.getTechnicalCharacteristicTitleId())
-                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND.getMessage()));
+        TechnicalCharacteristic characteristic = getTechnicalCharacteristicById(id);
         mapper.map(requestDto, characteristic);
-        characteristic.setTitle(title);
+        characteristic.setTitle(getTechnicalCharacteristicTitleById(requestDto.getTechnicalCharacteristicTitleId()));
         technicalCharacteristicRepository.save(characteristic);
     }
 
@@ -63,4 +56,13 @@ public class TechnicalCharacteristicServiceImpl implements TechnicalCharacterist
         return technicalCharacteristicRepository.existsById(id);
     }
 
+    private TechnicalCharacteristicTitle getTechnicalCharacteristicTitleById(UUID id) {
+        return titleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND.getMessage()));
+    }
+
+    private TechnicalCharacteristic getTechnicalCharacteristicById(UUID id) {
+        return technicalCharacteristicRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_NOT_FOUND.getMessage()));
+    }
 }

@@ -1,13 +1,13 @@
 package com.example.elcstore.service.impl;
 
-import com.example.elcstore.domain.ProductVideo;
+import com.example.elcstore.domain.ProductYouTube;
 import com.example.elcstore.domain.enums.VideoStatus;
-import com.example.elcstore.dto.request.ProductVideoRequestDto;
-import com.example.elcstore.dto.response.ProductVideoResponseDto;
+import com.example.elcstore.dto.request.ProductYouTubeRequestDto;
+import com.example.elcstore.dto.response.ProductYouTubeResponseDto;
 import com.example.elcstore.exception.InvalidProductVideoUrlException;
 import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.repository.ProductVideoRepository;
-import com.example.elcstore.service.ProductVideoService;
+import com.example.elcstore.repository.ProductYouTubeRepository;
+import com.example.elcstore.service.ProductYouTubeService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -23,63 +23,60 @@ import static com.example.elcstore.exception.NotFoundException.PRODUCT_VIDEO_NOT
 
 @Service
 @RequiredArgsConstructor
-public class ProductVideoServiceImpl implements ProductVideoService {
+public class ProductYouTubeServiceImpl implements ProductYouTubeService {
 
-    private final ProductVideoRepository productVideoRepository;
+    private final ProductYouTubeRepository productYouTubeRepository;
     private final ModelMapper mapper;
     private static final String VIDEO_THUMBNAIL_URL = "https://img.youtube.com/vi/%s/maxresdefault.jpg";
 
 
     @Override
-    public void createProductVideo(ProductVideoRequestDto requestDto) {
+    public void createProductYouTube(ProductYouTubeRequestDto requestDto) {
         String videoLink = requestDto.getVideoLink();
-        ProductVideo productVideo = mapper.map(requestDto, ProductVideo.class);
-        productVideo.setVideoThumbnail(String.format(VIDEO_THUMBNAIL_URL, extractVideoId(videoLink)));
-        productVideoRepository.save(productVideo);
+        ProductYouTube productYouTube = mapper.map(requestDto, ProductYouTube.class);
+        productYouTube.setVideoThumbnail(String.format(VIDEO_THUMBNAIL_URL, extractVideoId(videoLink)));
+        productYouTubeRepository.save(productYouTube);
     }
 
     @Override
-    public ProductVideoResponseDto findById(UUID id) {
-        ProductVideo productVideo = productVideoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_VIDEO_NOT_FOUND));
-        return mapper.map(productVideo, ProductVideoResponseDto.class);
+    public ProductYouTubeResponseDto findById(UUID id) {
+        return mapper.map(getProductYouTubeById(id), ProductYouTubeResponseDto.class);
     }
 
     @Override
-    public void updateProductVideo(UUID id, ProductVideoRequestDto requestDto) {
+    public void updateProductYouTube(UUID id, ProductYouTubeRequestDto requestDto) {
         String videoLink = requestDto.getVideoLink();
-        ProductVideo productVideo = productVideoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_VIDEO_NOT_FOUND));
-        mapper.map(requestDto, productVideo);
-        productVideo.setVideoThumbnail(String.format(VIDEO_THUMBNAIL_URL, extractVideoId(videoLink)));
-        productVideoRepository.save(productVideo);
+        ProductYouTube productYouTube = getProductYouTubeById(id);
+        mapper.map(requestDto, productYouTube);
+        productYouTube.setVideoThumbnail(String.format(VIDEO_THUMBNAIL_URL, extractVideoId(videoLink)));
+        productYouTubeRepository.save(productYouTube);
     }
 
     @Override
-    public List<ProductVideoResponseDto> getAllByVideoStatus(VideoStatus videoStatus) {
-        return productVideoRepository.findAllByVideoStatus(videoStatus)
+    public List<ProductYouTubeResponseDto> getAllByVideoStatus(VideoStatus videoStatus) {
+        return productYouTubeRepository.findAllByVideoStatus(videoStatus)
                 .stream()
-                .map((productVideo -> mapper.map(productVideo, ProductVideoResponseDto.class)))
+                .map((productYouTube -> mapper.map(productYouTube, ProductYouTubeResponseDto.class)))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductVideoResponseDto> getAllLatestUploaded() {
-        return productVideoRepository.findAllByIsNewTrue()
+    public List<ProductYouTubeResponseDto> getAllLatestUploaded() {
+        return productYouTubeRepository.findAllByIsNewTrue()
                 .stream()
-                .map((productVideo -> mapper.map(productVideo, ProductVideoResponseDto.class)))
+                .map((productYouTube -> mapper.map(productYouTube, ProductYouTubeResponseDto.class)))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteProductVideo(UUID id) {
+    public void deleteProductYouTube(UUID id) {
         if (checkById(id)) {
-            productVideoRepository.deleteById(id);
+            productYouTubeRepository.deleteById(id);
         }
     }
 
     private boolean checkById(UUID id) {
-        return productVideoRepository.existsById(id);
+        return productYouTubeRepository.existsById(id);
     }
 
     private boolean isYouTubeVideoURL(String url) {
@@ -103,5 +100,10 @@ public class ProductVideoServiceImpl implements ProductVideoService {
         } else {
             throw new InvalidProductVideoUrlException(INVALID_URL);
         }
+    }
+
+    private ProductYouTube getProductYouTubeById(UUID id) {
+        return productYouTubeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_VIDEO_NOT_FOUND));
     }
 }

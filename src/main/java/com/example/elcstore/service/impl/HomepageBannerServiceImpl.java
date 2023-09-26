@@ -38,9 +38,7 @@ public class HomepageBannerServiceImpl implements HomepageBannerService {
 
     @Override
     public HomepageBannerResponseDto findById(UUID id) {
-        HomepageBanner homepageBanner = homepageBannerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(HOMEPAGE_BANNER_NOT_FOUND));
-        return mapper.map(homepageBanner, HomepageBannerResponseDto.class);
+        return mapper.map(getHomepageBannerById(id), HomepageBannerResponseDto.class);
     }
 
     @Override
@@ -54,8 +52,7 @@ public class HomepageBannerServiceImpl implements HomepageBannerService {
     @Override
     @Transactional
     public void updateHomepageBanner(UUID id, @Valid HomepageBannerUpdateRequestDto requestDto) {
-        HomepageBanner homepageBanner = homepageBannerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(HOMEPAGE_BANNER_NOT_FOUND));
+        HomepageBanner homepageBanner = getHomepageBannerById(id);
         mapper.map(requestDto, homepageBanner);
         if (requestDto.getFile() != null && !requestDto.getFile().isEmpty()) {
             homepageBanner.setImageId(imageService.updateImage(requestDto.getFile(), homepageBanner.getImageId()).getId());
@@ -66,9 +63,13 @@ public class HomepageBannerServiceImpl implements HomepageBannerService {
     @Override
     @Transactional
     public void deleteHomepageBanner(UUID id) {
-        HomepageBanner homepageBanner = homepageBannerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(HOMEPAGE_BANNER_NOT_FOUND));
+        HomepageBanner homepageBanner = getHomepageBannerById(id);
         imageService.deleteImage(homepageBanner.getImageId());
         homepageBannerRepository.delete(homepageBanner);
+    }
+
+    private HomepageBanner getHomepageBannerById(UUID id) {
+        return homepageBannerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(HOMEPAGE_BANNER_NOT_FOUND));
     }
 }

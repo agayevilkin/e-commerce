@@ -35,15 +35,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void createProduct(ProductRequestDto productRequestDto) {
-        Brand brand = brandRepository.findById(productRequestDto.getBrandId())
-                .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
-        Highlight highlight = highlightRepository.findById(productRequestDto.getHighlightId())
-                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
-
         Product product = mapper.map(productRequestDto, Product.class);
-        product.setBrand(brand);
+        product.setBrand(getBrandById(productRequestDto.getBrandId()));
         product.setCategories(getCategoryList(productRequestDto.getCategories()));
-        product.setHighlight(highlight);
+        product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
 
@@ -52,16 +47,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void updateProduct(ProductRequestDto productRequestDto, UUID id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
+        Product product = getProductById(id);
         mapper.map(productRequestDto, product);
-
-        Brand brand = brandRepository.findById(productRequestDto.getBrandId())
-                .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
-        Highlight highlight = highlightRepository.findById(productRequestDto.getHighlightId())
-                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
-
-        product.setBrand(brand);
-        product.setHighlight(highlight);
+        product.setBrand(getBrandById(productRequestDto.getBrandId()));
+        product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setCategories(getCategoryList(productRequestDto.getCategories()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
@@ -78,8 +67,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public ProductDetailedResponseDto findById(UUID id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
-        return mapper.map(product, ProductDetailedResponseDto.class);
+        return mapper.map(getProductById(id), ProductDetailedResponseDto.class);
     }
 
     @Override
@@ -151,5 +139,20 @@ public class ProductServiceImpl implements ProductService {
                         .findById(e)
                         .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage())))
                 .collect(Collectors.toList());
+    }
+
+    private Brand getBrandById(UUID id) {
+        return brandRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
+    }
+
+    private Highlight getHighlightById(UUID id) {
+        return highlightRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
+    }
+
+    private Product getProductById(UUID id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
     }
 }

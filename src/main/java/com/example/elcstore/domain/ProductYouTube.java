@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "product_videos")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductVideo {
+public class ProductYouTube {
 
     @Id
     @Column(name = "product_video_id")

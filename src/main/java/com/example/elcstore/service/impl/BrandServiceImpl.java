@@ -37,8 +37,7 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public BrandResponseDto findById(UUID id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
-        return mapper.map(brand, BrandResponseDto.class);
+        return mapper.map(getBrandById(id), BrandResponseDto.class);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional
     public void updateBrand(UUID id, BrandUpdateRequestDto requestDto) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
+        Brand brand = getBrandById(id);
         mapper.map(requestDto, brand);
         if (requestDto.getImage() != null && !requestDto.getImage().isEmpty()) {
             brand.setImageId(imageService.updateImage(requestDto.getImage(), brand.getImageId()).getId());
@@ -63,9 +62,13 @@ public class BrandServiceImpl implements BrandService {
     @Override
     @Transactional
     public void deleteBrand(UUID id) {
-        Brand brand = brandRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
+        Brand brand = getBrandById(id);
         imageService.deleteImage(brand.getImageId());
         brandRepository.delete(brand);
+    }
+
+    private Brand getBrandById(UUID id) {
+        return brandRepository.findById(id).
+                orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
     }
 }

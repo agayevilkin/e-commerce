@@ -31,7 +31,7 @@ public class DiscountController {
     @GetMapping("/{id}")
     @Operation(summary = "findById")
     public DiscountResponseDto findById(@PathVariable UUID id) {
-        return service.getDiscount(id);
+        return service.findById(id);
     }
 
     @GetMapping("/all")

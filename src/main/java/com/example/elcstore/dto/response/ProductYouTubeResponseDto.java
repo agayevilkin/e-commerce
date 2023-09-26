@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Setter
 @Getter
-public class ProductVideoResponseDto {
+public class ProductYouTubeResponseDto {
 
     private UUID id;
     private String title;
