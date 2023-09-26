@@ -1,6 +1,6 @@
 package com.example.elcstore.domain;
 
-import com.example.elcstore.domain.enums.StateStatus;
+import com.example.elcstore.domain.enums.UserAccountStateStatus;
 import com.example.elcstore.domain.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -43,9 +43,9 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "role_id")})
     private List<Role> roles = new ArrayList<>();
 
-    @Column(name = "status")
+    @Column(name = "user_account_state_status")
     @Enumerated(EnumType.STRING)
-    private StateStatus stateStatus;
+    private UserAccountStateStatus userAccountStateStatus;
 
     @Column(name = "user_status")
     @Enumerated(EnumType.STRING)

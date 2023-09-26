@@ -1,6 +1,6 @@
 package com.example.elcstore.dto.response;
 
-import com.example.elcstore.domain.enums.StateStatus;
+import com.example.elcstore.domain.enums.UserAccountStateStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,5 +19,5 @@ public class UserResponseDto {
     private String avatar;
     //todo change with DTO
 //    private List<Role> roles;
-    private StateStatus stateStatus;
+    private UserAccountStateStatus userAccountStateStatus;
 }

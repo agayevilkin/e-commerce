@@ -1,6 +1,6 @@
 package com.example.elcstore.dto.request;
 
-import com.example.elcstore.domain.enums.VideoStatus;
+import com.example.elcstore.domain.enums.VideoTypeStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -22,7 +22,7 @@ public class ProductYouTubeRequestDto {
     private String videoLink;
 
     @NotNull(message = "Video status is required")
-    private VideoStatus videoStatus;
+    private VideoTypeStatus videoTypeStatus;
 
     private Boolean isNew;
 }

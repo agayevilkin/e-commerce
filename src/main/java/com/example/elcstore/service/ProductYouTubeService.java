@@ -1,6 +1,6 @@
 package com.example.elcstore.service;
 
-import com.example.elcstore.domain.enums.VideoStatus;
+import com.example.elcstore.domain.enums.VideoTypeStatus;
 import com.example.elcstore.dto.request.ProductYouTubeRequestDto;
 import com.example.elcstore.dto.response.ProductYouTubeResponseDto;
 
@@ -14,7 +14,7 @@ public interface ProductYouTubeService {
 
     void updateProductYouTube(UUID id, ProductYouTubeRequestDto requestDto);
 
-    List<ProductYouTubeResponseDto> getAllByVideoStatus(VideoStatus videoStatus);
+    List<ProductYouTubeResponseDto> getAllByVideoStatus(VideoTypeStatus videoTypeStatus);
 
     List<ProductYouTubeResponseDto> getAllLatestUploaded();
 

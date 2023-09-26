@@ -1,6 +1,6 @@
 package com.example.elcstore.controller;
 
-import com.example.elcstore.domain.enums.VideoStatus;
+import com.example.elcstore.domain.enums.VideoTypeStatus;
 import com.example.elcstore.dto.request.ProductYouTubeRequestDto;
 import com.example.elcstore.dto.response.ProductYouTubeResponseDto;
 import com.example.elcstore.service.ProductYouTubeService;
@@ -44,8 +44,8 @@ public class ProductYouTubeController {
 
     @GetMapping("/video-status/all")
     @Operation(summary = "getAllByVideoStatus")
-    public List<ProductYouTubeResponseDto> getAllByVideoStatus(@NotNull @RequestParam VideoStatus videoStatus) {
-        return service.getAllByVideoStatus(videoStatus);
+    public List<ProductYouTubeResponseDto> getAllByVideoStatus(@NotNull @RequestParam VideoTypeStatus videoTypeStatus) {
+        return service.getAllByVideoStatus(videoTypeStatus);
     }
 
     @GetMapping("/latest-uploads/all")

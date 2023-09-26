@@ -1,6 +1,6 @@
 package com.example.elcstore.domain;
 
-import com.example.elcstore.domain.enums.VideoStatus;
+import com.example.elcstore.domain.enums.VideoTypeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,9 +32,9 @@ public class ProductYouTube {
     @Column(name = "video_thumbnail")
     private String videoThumbnail;
 
-    @Column(name = "video_status")
+    @Column(name = "video_type_status")
     @Enumerated(EnumType.STRING)
-    private VideoStatus videoStatus;
+    private VideoTypeStatus videoTypeStatus;
 
     @Column(name = "is_new")
     private Boolean isNew;

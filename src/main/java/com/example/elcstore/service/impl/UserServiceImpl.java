@@ -4,7 +4,7 @@ import com.example.elcstore.domain.Customer;
 import com.example.elcstore.domain.Employee;
 import com.example.elcstore.domain.Role;
 import com.example.elcstore.domain.User;
-import com.example.elcstore.domain.enums.StateStatus;
+import com.example.elcstore.domain.enums.UserAccountStateStatus;
 import com.example.elcstore.domain.enums.UserStatus;
 import com.example.elcstore.dto.request.UserCustomerRequestDto;
 import com.example.elcstore.dto.request.UserEmployeeRequestDto;
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         Employee employee = mapper.map(requestDto, Employee.class);
         user.setRoles(getDefaultRole());
         //todo To make it INACTIVE when email verification is configured.
-        user.setStateStatus(StateStatus.ACTIVE);
+        user.setUserAccountStateStatus(UserAccountStateStatus.ACTIVE);
         user.setUserStatus(UserStatus.EMPLOYEE);
         user.setPassword(encoder.encode(requestDto.getPassword()));
         user.setEmployee(employee);
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         user.setCustomer(customer);
         user.setRoles(getDefaultRole());
         //todo To make it INACTIVE when email verification is configured.
-        user.setStateStatus(StateStatus.ACTIVE);
+        user.setUserAccountStateStatus(UserAccountStateStatus.ACTIVE);
         user.setUserStatus(UserStatus.CUSTOMER);
         userRepository.save(user);
     }

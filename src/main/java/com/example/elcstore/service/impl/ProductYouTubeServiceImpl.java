@@ -1,7 +1,7 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.ProductYouTube;
-import com.example.elcstore.domain.enums.VideoStatus;
+import com.example.elcstore.domain.enums.VideoTypeStatus;
 import com.example.elcstore.dto.request.ProductYouTubeRequestDto;
 import com.example.elcstore.dto.response.ProductYouTubeResponseDto;
 import com.example.elcstore.exception.InvalidProductVideoUrlException;
@@ -53,8 +53,8 @@ public class ProductYouTubeServiceImpl implements ProductYouTubeService {
     }
 
     @Override
-    public List<ProductYouTubeResponseDto> getAllByVideoStatus(VideoStatus videoStatus) {
-        return productYouTubeRepository.findAllByVideoStatus(videoStatus)
+    public List<ProductYouTubeResponseDto> getAllByVideoStatus(VideoTypeStatus videoTypeStatus) {
+        return productYouTubeRepository.findAllByVideoTypeStatus(videoTypeStatus)
                 .stream()
                 .map((productYouTube -> mapper.map(productYouTube, ProductYouTubeResponseDto.class)))
                 .collect(Collectors.toList());
