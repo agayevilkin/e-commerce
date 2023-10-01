@@ -5,6 +5,7 @@ import com.example.elcstore.dto.request.ProductOptionCreateRequestDto;
 import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
 import com.example.elcstore.dto.response.ProductOptionAdminPreviewResponseDto;
 import com.example.elcstore.dto.response.ProductOptionDetailedResponseDto;
+import com.example.elcstore.dto.response.ProductOptionRealTimeSearchResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -25,4 +26,5 @@ public interface ProductOptionService {
 
     void updateStockStatus(UUID id, StockStatus stockStatus);
 
+    List<ProductOptionRealTimeSearchResponseDto> searchProductOptionRealTime(String query);
 }

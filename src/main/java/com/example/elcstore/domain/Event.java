@@ -23,4 +23,8 @@ public class Event {
 
     @Column(name = "name")
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "color_id")
+    private Color color;
 }

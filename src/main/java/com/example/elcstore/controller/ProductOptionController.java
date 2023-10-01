@@ -1,10 +1,13 @@
 package com.example.elcstore.controller;
 
 import com.example.elcstore.domain.enums.StockStatus;
+import com.example.elcstore.domain.pagination.CustomPage;
 import com.example.elcstore.dto.request.ProductOptionCreateRequestDto;
 import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
 import com.example.elcstore.dto.response.ProductOptionAdminPreviewResponseDto;
 import com.example.elcstore.dto.response.ProductOptionDetailedResponseDto;
+import com.example.elcstore.dto.response.ProductOptionPreviewResponseDto;
+import com.example.elcstore.dto.response.ProductOptionRealTimeSearchResponseDto;
 import com.example.elcstore.service.ProductOptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -12,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -44,6 +48,12 @@ public class ProductOptionController {
     @Operation(summary = "findAllByProductId")
     public List<ProductOptionAdminPreviewResponseDto> findAllByProductId(@PathVariable UUID id) {
         return service.findAllByProductId(id);
+    }
+
+    @PostMapping("/real-time/search")
+    @Operation(summary = "searchProductOptionRealTime")
+    public List<ProductOptionRealTimeSearchResponseDto> searchProductOptionRealTime(@RequestParam String query) {
+        return service.searchProductOptionRealTime(query);
     }
 
     @PutMapping("/stock_status/{id}")

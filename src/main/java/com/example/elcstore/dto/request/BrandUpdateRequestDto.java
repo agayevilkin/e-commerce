@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class BrandUpdateRequestDto {
     @NotBlank(message = "Please provide a name")
-    private String name;
+    private String brandName;
 
     private MultipartFile image;
 }

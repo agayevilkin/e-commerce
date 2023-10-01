@@ -11,4 +11,5 @@ public class EventResponseDto {
 
     private UUID id;
     private String name;
+    private ColorResponseDto color;
 }

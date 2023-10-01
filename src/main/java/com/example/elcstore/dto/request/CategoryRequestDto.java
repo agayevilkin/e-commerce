@@ -10,7 +10,7 @@ import java.util.UUID;
 @Setter
 public class CategoryRequestDto {
     @NotBlank(message = "Please provide a name")
-    private String name;
+    private String categoryName;
 
     private UUID parentId;
 }

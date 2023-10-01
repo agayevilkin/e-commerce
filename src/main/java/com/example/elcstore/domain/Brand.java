@@ -20,8 +20,8 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "brand_name")
+    private String brandName;
 
     @Column(name = "image_id")
     private UUID imageId;
