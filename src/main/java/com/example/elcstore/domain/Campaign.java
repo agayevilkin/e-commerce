@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -31,10 +32,10 @@ public class Campaign {
     private String note;
 
     @Column(name = "starting_date")
-    private String startingDate;
+    private LocalDateTime startingDate;
 
     @Column(name = "ending_date")
-    private String endingDate;
+    private LocalDateTime endingDate;
 
     @Column(name = "image_id")
     private UUID imageId;
@@ -42,4 +43,5 @@ public class Campaign {
     @Column(name = "thumbnail_image_id")
     private UUID thumbnailImageId;
 
+    // TODO: 9/24/2023 can be add Category or (other function for get all product similar to campaigns)
 }

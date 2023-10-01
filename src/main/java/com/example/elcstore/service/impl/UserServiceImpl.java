@@ -4,7 +4,7 @@ import com.example.elcstore.domain.Customer;
 import com.example.elcstore.domain.Employee;
 import com.example.elcstore.domain.Role;
 import com.example.elcstore.domain.User;
-import com.example.elcstore.domain.enums.StateStatus;
+import com.example.elcstore.domain.enums.UserAccountStateStatus;
 import com.example.elcstore.domain.enums.UserStatus;
 import com.example.elcstore.dto.request.UserCustomerRequestDto;
 import com.example.elcstore.dto.request.UserEmployeeRequestDto;
@@ -42,13 +42,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void createEmployeeUser(UserEmployeeRequestDto requestDto) {
-        if (userRepository.existsByEmail(requestDto.getEmail()))
-            throw new AlreadyExistsException(EMAIL_ALREADY_EXISTS.getMessage());
+        checkAndThrowIfEmailExists(requestDto.getEmail());
         User user = mapper.map(requestDto, User.class);
         Employee employee = mapper.map(requestDto, Employee.class);
         user.setRoles(getDefaultRole());
         //todo To make it INACTIVE when email verification is configured.
-        user.setStateStatus(StateStatus.ACTIVE);
+        user.setUserAccountStateStatus(UserAccountStateStatus.ACTIVE);
         user.setUserStatus(UserStatus.EMPLOYEE);
         user.setPassword(encoder.encode(requestDto.getPassword()));
         user.setEmployee(employee);
@@ -58,22 +57,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createCustomerUser(UserCustomerRequestDto requestDto) {
-        if (userRepository.existsByEmail(requestDto.getEmail()))
-            throw new AlreadyExistsException(EMAIL_ALREADY_EXISTS.getMessage());
+        checkAndThrowIfEmailExists(requestDto.getEmail());
         User user = mapper.map(requestDto, User.class);
         Customer customer = mapper.map(requestDto, Customer.class);
         user.setPassword(encoder.encode(requestDto.getPassword()));
         user.setCustomer(customer);
         user.setRoles(getDefaultRole());
         //todo To make it INACTIVE when email verification is configured.
-        user.setStateStatus(StateStatus.ACTIVE);
+        user.setUserAccountStateStatus(UserAccountStateStatus.ACTIVE);
         user.setUserStatus(UserStatus.CUSTOMER);
         userRepository.save(user);
     }
 
     @Override
     public UserResponseDto findById(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+        User user = getUserById(id);
         UserResponseDto userResponseDto = mapper.map(user, UserResponseDto.class);
         if (user.getEmployee() != null && user.getEmployee().getImageId() != null) {
             userResponseDto.setAvatar(imageService.createImageUrl(user.getEmployee().getImageId()));
@@ -81,10 +79,12 @@ public class UserServiceImpl implements UserService {
         return userResponseDto;
     }
 
+    // TODO: 9/26/2023 add update method for CUSTOMER or add email verification method
     @Override
     @Transactional
     public void updateUser(UUID id, UserEmployeeRequestDto requestDto) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+        checkAndThrowIfEmailExists(requestDto.getEmail());
+        User user = getUserById(id);
         Employee employee = user.getEmployee();
         if (requestDto.getImage() != null)
             employee.setImageId(imageService.uploadImage(requestDto.getImage()).getId());
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void deleteUser(UUID id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+        User user = getUserById(id);
         userRepository.delete(user);
         if (user.getEmployee() != null && user.getEmployee().getImageId() != null) {
             imageService.deleteImage(user.getEmployee().getImageId());
@@ -115,5 +115,16 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(roleService::findById)
                 .collect(Collectors.toList());
+    }
+
+    public void checkAndThrowIfEmailExists(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new AlreadyExistsException(EMAIL_ALREADY_EXISTS.getMessage());
+        }
+    }
+
+    private User getUserById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
     }
 }

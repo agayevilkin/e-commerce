@@ -23,28 +23,26 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 @RequiredArgsConstructor
 public class HighlightServiceImpl implements HighlightService {
 
-    private final HighlightRepository repository;
+    private final HighlightRepository highlightRepository;
     private final HighlightDefinitionRepository highlightDefinitionRepository;
     private final ModelMapper mapper;
 
     @Override
     public void createHighlight(HighlightRequestDto requestDto) {
-        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getHighlightDefinitionId())
-                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
+        HighlightDefinition highlightDefinition = getHighlightDefinitionById(requestDto.getHighlightDefinitionId());
         Highlight highlight = mapper.map(requestDto, Highlight.class);
         highlight.setHighlightDefinition(highlightDefinition);
-        repository.save(highlight);
+        highlightRepository.save(highlight);
     }
 
     @Override
     public HighlightResponseDto findById(UUID id) {
-        Highlight highlight = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
-        return mapper.map(highlight, HighlightResponseDto.class);
+        return mapper.map(getHighlightById(id), HighlightResponseDto.class);
     }
 
     @Override
     public List<HighlightResponseDto> getAllByProductIdentificationName(String productIdentificationName) {
-        return repository.findAllByProductIdentificationName(productIdentificationName)
+        return highlightRepository.findAllByProductIdentificationName(productIdentificationName)
                 .stream()
                 .map((idN) -> mapper.map(idN, HighlightResponseDto.class))
                 .collect(Collectors.toList());
@@ -52,23 +50,31 @@ public class HighlightServiceImpl implements HighlightService {
 
     @Override
     public void updateHighlight(UUID id, HighlightRequestDto requestDto) {
-        Highlight highlight = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
-        HighlightDefinition highlightDefinition = highlightDefinitionRepository.findById(requestDto.getHighlightDefinitionId())
-                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
+        Highlight highlight = getHighlightById(id);
+        HighlightDefinition highlightDefinition = getHighlightDefinitionById(requestDto.getHighlightDefinitionId());
         mapper.map(requestDto, highlight);
         highlight.setHighlightDefinition(highlightDefinition);
-        repository.save(highlight);
+        highlightRepository.save(highlight);
     }
 
     @Override
     public void deleteHighlight(UUID id) {
         if (checkById(id)) {
-            repository.deleteById(id);
+            highlightRepository.deleteById(id);
         }
     }
 
     private boolean checkById(UUID id) {
-        return repository.existsById(id);
+        return highlightRepository.existsById(id);
+    }
+
+    private HighlightDefinition getHighlightDefinitionById(UUID id) {
+        return highlightDefinitionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
+    }
+
+    private Highlight getHighlightById(UUID id) {
+        return highlightRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_NOT_FOUND.getMessage()));
     }
 }

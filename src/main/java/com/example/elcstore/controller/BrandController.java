@@ -1,6 +1,7 @@
 package com.example.elcstore.controller;
 
-import com.example.elcstore.dto.request.BrandRequestDto;
+import com.example.elcstore.dto.request.BrandCreateRequestDto;
+import com.example.elcstore.dto.request.BrandUpdateRequestDto;
 import com.example.elcstore.dto.response.BrandResponseDto;
 import com.example.elcstore.service.BrandService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,10 +20,11 @@ public class BrandController {
 
     private final BrandService service;
 
-    @PostMapping
+    //    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
-    public void create(@Valid @RequestBody BrandRequestDto requestDto) {
+    public void create(@Valid @ModelAttribute BrandCreateRequestDto requestDto) {
         service.createBrand(requestDto);
     }
 
@@ -38,9 +40,10 @@ public class BrandController {
         return service.getAllBrands();
     }
 
-    @PutMapping("/{id}")
+    //    @PutMapping("/{id}")
+    @PutMapping(value = {"/{id}"}, consumes = {"multipart/form-data"})
     @Operation(summary = "update")
-    public void update(@PathVariable UUID id, @Valid @RequestBody BrandRequestDto requestDto) {
+    public void update(@PathVariable UUID id, @Valid @ModelAttribute BrandUpdateRequestDto requestDto) {
         service.updateBrand(id, requestDto);
     }
 

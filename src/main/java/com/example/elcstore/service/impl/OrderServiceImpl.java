@@ -1,10 +1,7 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.config.UserInfo;
-import com.example.elcstore.domain.Order;
-import com.example.elcstore.domain.OrderDetail;
-import com.example.elcstore.domain.ProductOption;
-import com.example.elcstore.domain.User;
+import com.example.elcstore.domain.*;
 import com.example.elcstore.domain.enums.OrderStatus;
 import com.example.elcstore.dto.request.OrderDetailRequestDto;
 import com.example.elcstore.dto.request.OrderRequestDto;
@@ -31,7 +28,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
-    //    private final PaymentRepository paymentRepository;
+//        private final PaymentRepository paymentRepository;
     private final ProductRepository productRepository;
     private final ProductOptionRepository productOptionRepository;
     private final ModelMapper mapper;
@@ -42,12 +39,10 @@ public class OrderServiceImpl implements OrderService {
     // TODO: 9/15/2023 Payment pending..
     // TODO: 9/15/2023 write fake Payment service or not use Payment for now
     public OrderResponseDto createOrder(OrderRequestDto requestDto) {
-        User user = userRepository.findById(userInfo.getUserId())
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
         Order order = mapper.map(requestDto, Order.class);
         order.setOrderDetail(getOrderProductDetailList(requestDto.getOrderDetailRequestDto(), order));
         order.setOrderStatus(OrderStatus.ORDER_RECEIVED);
-        order.setCustomer(user.getCustomer());
+        order.setCustomer(getUser().getCustomer());
 //        order.setPayment();
         return mapper.map(orderRepository.save(order), OrderResponseDto.class);
     }
@@ -55,8 +50,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponseDto findById(UUID id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
-        return mapper.map(order, OrderResponseDto.class);
+        return mapper.map(getOrderById(id), OrderResponseDto.class);
     }
 
     @Override
@@ -73,8 +67,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponseDto> getAllOrdersByCustomer() {
         if (userInfo.getUserId() != null) {
-            User user = userRepository.findById(userInfo.getUserId())
-                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+            User user = getUser();
             if (user.getCustomer() != null) {
                 return orderRepository.findByCustomerId(user.getCustomer().getId())
                         .stream()
@@ -87,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void updateOrderStatus(UUID id, OrderStatus orderStatus) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
+        Order order = getOrderById(id);
         order.setOrderStatus(orderStatus);
         orderRepository.save(order);
     }
@@ -122,5 +115,24 @@ public class OrderServiceImpl implements OrderService {
 
     private boolean checkById(UUID id) {
         return orderRepository.existsById(id);
+    }
+
+
+    private ProductOption getProductOptionById(UUID id) {
+        return null; // TODO: 9/26/2023 complete if you need
+    }
+
+    private Product getProductById(UUID id) {
+        return null; // TODO: 9/26/2023 complete if you need
+    }
+
+    private User getUser() {
+        return userRepository.findById(userInfo.getUserId())
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));
+    }
+
+    private Order getOrderById(UUID id) {
+        return orderRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(ORDER_NOT_FOUND.getMessage()));
     }
 }

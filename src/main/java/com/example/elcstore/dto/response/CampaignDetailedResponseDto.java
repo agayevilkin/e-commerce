@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Setter
@@ -14,7 +15,7 @@ public class CampaignDetailedResponseDto {
     private String title;
     private String description;
     private String note;
-    private String startingDate;
-    private String endingDate;
+    private LocalDateTime startingDate;
+    private LocalDateTime endingDate;
     private UUID imageId;
 }

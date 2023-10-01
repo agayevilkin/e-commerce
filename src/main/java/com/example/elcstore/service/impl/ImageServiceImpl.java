@@ -68,8 +68,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Transactional
     public byte[] getImage(UUID id) {
-        Image dbImage = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
-        return ImageUtil.decompressImage(dbImage.getImageData());
+        return ImageUtil.decompressImage(getImageById(id).getImageData());
     }
 
     @Override
@@ -138,7 +137,7 @@ public class ImageServiceImpl implements ImageService {
 
     private Image createUpdateImageObject(UUID id, byte[] bytes) {
         if (isSupportedImageFormat(bytes)) {
-            Image image = imageRepository.findById(id).orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
+            Image image = getImageById(id);
             image.setImageData(ImageUtil.compressImage(bytes));
             return imageRepository.save(image);
         } else throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
@@ -146,13 +145,25 @@ public class ImageServiceImpl implements ImageService {
     }
 
     private boolean isSupportedImageFormat(byte[] file) {
-        if (file.length >= 2) {
-            if (file[0] == (byte) 0xFF && file[1] == (byte) 0xD8) {
+        if (file.length >= 6) {
+            if (file[0] == (byte) 0x47 && // 'G'
+                    file[1] == (byte) 0x49 && // 'I'
+                    file[2] == (byte) 0x46 && // 'F'
+                    file[3] == (byte) 0x38 && // '8'
+                    (file[4] == (byte) 0x37 || file[4] == (byte) 0x39) && // '7' or '9'
+                    file[5] == (byte) 0x61) { // 'a'
+                return true; // GIF
+            } else if (file[0] == (byte) 0xFF && file[1] == (byte) 0xD8) {
                 return true; // JPEG
             } else if (file[0] == (byte) 0x89 && file[1] == (byte) 0x50) {
                 return true; // PNG
             }
         }
         return false;
+    }
+
+    private Image getImageById(UUID id) {
+        return imageRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(IMAGE_NOT_FOUND.getMessage()));
     }
 }

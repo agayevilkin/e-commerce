@@ -50,16 +50,11 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     // TODO: 9/20/2023  ProductOptionImageDetailRequestDto list wait test
     public void createProductOption(ProductOptionCreateRequestDto requestDto) {
-        Product product = productRepository.findById(requestDto.getProductId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND));
-        Color color = colorRepository.findById(requestDto.getColorId())
-                .orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND));
-
         ProductOption productOption = mapper.map(requestDto, ProductOption.class);
         productOption.setThumbnailId(imageService.uploadImageWithByteArray(resizeImage(requestDto.getThumbnail())).getId());
         productOption.setImageDetails(getImageDetailList(requestDto.getImageDetailRequestDtoList(), productOption));
-        productOption.setProduct(product);
-        productOption.setColor(color);
+        productOption.setProduct(getProductById(requestDto.getProductId()));
+        productOption.setColor(getColorById(requestDto.getColorId()));
 
         productOptionRepository.save(productOption);
     }
@@ -67,9 +62,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     @Transactional
     public ProductOptionDetailedResponseDto findById(UUID id) {
-        ProductOption productOption = productOptionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND));
-        return mapper.map(productOption, ProductOptionDetailedResponseDto.class);
+        return mapper.map(getProductOptionById(id), ProductOptionDetailedResponseDto.class);
     }
 
     @Override
@@ -83,17 +76,11 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     // TODO: 9/20/2023  ProductOptionImageDetailRequestDto list wait test
     public void updateProductOption(UUID id, ProductOptionUpdateRequestDto requestDto) {
-        ProductOption productOption = productOptionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND));
-        Product product = productRepository.findById(requestDto.getProductId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND));
-        Color color = colorRepository.findById(requestDto.getColorId())
-                .orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND));
-
+        ProductOption productOption = getProductOptionById(id);
         mapper.map(requestDto, productOption);
-        productOption.setProduct(product);
+        productOption.setProduct(getProductById(requestDto.getProductId()));
+        productOption.setColor(getColorById(requestDto.getColorId()));
         productOption.getImageDetails().addAll(getImageDetailList(requestDto.getImageDetailRequestDtoList(), productOption));
-        productOption.setColor(color);
 
         productOptionRepository.save(productOption);
     }
@@ -101,16 +88,14 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     @Transactional
     public void updateThumbnail(UUID id, MultipartFile file) {
-        ProductOption productOption = productOptionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND));
+        ProductOption productOption = getProductOptionById(id);
         productOption.setThumbnailId(imageService.updateImageWithByteArray(resizeImage(file), productOption.getThumbnailId()).getId());
         productOptionRepository.save(productOption);
     }
 
     @Override
     public void updateStockStatus(UUID id, StockStatus stockStatus) {
-        ProductOption productOption = productOptionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND));
+        ProductOption productOption = getProductOptionById(id);
         productOption.setStockStatus(stockStatus);
         productOptionRepository.save(productOption);
     }
@@ -118,8 +103,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Override
     @Transactional
     public void deleteProductOption(UUID id) {
-        ProductOption productOption = productOptionRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND));
+        ProductOption productOption = getProductOptionById(id);
         imageService.deleteImage(productOption.getThumbnailId());
         productOptionRepository.delete(productOption);
     }
@@ -149,5 +133,20 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         } catch (IOException e) {
             throw new ImageUploadException(FAILED_UPLOAD_IMAGE);
         }
+    }
+
+    private Product getProductById(UUID id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND));
+    }
+
+    private Color getColorById(UUID id) {
+        return colorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND));
+    }
+
+    private ProductOption getProductOptionById(UUID id) {
+        return productOptionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND));
     }
 }

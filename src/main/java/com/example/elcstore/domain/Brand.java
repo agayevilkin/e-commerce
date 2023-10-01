@@ -22,4 +22,7 @@ public class Brand {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "image_id")
+    private UUID imageId;
 }

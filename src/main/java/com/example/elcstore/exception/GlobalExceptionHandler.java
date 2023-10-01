@@ -42,6 +42,12 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
+    @ExceptionHandler(InvalidProductVideoUrlException.class)
+    public final ResponseEntity<Map<String, Object>> handle(InvalidProductVideoUrlException ex, WebRequest request) {
+        log.trace("Invalid Product Video Url {}", ex.getMessage());
+            return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
     @ExceptionHandler(ImageProcessingException.class)
     public final ResponseEntity<Map<String, Object>> handle(ImageProcessingException ex, WebRequest request) {
         log.trace("Image processing failed! {}", ex.getMessage());
@@ -54,7 +60,7 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    //todo can be change
+    // TODO: 9/25/2023 Change this message or change use place
     @ExceptionHandler(DataIntegrityViolationException.class)
     public final ResponseEntity<Map<String, Object>> handle(DataIntegrityViolationException ex, WebRequest request) {
         log.trace("This data is used by other entity {}", ex.getMessage());

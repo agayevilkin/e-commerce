@@ -36,8 +36,7 @@ public class ProductImageDetailServiceImpl implements ProductImageDetailService 
     @Override
     @Transactional
     public void createProductImageDetail(ProductImageDetailRequestDto requestDto) {
-        ProductOption productOption = productOptionRepository.findById(requestDto.getProductOptionId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND.getMessage()));
+        ProductOption productOption = getProductOptionById(requestDto.getProductOptionId());
         ProductImageDetail productImageDetail = mapper.map(requestDto, ProductImageDetail.class);
         Image image = imageService.uploadImageWithByteArray(requestDto.getImage().getBytes());
         productImageDetail.setImage(image);
@@ -48,9 +47,7 @@ public class ProductImageDetailServiceImpl implements ProductImageDetailService 
 
     @Override
     public ProductImageDetailResponseDto findById(UUID id) {
-        ProductImageDetail productImageDetail = productImageDetailRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_IMAGE_DETAIL_NOT_FOUND.getMessage()));
-        return mapper.map(productImageDetail, ProductImageDetailResponseDto.class);
+        return mapper.map(getProductImageDetailById(id), ProductImageDetailResponseDto.class);
     }
 
     @Override
@@ -64,22 +61,28 @@ public class ProductImageDetailServiceImpl implements ProductImageDetailService 
     @SneakyThrows
     @Override
     public void updateProductImageDetail(UUID id, ProductImageDetailRequestDto requestDto) {
-        ProductImageDetail productImageDetail = productImageDetailRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_IMAGE_DETAIL_NOT_FOUND.getMessage()));
-        ProductOption productOption = productOptionRepository.findById(requestDto.getProductOptionId())
-                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND.getMessage()));
+        ProductImageDetail productImageDetail = getProductImageDetailById(id);
         mapper.map(requestDto, productImageDetail);
         productImageDetail.setImage(imageService.updateImageWithByteArray(requestDto.getImage().getBytes(), productImageDetail.getImage().getId()));
-        productImageDetail.setProductOption(productOption);
+        productImageDetail.setProductOption(getProductOptionById(requestDto.getProductOptionId()));
         productImageDetailRepository.save(productImageDetail);
     }
 
     @Override
     @Transactional
     public void deleteProductImageDetail(UUID id) {
-        ProductImageDetail productImageDetail = productImageDetailRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(PRODUCT_IMAGE_DETAIL_NOT_FOUND.getMessage()));
+        ProductImageDetail productImageDetail = getProductImageDetailById(id);
         imageService.deleteImage(productImageDetail.getImage().getId());
         productImageDetailRepository.delete(productImageDetail);
+    }
+
+    private ProductImageDetail getProductImageDetailById(UUID id) {
+        return productImageDetailRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_IMAGE_DETAIL_NOT_FOUND.getMessage()));
+    }
+
+    private ProductOption getProductOptionById(UUID id) {
+        return productOptionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_OPTION_NOT_FOUND.getMessage()));
     }
 }

@@ -10,7 +10,7 @@ public interface DiscountService {
 
     void create(DiscountRequestDto requestDto);
 
-    DiscountResponseDto getDiscount(UUID id);
+    DiscountResponseDto findById(UUID id);
 
     void delete(UUID id);
 

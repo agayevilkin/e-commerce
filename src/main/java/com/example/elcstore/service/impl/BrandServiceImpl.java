@@ -1,11 +1,14 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Brand;
-import com.example.elcstore.dto.request.BrandRequestDto;
+import com.example.elcstore.dto.request.BrandCreateRequestDto;
+import com.example.elcstore.dto.request.BrandUpdateRequestDto;
 import com.example.elcstore.dto.response.BrandResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.BrandRepository;
 import com.example.elcstore.service.BrandService;
+import com.example.elcstore.service.ImageService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -21,18 +24,20 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
+    private final ImageService imageService;
     private final ModelMapper mapper;
 
     @Override
-    public void createBrand(BrandRequestDto requestDto) {
+    @Transactional
+    public void createBrand(BrandCreateRequestDto requestDto) {
         Brand brand = mapper.map(requestDto, Brand.class);
+        brand.setImageId(imageService.uploadImage(requestDto.getImage()).getId());
         brandRepository.save(brand);
     }
 
     @Override
     public BrandResponseDto findById(UUID id) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
-        return mapper.map(brand, BrandResponseDto.class);
+        return mapper.map(getBrandById(id), BrandResponseDto.class);
     }
 
     @Override
@@ -44,20 +49,26 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public void updateBrand(UUID id, BrandRequestDto requestDto) {
-        Brand brand = brandRepository.findById(id).orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
+    @Transactional
+    public void updateBrand(UUID id, BrandUpdateRequestDto requestDto) {
+        Brand brand = getBrandById(id);
         mapper.map(requestDto, brand);
+        if (requestDto.getImage() != null && !requestDto.getImage().isEmpty()) {
+            brand.setImageId(imageService.updateImage(requestDto.getImage(), brand.getImageId()).getId());
+        }
         brandRepository.save(brand);
     }
 
     @Override
+    @Transactional
     public void deleteBrand(UUID id) {
-        if (checkById(id)) {
-            brandRepository.deleteById(id);
-        }
+        Brand brand = getBrandById(id);
+        imageService.deleteImage(brand.getImageId());
+        brandRepository.delete(brand);
     }
 
-    private boolean checkById(UUID id) {
-        return brandRepository.existsById(id);
+    private Brand getBrandById(UUID id) {
+        return brandRepository.findById(id).
+                orElseThrow(() -> new NotFoundException(BRAND_NOT_FOUND.getMessage()));
     }
 }

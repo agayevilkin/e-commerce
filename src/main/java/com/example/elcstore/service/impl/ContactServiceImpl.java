@@ -29,9 +29,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public ContactResponseDto findById(UUID id) {
-        Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(CONTACT_NOT_FOUND.getMessage()));
-        return mapper.map(contact, ContactResponseDto.class);
+        return mapper.map(getContactById(id), ContactResponseDto.class);
     }
 
     @Override
@@ -44,8 +42,7 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public void updateContact(UUID id, ContactRequestDto requestDto) {
-        Contact contact = contactRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(CONTACT_NOT_FOUND.getMessage()));
+        Contact contact = getContactById(id);
         mapper.map(requestDto, contact);
         contactRepository.save(contact);
     }
@@ -59,5 +56,10 @@ public class ContactServiceImpl implements ContactService {
 
     private boolean existsById(UUID id) {
         return contactRepository.existsById(id);
+    }
+
+    private Contact getContactById(UUID id) {
+        return contactRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CONTACT_NOT_FOUND.getMessage()));
     }
 }

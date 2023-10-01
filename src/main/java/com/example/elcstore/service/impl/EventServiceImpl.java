@@ -31,15 +31,14 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public void updateEvent(UUID id, EventRequestDto requestDto) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage()));
+        Event event = getEventById(id);
         mapper.map(requestDto, event);
         eventRepository.save(event);
     }
 
     @Override
     public EventResponseDto findById(UUID id) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage()));
-        return mapper.map(event, EventResponseDto.class);
+        return mapper.map(getEventById(id), EventResponseDto.class);
     }
 
     @Override
@@ -62,4 +61,8 @@ public class EventServiceImpl implements EventService {
         return eventRepository.existsById(id);
     }
 
+    private Event getEventById(UUID id) {
+        return eventRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(EVENT_NOT_FOUND.getMessage()));
+    }
 }

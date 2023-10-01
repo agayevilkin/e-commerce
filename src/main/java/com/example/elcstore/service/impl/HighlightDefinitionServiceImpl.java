@@ -28,13 +28,12 @@ public class HighlightDefinitionServiceImpl implements HighlightDefinitionServic
 
     @Override
     public HighlightDefinitionResponseDto findById(UUID id) {
-        HighlightDefinition highlightDefinition = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
-        return mapper.map(highlightDefinition, HighlightDefinitionResponseDto.class);
+        return mapper.map(getHighlightDefinitionById(id), HighlightDefinitionResponseDto.class);
     }
 
     @Override
     public void updateHighlightDefinition(UUID id, HighlightDefinitionRequestDto requestDto) {
-        HighlightDefinition highlightDefinition = repository.findById(id).orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
+        HighlightDefinition highlightDefinition = getHighlightDefinitionById(id);
         mapper.map(requestDto, highlightDefinition);
         repository.save(highlightDefinition);
     }
@@ -48,5 +47,10 @@ public class HighlightDefinitionServiceImpl implements HighlightDefinitionServic
 
     private boolean checkById(UUID id) {
         return repository.existsById(id);
+    }
+
+    private HighlightDefinition getHighlightDefinitionById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
     }
 }

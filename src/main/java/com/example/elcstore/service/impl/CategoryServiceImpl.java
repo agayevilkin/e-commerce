@@ -25,8 +25,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(CategoryRequestDto requestDto) {
-        Category parent = categoryRepository.findById(requestDto.getParentId())
-                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+        Category parent = getCategoryById(requestDto.getParentId());
         Category category = mapper.map(requestDto, Category.class);
         category.setParent(parent);
         categoryRepository.save(category);
@@ -34,8 +33,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto findById(UUID id) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
-        return mapper.map(category, CategoryResponseDto.class);
+        return mapper.map(getCategoryById(id), CategoryResponseDto.class);
     }
 
     @Override
@@ -56,8 +54,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void updateCategory(UUID id, CategoryRequestDto requestDto) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+        Category category = getCategoryById(id);
         mapper.map(requestDto, category);
+        if (requestDto.getParentId() != null) {
+            Category parent = getCategoryById(requestDto.getParentId());
+            category.setParent(parent);
+        } else category.setParent(null);
         categoryRepository.save(category);
     }
 
@@ -69,8 +71,12 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
-
     private boolean checkById(UUID id) {
         return categoryRepository.existsById(id);
+    }
+
+    private Category getCategoryById(UUID id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
     }
 }

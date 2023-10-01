@@ -25,14 +25,12 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public void createColor(ColorRequestDto requestDto) {
-        Color color = mapper.map(requestDto, Color.class);
-        colorRepository.save(color);
+        colorRepository.save(mapper.map(requestDto, Color.class));
     }
 
     @Override
     public ColorResponseDto findById(UUID id) {
-        Color color = colorRepository.findById(id).orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND.getMessage()));
-        return mapper.map(color, ColorResponseDto.class);
+        return mapper.map(getColorById(id), ColorResponseDto.class);
     }
 
     @Override
@@ -45,7 +43,7 @@ public class ColorServiceImpl implements ColorService {
 
     @Override
     public void updateColor(UUID id, ColorRequestDto requestDto) {
-        Color color = colorRepository.findById(id).orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND.getMessage()));
+        Color color = getColorById(id);
         mapper.map(requestDto, color);
         colorRepository.save(color);
     }
@@ -59,5 +57,10 @@ public class ColorServiceImpl implements ColorService {
 
     private boolean checkById(UUID id) {
         return colorRepository.existsById(id);
+    }
+
+    private Color getColorById(UUID id) {
+        return colorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(COLOR_NOT_FOUND.getMessage()));
     }
 }

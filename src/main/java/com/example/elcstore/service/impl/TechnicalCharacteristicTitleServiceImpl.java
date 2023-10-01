@@ -28,15 +28,12 @@ public class TechnicalCharacteristicTitleServiceImpl implements TechnicalCharact
 
     @Override
     public TechnicalCharacteristicTitleResponseDto findById(UUID id) {
-        TechnicalCharacteristicTitle title = titleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND.getMessage()));
-        return mapper.map(title, TechnicalCharacteristicTitleResponseDto.class);
+        return mapper.map(getTechnicalCharacteristicTitleById(id), TechnicalCharacteristicTitleResponseDto.class);
     }
 
     @Override
     public void updateTechnicalCharacteristicTitle(UUID id, TechnicalCharacteristicTitleRequestDto requestDto) {
-        TechnicalCharacteristicTitle title = titleRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND.getMessage()));
+        TechnicalCharacteristicTitle title = getTechnicalCharacteristicTitleById(id);
         mapper.map(requestDto, title);
         titleRepository.save(title);
 
@@ -53,4 +50,8 @@ public class TechnicalCharacteristicTitleServiceImpl implements TechnicalCharact
         return titleRepository.existsById(id);
     }
 
+    private TechnicalCharacteristicTitle getTechnicalCharacteristicTitleById(UUID id) {
+        return titleRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND.getMessage()));
+    }
 }
