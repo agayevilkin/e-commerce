@@ -12,4 +12,5 @@ public class HomepageBannerResponseDto {
     private UUID id;
     private UUID imageId;
     private String link;
+    private int orderNum;
 }

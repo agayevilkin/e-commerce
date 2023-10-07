@@ -9,6 +9,6 @@ import java.util.UUID;
 @Setter
 public class BrandResponseDto {
     private UUID id;
-    private String name;
+    private String brandName;
     private UUID imageId;
 }

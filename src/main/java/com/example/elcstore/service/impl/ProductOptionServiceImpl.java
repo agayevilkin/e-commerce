@@ -4,12 +4,13 @@ import com.example.elcstore.domain.Color;
 import com.example.elcstore.domain.Product;
 import com.example.elcstore.domain.ProductImageDetail;
 import com.example.elcstore.domain.ProductOption;
+import com.example.elcstore.domain.enums.SearchOperation;
 import com.example.elcstore.domain.enums.StockStatus;
+import com.example.elcstore.domain.pagination.CustomPage;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.request.ProductOptionCreateRequestDto;
 import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
-import com.example.elcstore.dto.response.ProductOptionAdminPreviewResponseDto;
-import com.example.elcstore.dto.response.ProductOptionDetailedResponseDto;
+import com.example.elcstore.dto.response.*;
 import com.example.elcstore.dto.request.ProductOptionImageDetailRequestDto;
 import com.example.elcstore.exception.ImageUploadException;
 import com.example.elcstore.exception.NotFoundException;
@@ -18,9 +19,12 @@ import com.example.elcstore.repository.ProductOptionRepository;
 import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.ImageService;
 import com.example.elcstore.service.ProductOptionService;
+import com.example.elcstore.service.search.SearchCriteria;
+import com.example.elcstore.service.search.GenericSearchSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -98,6 +102,27 @@ public class ProductOptionServiceImpl implements ProductOptionService {
         ProductOption productOption = getProductOptionById(id);
         productOption.setStockStatus(stockStatus);
         productOptionRepository.save(productOption);
+    }
+
+    @Override
+    public List<ProductOptionRealTimeSearchResponseDto> searchProductOptionRealTime(String query) {
+        SearchCriteria criteria = SearchCriteria.builder().key("title").searchOperation(SearchOperation.LIKE).value(query).build();
+        return productOptionRepository.findAll(new GenericSearchSpecification<>(criteria), PageRequest.of(0, 10))
+                .stream()
+                .map((productOption) -> mapper.map(productOption, ProductOptionRealTimeSearchResponseDto.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional    // TODO: 10/2/2023 check again for maybe too send many queries to DB
+    public CustomPage<ProductOptionCategoryBannerResponseDto> findAllByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize) {
+        return new CustomPage<>(productOptionRepository.findAllByProduct_Categories_Id(categoryId, PageRequest.of(pageIndex, pageSize))
+                .map((productOption -> {
+                    ProductOptionCategoryBannerResponseDto responseDto = mapper.map(productOption, ProductOptionCategoryBannerResponseDto.class);
+                    responseDto.setProductId(productOption.getProduct().getId());
+                    responseDto.setBrandImageId(productOption.getProduct().getBrand().getImageId());
+                    return responseDto;
+                })));
     }
 
     @Override

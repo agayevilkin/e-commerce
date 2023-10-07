@@ -11,6 +11,7 @@ import java.util.UUID;
 public class TechnicalCharacteristicResponseDto {
 
     private UUID id;
-    private String content;
+    private String characteristicName;
+    private String value;
     private TechnicalCharacteristicTitle title;
 }

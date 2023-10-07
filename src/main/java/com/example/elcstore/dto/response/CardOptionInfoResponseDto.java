@@ -5,11 +5,12 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Getter
 @Setter
-public class EventResponseDto {
+@Getter
+public class CardOptionInfoResponseDto {
 
     private UUID id;
-    private String name;
-    private ColorResponseDto color;
+    private String title;
+    private String description;
+    private UUID imageId;
 }

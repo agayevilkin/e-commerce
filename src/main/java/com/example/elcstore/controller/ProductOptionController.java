@@ -1,10 +1,13 @@
 package com.example.elcstore.controller;
 
+import com.example.elcstore.domain.pagination.CustomPage;
+import com.example.elcstore.dto.response.ProductOptionCategoryBannerResponseDto;
 import com.example.elcstore.domain.enums.StockStatus;
 import com.example.elcstore.dto.request.ProductOptionCreateRequestDto;
 import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
 import com.example.elcstore.dto.response.ProductOptionAdminPreviewResponseDto;
 import com.example.elcstore.dto.response.ProductOptionDetailedResponseDto;
+import com.example.elcstore.dto.response.ProductOptionRealTimeSearchResponseDto;
 import com.example.elcstore.service.ProductOptionService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -40,10 +43,25 @@ public class ProductOptionController {
         return service.findById(id);
     }
 
-    @GetMapping("/{id}/all")
+    @GetMapping("/all/by-product/{product_id}")
     @Operation(summary = "findAllByProductId")
-    public List<ProductOptionAdminPreviewResponseDto> findAllByProductId(@PathVariable UUID id) {
-        return service.findAllByProductId(id);
+    public List<ProductOptionAdminPreviewResponseDto> findAllByProductId(@PathVariable UUID product_id) {
+        return service.findAllByProductId(product_id);
+    }
+
+    @GetMapping("/all/by-category/{category_id}")
+    @Operation(summary = "findAllByCategoryId")
+    public CustomPage<ProductOptionCategoryBannerResponseDto> findAllByCategoryId(
+            @PathVariable UUID category_id,
+            @RequestParam Integer pageIndex,
+            @RequestParam Integer pageSize) {
+        return service.findAllByCategoryId(category_id, pageIndex, pageSize);
+    }
+
+    @PostMapping("/real-time/search")
+    @Operation(summary = "searchProductOptionRealTime")
+    public List<ProductOptionRealTimeSearchResponseDto> searchProductOptionRealTime(@RequestParam String query) {
+        return service.searchProductOptionRealTime(query);
     }
 
     @PutMapping("/stock_status/{id}")

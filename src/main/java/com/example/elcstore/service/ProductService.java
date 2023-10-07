@@ -4,6 +4,7 @@ import com.example.elcstore.domain.pagination.CustomPage;
 import com.example.elcstore.dto.request.ProductRequestDto;
 import com.example.elcstore.dto.response.ProductDetailedResponseDto;
 import com.example.elcstore.dto.response.ProductPreviewResponseDto;
+import com.example.elcstore.dto.search.ProductSearchCriteriaDto;
 
 import java.util.UUID;
 
@@ -27,4 +28,8 @@ public interface ProductService {
     CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize);
 
     CustomPage<ProductPreviewResponseDto> getAllProductsByBrandId(UUID brandId, Integer pageIndex, Integer pageSize);
+
+    CustomPage<ProductPreviewResponseDto> filteredSearchProduct(ProductSearchCriteriaDto productSearchCriteriaDto, Integer pageIndex, Integer pageSize);
+
+    CustomPage<ProductPreviewResponseDto> searchProduct(String query, Integer pageIndex, Integer pageSize);
 }

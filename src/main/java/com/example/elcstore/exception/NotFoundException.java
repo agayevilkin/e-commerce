@@ -24,6 +24,9 @@ public class NotFoundException extends RuntimeException {
     public static final String TECHNICAL_CHARACTERISTIC_TITLE_NOT_FOUND = "Technical Characteristic Title not found!";
     public static final String USER_NOT_FOUND = "User not found!";
     public static final String STORE_NOT_FOUND = "Store not found!";
+    public static final String CARD_PAYMENT_OPTION_INFO_NOT_FOUND = "Card payment option info not found!";
+    public static final String CREDIT_NOT_FOUND = "Credit not found!";
+
 
     public NotFoundException(String message) {
         super(message);

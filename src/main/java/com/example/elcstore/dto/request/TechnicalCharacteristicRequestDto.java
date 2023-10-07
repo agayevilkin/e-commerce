@@ -11,8 +11,11 @@ import java.util.UUID;
 @Getter
 public class TechnicalCharacteristicRequestDto {
 
-    @NotBlank(message = "content is Required!")
-    private String content;
+    @NotBlank(message = "characteristicName is Required!")
+    private String characteristicName;
+
+    @NotBlank(message = "value is Required!")
+    private String value;
 
     @NotNull
     private UUID technicalCharacteristicTitleId;

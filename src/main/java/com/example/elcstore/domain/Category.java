@@ -3,7 +3,6 @@ package com.example.elcstore.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,7 +21,7 @@ public class Category {
     private UUID id;
 
     @Column(name = "name")
-    private String name;
+    private String categoryName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

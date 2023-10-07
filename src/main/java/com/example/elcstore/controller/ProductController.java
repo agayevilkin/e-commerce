@@ -5,6 +5,7 @@ import com.example.elcstore.domain.pagination.CustomPage;
 import com.example.elcstore.dto.request.ProductRequestDto;
 import com.example.elcstore.dto.response.ProductDetailedResponseDto;
 import com.example.elcstore.dto.response.ProductPreviewResponseDto;
+import com.example.elcstore.dto.search.ProductSearchCriteriaDto;
 import com.example.elcstore.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -41,6 +42,26 @@ public class ProductController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public void update(@PathVariable UUID id, @RequestBody @Valid ProductRequestDto requestDto) {
         productService.updateProduct(requestDto, id);
+    }
+
+    @PostMapping("/filtered/search")
+    @Operation(summary = "filteredSearchProduct")
+    @PreAuthorize("permitAll()")
+    public CustomPage<ProductPreviewResponseDto> filteredSearchProduct(
+            @RequestBody ProductSearchCriteriaDto productSearchCriteriaDto,
+            @RequestParam Integer pageIndex,
+            @RequestParam Integer pageSize) {
+        return productService.filteredSearchProduct(productSearchCriteriaDto, pageIndex, pageSize);
+    }
+
+    @PostMapping("/search")
+    @Operation(summary = "searchProduct")
+    @PreAuthorize("permitAll()")
+    public CustomPage<ProductPreviewResponseDto> searchProduct(
+            @RequestParam String query,
+            @RequestParam Integer pageIndex,
+            @RequestParam Integer pageSize) {
+        return productService.searchProduct(query, pageIndex, pageSize);
     }
 
     @GetMapping("/all")

@@ -25,4 +25,7 @@ public class HomepageBanner {
 
     @Column(name = "link")
     private String link;
+
+    @Column(name = "order_num")
+    private int orderNum;
 }

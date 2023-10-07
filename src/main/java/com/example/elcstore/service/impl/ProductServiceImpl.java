@@ -5,9 +5,11 @@ import com.example.elcstore.domain.pagination.CustomPage;
 import com.example.elcstore.dto.request.ProductRequestDto;
 import com.example.elcstore.dto.response.ProductDetailedResponseDto;
 import com.example.elcstore.dto.response.ProductPreviewResponseDto;
+import com.example.elcstore.dto.search.ProductSearchCriteriaDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.*;
 import com.example.elcstore.service.ProductService;
+import com.example.elcstore.service.search.ProductSearchSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -26,6 +28,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductSearchSpecification searchSpecification;
     private final HighlightRepository highlightRepository;
     private final TechnicalCharacteristicRepository technicalCharacteristicRepository;
     private final BrandRepository brandRepository;
@@ -101,6 +104,19 @@ public class ProductServiceImpl implements ProductService {
         return new CustomPage<>(productRepository.findAllByBrandId(brandId, PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
 
+    }
+
+    @Override
+    public CustomPage<ProductPreviewResponseDto> filteredSearchProduct(ProductSearchCriteriaDto productSearchCriteriaDto, Integer pageIndex, Integer pageSize) {
+        return new CustomPage<>(productRepository.findAll(new ProductSearchSpecification(productSearchCriteriaDto.getCriteriaList()), PageRequest.of(pageIndex, pageSize))
+                .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
+    }
+
+    @Override
+    public CustomPage<ProductPreviewResponseDto> searchProduct(String query, Integer pageIndex, Integer pageSize) {
+        return new CustomPage<>(productRepository.findAll(searchSpecification.buildSpecificaationForQuerySearch(query), PageRequest.of(pageIndex, pageSize))
+                .map(product -> mapper.map(product, ProductPreviewResponseDto.class))
+        );
     }
 
     @Override

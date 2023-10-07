@@ -19,8 +19,11 @@ public class TechnicalCharacteristic {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "content")
-    private String content;
+    @Column(name = "characteristic_name")
+    private String characteristicName;
+
+    @Column(name = "value")
+    private String value;
 
     @ManyToOne
     @JoinColumn(name = "technical_characteristic_title_id")

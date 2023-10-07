@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Setter
 public class BrandCreateRequestDto {
     @NotBlank(message = "Please provide a name")
-    private String name;
+    private String brandName;
 
     @NotNull(message = "File cannot be null")
     private MultipartFile image;

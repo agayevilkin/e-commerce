@@ -10,5 +10,5 @@ import java.util.UUID;
 @Setter
 public class CategoryResponseDto {
     private UUID id;
-    private String name;
+    private String categoryName;
 }
