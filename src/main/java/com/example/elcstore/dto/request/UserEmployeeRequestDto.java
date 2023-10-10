@@ -1,7 +1,5 @@
 package com.example.elcstore.dto.request;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -21,9 +19,8 @@ public class UserEmployeeRequestDto {
     @NotBlank(message = "lastName is required")
     private String lastName;
 
-    @NotBlank(message = "Email is required")
-    @Email
-    private String email;
+    @NotBlank(message = "Username is required")
+    private String username;
 
     @NotBlank(message = "Password is required")
     @Size(min = 5)
@@ -35,7 +32,5 @@ public class UserEmployeeRequestDto {
     //todo create 2. request dto for create employee service without this field
     private List<UUID> roles;
 
-    @Nullable
     private MultipartFile image;
-
 }

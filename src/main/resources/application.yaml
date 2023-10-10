@@ -10,6 +10,8 @@
 spring:
   application:
     name: elc-product
+  profiles:
+    active: oauth
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -40,3 +42,4 @@ spring:
 
 server:
   port: 9095
+

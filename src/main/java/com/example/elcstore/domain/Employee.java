@@ -37,4 +37,7 @@ public class Employee {
 
     @Column(name = "image_id")
     private UUID imageId;
+
+    @Column(name = "profile_pic")
+    private String profilePic;
 }

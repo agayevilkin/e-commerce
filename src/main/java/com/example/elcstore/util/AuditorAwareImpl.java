@@ -1,4 +1,4 @@
-package com.example.elcstore.domain.util;
+package com.example.elcstore.util;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;

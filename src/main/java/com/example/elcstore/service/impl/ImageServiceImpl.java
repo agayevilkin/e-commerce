@@ -1,7 +1,7 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Image;
-import com.example.elcstore.domain.util.ImageUtil;
+import com.example.elcstore.util.ImageUtil;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.response.ImageResponseDto;
 import com.example.elcstore.exception.ImageProcessingException;

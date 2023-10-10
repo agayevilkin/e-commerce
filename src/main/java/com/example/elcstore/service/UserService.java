@@ -11,9 +11,10 @@ public interface UserService {
 
     UserResponseDto findById(UUID id);
 
-    void updateUser(UUID id, UserEmployeeRequestDto requestDto);
+    void updateEmployeeUser(UUID id, UserEmployeeRequestDto requestDto);
 
     void deleteUser(UUID id);
 
     void createCustomerUser(UserCustomerRequestDto requestDto);
+
 }

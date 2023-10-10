@@ -1,4 +1,4 @@
-package com.example.elcstore.domain.util;
+package com.example.elcstore.util;
 
 import java.io.ByteArrayOutputStream;
 import java.util.zip.Deflater;

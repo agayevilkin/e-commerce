@@ -19,7 +19,7 @@ import com.example.elcstore.repository.ProductOptionRepository;
 import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.ImageService;
 import com.example.elcstore.service.ProductOptionService;
-import com.example.elcstore.service.search.SearchCriteria;
+import com.example.elcstore.dto.search.SearchCriteria;
 import com.example.elcstore.service.search.GenericSearchSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

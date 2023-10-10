@@ -1,6 +1,6 @@
 package com.example.elcstore.config;
 
-import com.example.elcstore.domain.util.AuditorAwareImpl;
+import com.example.elcstore.util.AuditorAwareImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;

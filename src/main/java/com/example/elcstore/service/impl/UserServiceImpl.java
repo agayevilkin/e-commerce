@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.example.elcstore.exception.messages.AlreadyExistsExceptionMessages.EMAIL_ALREADY_EXISTS;
+import static com.example.elcstore.domain.enums.AuthProvider.local;
+import static com.example.elcstore.exception.messages.AlreadyExistsExceptionMessages.USERNAME_ALREADY_EXISTS;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.USER_NOT_FOUND;
 
 @Service
@@ -41,49 +42,61 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
+    // TODO: 10/9/2023 can be add email field and email verification
     public void createEmployeeUser(UserEmployeeRequestDto requestDto) {
-        checkAndThrowIfEmailExists(requestDto.getEmail());
+        checkAndThrowIfUsernameExists(requestDto.getUsername());
         User user = mapper.map(requestDto, User.class);
         Employee employee = mapper.map(requestDto, Employee.class);
         user.setRoles(getDefaultRole());
-        //todo To make it INACTIVE when email verification is configured.
         user.setUserAccountStateStatus(UserAccountStateStatus.ACTIVE);
         user.setUserStatus(UserStatus.EMPLOYEE);
         user.setPassword(encoder.encode(requestDto.getPassword()));
         user.setEmployee(employee);
-        if (requestDto.getImage() != null) employee.setImageId(imageService.uploadImage(requestDto.getImage()).getId());
+        user.setAuthProvider(local);
+        if (requestDto.getImage() != null) {
+            UUID imageId = imageService.uploadImage(requestDto.getImage()).getId();
+            employee.setImageId(imageId);
+            employee.setProfilePic(imageService.createImageUrl(imageId));
+        }
         userRepository.save(user);
     }
 
     @Override
+    @Transactional
+    // TODO: 10/9/2023 can be add email field and email verification
     public void createCustomerUser(UserCustomerRequestDto requestDto) {
-        checkAndThrowIfEmailExists(requestDto.getEmail());
+        checkAndThrowIfUsernameExists(requestDto.getUsername());
         User user = mapper.map(requestDto, User.class);
         Customer customer = mapper.map(requestDto, Customer.class);
         user.setPassword(encoder.encode(requestDto.getPassword()));
         user.setCustomer(customer);
         user.setRoles(getDefaultRole());
-        //todo To make it INACTIVE when email verification is configured.
         user.setUserAccountStateStatus(UserAccountStateStatus.ACTIVE);
         user.setUserStatus(UserStatus.CUSTOMER);
+        user.setAuthProvider(local);
+        if (requestDto.getImage() != null) {
+            UUID imageId = imageService.uploadImage(requestDto.getImage()).getId();
+            customer.setImageId(imageId);
+            customer.setProfilePic(imageService.createImageUrl(imageId));
+        }
         userRepository.save(user);
     }
 
+
     @Override
+    // TODO: 10/9/2023 simplify this code or create 2 difference response dto for each user
     public UserResponseDto findById(UUID id) {
         User user = getUserById(id);
-        UserResponseDto userResponseDto = mapper.map(user, UserResponseDto.class);
-        if (user.getEmployee() != null && user.getEmployee().getImageId() != null) {
-            userResponseDto.setAvatar(imageService.createImageUrl(user.getEmployee().getImageId()));
-        }
-        return userResponseDto;
+        UserResponseDto responseDto = mapper.map(user, UserResponseDto.class);
+        responseDto.setProfilePic(user.getCustomer().getProfilePic());
+        return responseDto;
     }
 
     // TODO: 9/26/2023 add update method for CUSTOMER or add email verification method
     @Override
     @Transactional
-    public void updateUser(UUID id, UserEmployeeRequestDto requestDto) {
-        checkAndThrowIfEmailExists(requestDto.getEmail());
+    public void updateEmployeeUser(UUID id, UserEmployeeRequestDto requestDto) {
+        checkAndThrowIfUsernameExists(requestDto.getUsername());
         User user = getUserById(id);
         Employee employee = user.getEmployee();
         if (requestDto.getImage() != null)
@@ -103,6 +116,8 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
         if (user.getEmployee() != null && user.getEmployee().getImageId() != null) {
             imageService.deleteImage(user.getEmployee().getImageId());
+        } else if (user.getCustomer() != null && user.getCustomer().getImageId() != null) {
+            imageService.deleteImage(user.getCustomer().getImageId());
         }
     }
 
@@ -117,9 +132,9 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public void checkAndThrowIfEmailExists(String email) {
-        if (userRepository.existsByEmail(email)) {
-            throw new AlreadyExistsException(EMAIL_ALREADY_EXISTS.getMessage());
+    public void checkAndThrowIfUsernameExists(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new AlreadyExistsException(USERNAME_ALREADY_EXISTS.getMessage());
         }
     }
 
