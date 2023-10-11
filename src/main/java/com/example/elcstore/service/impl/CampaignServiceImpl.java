@@ -1,8 +1,7 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Campaign;
-import com.example.elcstore.domain.Category;
-import com.example.elcstore.domain.util.ImageUtil;
+import com.example.elcstore.util.ImageUtil;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.request.CampaignCreateRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
@@ -14,13 +13,11 @@ import com.example.elcstore.service.CampaignService;
 import com.example.elcstore.service.ImageService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

@@ -21,7 +21,14 @@ public class Customer {
     @Column(name = "customer_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-//
+
+    @Column(name = "profile_pic")
+    private String profilePic;
+
+    @Column(name = "image_id")
+    private UUID imageId;
+
+
 //    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 //    private List<Order> orders;
 

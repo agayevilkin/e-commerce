@@ -1,5 +1,6 @@
 package com.example.elcstore.domain;
 
+import com.example.elcstore.domain.enums.AuthProvider;
 import com.example.elcstore.domain.enums.UserAccountStateStatus;
 import com.example.elcstore.domain.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -30,11 +31,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
+    @Column(name = "username", unique = true, nullable = false)
+    private String username;
 
     @JsonIgnore
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
@@ -50,6 +51,13 @@ public class User {
     @Column(name = "user_status")
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
+
+    @Column(name = "auth_provider")
+    @Enumerated(EnumType.STRING)
+    private AuthProvider authProvider;
+
+    @Column(name = "provider_id")
+    private String providerId;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     @JoinColumn(name = "employee_id")

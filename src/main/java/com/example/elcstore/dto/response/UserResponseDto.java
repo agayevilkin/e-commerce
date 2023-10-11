@@ -15,9 +15,8 @@ public class UserResponseDto {
     private String firstName;
     private String lastName;
     private String userDescription;
-    private String email;
-    private String avatar;
+    private String profilePic;
+    private UserAccountStateStatus userAccountStateStatus;
     //todo change with DTO
 //    private List<Role> roles;
-    private UserAccountStateStatus userAccountStateStatus;
 }

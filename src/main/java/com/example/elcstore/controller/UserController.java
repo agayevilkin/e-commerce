@@ -45,7 +45,7 @@ public class UserController {
     @Operation(summary = "update")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public void update(@PathVariable UUID id, @Valid @RequestBody UserEmployeeRequestDto requestDto) {
-        service.updateUser(id, requestDto);
+        service.updateEmployeeUser(id, requestDto);
     }
 
     @DeleteMapping("/{id}")

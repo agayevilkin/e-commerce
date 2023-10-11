@@ -1,6 +1,7 @@
 package com.example.elcstore.service.search;
 
 import com.example.elcstore.domain.enums.SearchOperation;
+import com.example.elcstore.dto.search.SearchCriteria;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;

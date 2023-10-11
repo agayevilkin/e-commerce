@@ -1,4 +1,4 @@
-package com.example.elcstore.service.search;
+package com.example.elcstore.dto.search;
 
 import com.example.elcstore.domain.enums.SearchOperation;
 import lombok.*;

@@ -1,11 +1,13 @@
 package com.example.elcstore.config.security;
 
 import com.example.elcstore.dto.auth.AuthResponse;
+import com.example.elcstore.config.security.oauth2.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
@@ -22,24 +26,26 @@ import org.springframework.stereotype.Service;
 public class JwtService {
 
     //todo change secret
+    // TODO: 10/10/2023 can be change JWT generate methods and to make more simple
+    //  and look at all methods and fix if all is not good
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
-    public String generateAccessToken(MyUserPrincipal user) {
+    public String generateAccessToken(Claims extraClaims, String username) {
         return Jwts
                 .builder()
-                .setClaims(extraClaims(user))
-                .setSubject(user.getUsername())
+                .setClaims(extraClaims)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public String generateRefreshToken(MyUserPrincipal user) {
+    public String generateRefreshToken(Map<String, UUID> userId, String username) {
         return Jwts
                 .builder()
-                .setClaims(userId(user.getUserId()))
-                .setSubject(user.getUsername())
+                .setClaims(userId)
+                .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 1000L * 60 * 60 * 24 * 30))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
@@ -47,8 +53,16 @@ public class JwtService {
     }
 
     public AuthResponse generateToken(MyUserPrincipal user) {
-        String accessToken = generateAccessToken(user);
-        String refreshToken = generateRefreshToken(user);
+        String accessToken = generateAccessToken(extraClaims(user), user.getUsername());
+        String refreshToken = generateRefreshToken(userId(user.getUserId()), user.getUsername());
+
+        return AuthResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    }
+
+    public AuthResponse generateTokenForOAuth(Authentication authentication) {
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        String accessToken = generateAccessToken(extraClaims(userPrincipal), userPrincipal.getUsername());
+        String refreshToken = generateRefreshToken(userId(userPrincipal.getId()), userPrincipal.getUsername());
 
         return AuthResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
@@ -93,6 +107,8 @@ public class JwtService {
                 .getBody();
     }
 
+
+    // TODO: 10/10/2023 fix these two same structural methods
     private Claims extraClaims(MyUserPrincipal userPrincipal) {
         Map<String, Object> claims = new HashMap<>();
         Set<String> userRoles = new HashSet<>();
@@ -101,6 +117,17 @@ public class JwtService {
         }
         claims.put("roles", userRoles);
         claims.put("user-id", userPrincipal.getUserId());
+        return Jwts.claims(claims);
+    }
+
+    private Claims extraClaims(UserPrincipal userPrincipal) {
+        Map<String, Object> claims = new HashMap<>();
+        Set<String> userRoles = new HashSet<>();
+        for (GrantedAuthority role : userPrincipal.getAuthorities()) {
+            userRoles.add("ROLE_" + role.getAuthority());
+        }
+        claims.put("roles", userRoles);
+        claims.put("user-id", userPrincipal.getId());
         return Jwts.claims(claims);
     }
 
@@ -114,4 +141,6 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
 }

@@ -4,6 +4,7 @@ import com.example.elcstore.domain.Brand;
 import com.example.elcstore.domain.Product;
 import com.example.elcstore.domain.TechnicalCharacteristic;
 import com.example.elcstore.domain.enums.SearchOperation;
+import com.example.elcstore.dto.search.SearchCriteria;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
