@@ -19,6 +19,7 @@ services:
   postgres:
     image: postgres:10.5
     restart: always
+    container_name: e-commercedb
     environment:
       - POSTGRES_USER=elcproduct
       - POSTGRES_PASSWORD=elcproduct!@#
