@@ -39,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String email;
+        final String username;
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -47,21 +47,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         jwt = authHeader.substring(7);
-        email = jwtService.extractUsername(jwt);
+        username = jwtService.extractUsername(jwt);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             if (jwtService.isTokenValid(jwt)) {
 
                 userInfo.setUserId(jwtService.extractUserId(jwt));
-                userInfo.setEmail(email);
+                userInfo.setUsername(username);
 
                 List<String> roles = jwtService.extractRoles(jwt);
                 Collection<GrantedAuthority> authorities = new ArrayList<>();
                 roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
                 AbstractAuthenticationToken authenticationToken =
-                        new PreAuthenticatedAuthenticationToken(email, null, authorities);
+                        new PreAuthenticatedAuthenticationToken(username, null, authorities);
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 

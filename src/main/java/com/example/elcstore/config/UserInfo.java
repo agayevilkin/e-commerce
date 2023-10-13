@@ -15,7 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 @Scope(value = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class UserInfo {
 
-    private String email;
+    private String username;
     private UUID userId;
 }
 
