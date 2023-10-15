@@ -40,10 +40,10 @@ public class ProductServiceImpl implements ProductService {
     public void createProduct(ProductRequestDto productRequestDto) {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
-        product.setCategories(getCategoryList(productRequestDto.getCategories()));
+        product.setCategories(getCategoryList(productRequestDto.getCategoryIds()));
         if (product.getHighlight() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
-        product.setEvents(getEventList(productRequestDto.getEvents()));
-        product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
+        product.setEvents(getEventList(productRequestDto.getEventIds()));
+        product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristicsIds()));
 
         productRepository.save(product);
     }
@@ -54,9 +54,9 @@ public class ProductServiceImpl implements ProductService {
         mapper.map(productRequestDto, product);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
         if (product.getHighlight() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
-        product.setCategories(getCategoryList(productRequestDto.getCategories()));
-        product.setEvents(getEventList(productRequestDto.getEvents()));
-        product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
+        product.setCategories(getCategoryList(productRequestDto.getCategoryIds()));
+        product.setEvents(getEventList(productRequestDto.getEventIds()));
+        product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristicsIds()));
 
         productRepository.save(product);
     }
@@ -106,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+    // TODO: 10/15/2023 get all product by category List (change getAllProductByCategory or add new method)
     @Override
     public CustomPage<ProductPreviewResponseDto> filteredSearchProduct(ProductSearchCriteriaDto productSearchCriteriaDto, Integer pageIndex, Integer pageSize) {
         return new CustomPage<>(productRepository.findAll(new ProductSearchSpecification(productSearchCriteriaDto.getCriteriaList()), PageRequest.of(pageIndex, pageSize))

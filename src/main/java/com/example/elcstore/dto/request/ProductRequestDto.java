@@ -26,12 +26,12 @@ public class ProductRequestDto {
 
     private UUID highlightId;
 
-    private List<UUID> events;
+    private List<UUID> eventIds;
 
     @NotNull
-    private List<UUID> categories;
+    private List<UUID> categoryIds;
 
-    private List<UUID> technicalCharacteristics;
+    private List<UUID> technicalCharacteristicsIds;
 
     // TODO: 9/18/2023 can be add HighLightRequestDto dto for highlight create
 }
