@@ -25,9 +25,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void createCategory(CategoryRequestDto requestDto) {
-        Category parent = getCategoryById(requestDto.getParentId());
         Category category = mapper.map(requestDto, Category.class);
-        category.setParent(parent);
+        if (requestDto.getParentId() != null) {
+            Category parent = getCategoryById(requestDto.getParentId());
+            category.setParent(parent);
+        }
         categoryRepository.save(category);
     }
 

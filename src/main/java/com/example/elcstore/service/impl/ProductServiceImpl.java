@@ -41,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
         product.setCategories(getCategoryList(productRequestDto.getCategories()));
+        // TODO: 10/15/2023 set If block for in case highlight is null
         product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
@@ -53,6 +54,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductById(id);
         mapper.map(productRequestDto, product);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
+        // TODO: 10/15/2023 set If block for in case highlight is null
         product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setCategories(getCategoryList(productRequestDto.getCategories()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
@@ -63,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public CustomPage<ProductPreviewResponseDto> getAllProducts(Integer pageIndex, Integer pageSize) {
-        return new CustomPage<>(productRepository.findAll(PageRequest.of(pageIndex, pageSize))
+        return new CustomPage<>(productRepository.findAllByStatusIsTrue(PageRequest.of(pageIndex, pageSize))
                 .map((product -> mapper.map(product, ProductPreviewResponseDto.class))));
     }
 
@@ -75,7 +77,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailedResponseDto findByProductIdentificationNameAndHighlight(String idName, String highlight) {
-        Product product = productRepository.findByHighlight_ProductIdentificationNameAndHighlight_Value(idName, highlight).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
+        Product product = productRepository.findByHighlight_ProductIdentificationNameAndHighlight_ValueAndStatusIsTrue(idName, highlight).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         return mapper.map(product, ProductDetailedResponseDto.class);
     }
 
@@ -83,25 +85,25 @@ public class ProductServiceImpl implements ProductService {
     public CustomPage<ProductPreviewResponseDto> getAllNewProducts(Integer pageIndex, Integer pageSize) {
         // TODO: 9/18/2023 can be change time
         LocalDateTime yesterday = LocalDateTime.now().minusDays(30);
-        return new CustomPage<>(productRepository.findAllByCreatedDateAfter(yesterday, PageRequest.of(pageIndex, pageSize))
+        return new CustomPage<>(productRepository.findAllByCreatedDateAfterAndStatusIsTrue(yesterday, PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
     }
 
     @Override
     public CustomPage<ProductPreviewResponseDto> getAllDiscountedProducts(Integer pageIndex, Integer pageSize) {
-        return new CustomPage<>(productRepository.findAllByDiscountIsNotNull(PageRequest.of(pageIndex, pageSize))
+        return new CustomPage<>(productRepository.findAllByDiscountIsNotNullAndStatusIsTrue(PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
     }
 
     @Override
     public CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize) {
-        return new CustomPage<>(productRepository.findAllByCategoriesId(categoryId, PageRequest.of(pageIndex, pageSize))
+        return new CustomPage<>(productRepository.findAllByCategoriesIdAndStatusIsTrue(categoryId, PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
     }
 
     @Override
     public CustomPage<ProductPreviewResponseDto> getAllProductsByBrandId(UUID brandId, Integer pageIndex, Integer pageSize) {
-        return new CustomPage<>(productRepository.findAllByBrandId(brandId, PageRequest.of(pageIndex, pageSize))
+        return new CustomPage<>(productRepository.findAllByBrandIdAndStatusIsTrue(brandId, PageRequest.of(pageIndex, pageSize))
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
 
     }

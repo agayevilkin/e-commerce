@@ -26,6 +26,9 @@ public class Product extends Audit {
     @Column(name = "price")
     private double price;
 
+    @Column(name = "status")
+    private boolean status;
+
     @OneToOne(mappedBy = "product", cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     private Discount discount;
 

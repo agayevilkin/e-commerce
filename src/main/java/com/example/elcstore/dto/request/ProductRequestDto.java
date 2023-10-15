@@ -19,6 +19,9 @@ public class ProductRequestDto {
     private double price;
 
     @NotNull
+    private boolean status;
+
+    @NotNull
     private UUID brandId;
 
     private UUID highlightId;
