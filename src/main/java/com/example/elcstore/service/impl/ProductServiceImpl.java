@@ -41,8 +41,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
         product.setCategories(getCategoryList(productRequestDto.getCategories()));
-        // TODO: 10/15/2023 set If block for in case highlight is null
-        product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
+        if (product.getHighlight() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
 
@@ -54,8 +53,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductById(id);
         mapper.map(productRequestDto, product);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
-        // TODO: 10/15/2023 set If block for in case highlight is null
-        product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
+        if (product.getHighlight() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setCategories(getCategoryList(productRequestDto.getCategories()));
         product.setEvents(getEventList(productRequestDto.getEvents()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristics()));
