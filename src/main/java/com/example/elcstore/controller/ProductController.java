@@ -27,7 +27,7 @@ public class ProductController {
 
     private final ProductService productService;
     // TODO: 9/20/2023 add "status" field to Product entity and
-    //  change relational repo method in the productRepo
+    //  change relational repo method in the productRepo (completed this but must test related APIs)
 
     @PostMapping
     @ResponseStatus(CREATED)

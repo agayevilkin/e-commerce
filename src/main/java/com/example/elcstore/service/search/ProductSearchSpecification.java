@@ -54,7 +54,7 @@ public class ProductSearchSpecification implements Specification<Product> {
     }
 
     public Specification<Product> buildSpecificaationForQuerySearch(String query) {
-        return Specification.where(categoryNameLike(query)).or(nameLike(query));
+        return Specification.where(categoryNameLike(query)).or(nameLike(query).and(isStatusTrue()));
     }
 
     private Predicate buildEqualPredicate(Expression<?> expression, Object value, CriteriaBuilder criteriaBuilder) {
@@ -69,6 +69,11 @@ public class ProductSearchSpecification implements Specification<Product> {
     private Specification<Product> nameLike(String query) {
         return (root, query1, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + query.toLowerCase() + "%");
+    }
+
+    private Specification<Product> isStatusTrue() {
+        return (root, query1, criteriaBuilder) ->
+                criteriaBuilder.isTrue(root.get("status"));
     }
 
     private <T> boolean isRelationalClassField(Class<T> relationalClass, String fieldName) {
