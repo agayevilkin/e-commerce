@@ -1,6 +1,7 @@
 package com.example.elcstore.service.search;
 
 import com.example.elcstore.domain.Brand;
+import com.example.elcstore.domain.Category;
 import com.example.elcstore.domain.Product;
 import com.example.elcstore.domain.TechnicalCharacteristic;
 import com.example.elcstore.domain.enums.SearchOperation;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductSearchSpecification implements Specification<Product> {
     // TODO: 10/1/2023 optimize ProductSearchSpecification service and write for generic using
+    //  (this state is bad because when we want to add new criteria we change the code every time)
 
     private final List<SearchCriteria> criteriaList;
 
@@ -25,6 +27,8 @@ public class ProductSearchSpecification implements Specification<Product> {
         Predicate[] predicates = criteriaList.stream()
                 .map(criteria -> buildPredicateForFilteredSearchProduct(criteria, root, criteriaBuilder))
                 .toArray(Predicate[]::new);
+
+        // TODO: 10/17/2023 or and match type customize every usage
         return criteriaBuilder.and(predicates);
     }
 
@@ -33,12 +37,15 @@ public class ProductSearchSpecification implements Specification<Product> {
         String key = criteria.getKey();
         Object value = criteria.getValue();
 
+        // TODO: 10/17/2023 you can write for all relational classes like brand, and categories etc. in just one place
         switch (searchOperation) {
             case EQUAL -> {
                 if (isRelationalClassField(TechnicalCharacteristic.class, key)) {
                     return buildEqualPredicate(root.join("technicalCharacteristic", JoinType.LEFT).get(key), value, criteriaBuilder);
                 } else if (isRelationalClassField(Brand.class, key)) {
                     return buildEqualPredicate(root.join("brand", JoinType.LEFT).get(key), value, criteriaBuilder);
+                } else if (isRelationalClassField(Category.class, key)) {
+                    return buildEqualPredicate(root.join("categories", JoinType.LEFT).get(key), value, criteriaBuilder);
                 } else if (isRelationalClassField(Product.class, key)) {
                     return buildEqualPredicate(root.get(key), value, criteriaBuilder);
                 } else return criteriaBuilder.conjunction();
