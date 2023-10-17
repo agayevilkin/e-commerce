@@ -48,6 +48,4 @@ public class Campaign {
             joinColumns = {@JoinColumn(name = "campaign_id", referencedColumnName = "campaign_id")},
             inverseJoinColumns = {@JoinColumn(name = "category_id", referencedColumnName = "category_id")})
     private List<Category> categories;
-
-    // TODO: 9/24/2023 can be add Category or (other function for get all product similar to campaigns)
 }
