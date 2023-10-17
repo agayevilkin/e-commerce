@@ -5,8 +5,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -24,4 +25,6 @@ public class CampaignUpdateRequestDto {
 
     @NotNull(message = "Ending date cannot be null")
     private LocalDateTime endingDate;
+
+    private List<UUID> categoryIds;
 }

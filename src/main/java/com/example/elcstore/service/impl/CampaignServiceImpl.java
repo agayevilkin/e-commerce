@@ -1,7 +1,7 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Campaign;
-import com.example.elcstore.util.ImageUtil;
+import com.example.elcstore.domain.Category;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.request.CampaignCreateRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
@@ -9,6 +9,7 @@ import com.example.elcstore.dto.response.CampaignDetailedResponseDto;
 import com.example.elcstore.dto.response.CampaignPreviewResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.CampaignRepository;
+import com.example.elcstore.repository.CategoryRepository;
 import com.example.elcstore.service.CampaignService;
 import com.example.elcstore.service.ImageService;
 import jakarta.transaction.Transactional;
@@ -23,12 +24,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CAMPAIGN_NOT_FOUND;
+import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.CATEGORY_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
 public class CampaignServiceImpl implements CampaignService {
 
     private final CampaignRepository campaignRepository;
+    private final CategoryRepository categoryRepository;
     private final ImageService imageService;
     private final ModelMapper mapper;
 
@@ -42,12 +45,14 @@ public class CampaignServiceImpl implements CampaignService {
         UUID originalImageId = imageService.uploadImage(originalImage).getId();
         UUID thumbnailImageId = imageService.uploadImageWithByteArray(getResizedImageByte(originalImage)).getId();
 
+        campaign.setCategories(getCategoriesList(requestDto.getCategoryIds()));
         campaign.setImageId(originalImageId);
         campaign.setThumbnailImageId(thumbnailImageId);
         campaignRepository.save(campaign);
     }
 
     @Override
+    @Transactional
     public CampaignDetailedResponseDto findById(UUID id) {
         return mapper.map(getCampaignById(id), CampaignDetailedResponseDto.class);
     }
@@ -56,6 +61,7 @@ public class CampaignServiceImpl implements CampaignService {
     public void updateCampaign(UUID id, CampaignUpdateRequestDto requestDto) {
         Campaign campaign = getCampaignById(id);
         mapper.map(requestDto, campaign);
+        campaign.setCategories(getCategoriesList(requestDto.getCategoryIds()));
         campaignRepository.save(campaign);
     }
 
@@ -95,7 +101,7 @@ public class CampaignServiceImpl implements CampaignService {
 
     private byte[] getResizedImageByte(MultipartFile image) {
         try {
-            ImageInfoDto info = imageService.getImageWidthAndHeight(ImageUtil.compressImage(image.getBytes()));
+            ImageInfoDto info = imageService.getImageWidthAndHeight(image.getBytes());
             int reducedWidth = info.getWidth() * 2 / 3;
             int reducedHeight = info.getHeight() * 2 / 3;
 
@@ -108,5 +114,14 @@ public class CampaignServiceImpl implements CampaignService {
     private Campaign getCampaignById(UUID id) {
         return campaignRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CAMPAIGN_NOT_FOUND.getMessage()));
+    }
+
+    private List<Category> getCategoriesList(List<UUID> categoryIds) {
+        return categoryIds
+                .stream()
+                .map((categoryId) -> categoryRepository
+                        .findById(categoryId)
+                        .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage())))
+                .collect(Collectors.toList());
     }
 }

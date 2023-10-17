@@ -3,8 +3,8 @@ package com.example.elcstore.dto.response;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Setter
@@ -18,4 +18,5 @@ public class CampaignDetailedResponseDto {
     private LocalDateTime startingDate;
     private LocalDateTime endingDate;
     private UUID imageId;
+    private List<CategoryResponseDto> categories;
 }

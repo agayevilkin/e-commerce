@@ -23,11 +23,11 @@ public class CampaignController {
 
     private final CampaignService service;
 
-    @PostMapping
-//    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
+//    @PostMapping
+    @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create") //@ModelAttribute
-    public void create(@Valid @RequestBody CampaignCreateRequestDto requestDto) {
+    public void create(@Valid @ModelAttribute CampaignCreateRequestDto requestDto) {
         service.createCampaign(requestDto);
     }
 
