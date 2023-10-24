@@ -4,8 +4,10 @@ import com.example.elcstore.domain.Brand;
 import com.example.elcstore.dto.request.BrandCreateRequestDto;
 import com.example.elcstore.dto.request.BrandUpdateRequestDto;
 import com.example.elcstore.dto.response.BrandResponseDto;
+import com.example.elcstore.exception.BrandInUseException;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.BrandRepository;
+import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.BrandService;
 import com.example.elcstore.service.ImageService;
 import jakarta.transaction.Transactional;
@@ -24,6 +26,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class BrandServiceImpl implements BrandService {
 
     private final BrandRepository brandRepository;
+    private final ProductRepository productRepository;
     private final ImageService imageService;
     private final ModelMapper mapper;
 
@@ -63,8 +66,16 @@ public class BrandServiceImpl implements BrandService {
     @Transactional
     public void deleteBrand(UUID id) {
         Brand brand = getBrandById(id);
-        imageService.deleteImage(brand.getImageId());
-        brandRepository.delete(brand);
+        if (existsByBrandId(id)) {
+            throw new BrandInUseException(id);
+        } else {
+            imageService.deleteImage(brand.getImageId());
+            brandRepository.delete(brand);
+        }
+    }
+
+    private boolean existsByBrandId(UUID id) {
+        return productRepository.existsByBrandId(id);
     }
 
     private Brand getBrandById(UUID id) {

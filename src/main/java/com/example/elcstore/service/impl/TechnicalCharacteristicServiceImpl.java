@@ -5,6 +5,8 @@ import com.example.elcstore.domain.TechnicalCharacteristicTitle;
 import com.example.elcstore.dto.request.TechnicalCharacteristicRequestDto;
 import com.example.elcstore.dto.response.TechnicalCharacteristicResponseDto;
 import com.example.elcstore.exception.NotFoundException;
+import com.example.elcstore.exception.TechnicalCharacteristicInUseException;
+import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.repository.TechnicalCharacteristicRepository;
 import com.example.elcstore.repository.TechnicalCharacteristicTitleRepository;
 import com.example.elcstore.service.TechnicalCharacteristicService;
@@ -22,6 +24,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class TechnicalCharacteristicServiceImpl implements TechnicalCharacteristicService {
 
     private final TechnicalCharacteristicRepository technicalCharacteristicRepository;
+    private final ProductRepository productRepository;
     private final TechnicalCharacteristicTitleRepository titleRepository;
     private final ModelMapper mapper;
 
@@ -48,8 +51,14 @@ public class TechnicalCharacteristicServiceImpl implements TechnicalCharacterist
     @Override
     public void deleteTechnicalCharacteristic(UUID id) {
         if (existsById(id)) {
-            technicalCharacteristicRepository.deleteById(id);
+            if (existsByTechnicalCharacteristicId(id)) {
+                throw new TechnicalCharacteristicInUseException(id);
+            } else technicalCharacteristicRepository.deleteById(id);
         }
+    }
+
+    private boolean existsByTechnicalCharacteristicId(UUID id) {
+        return productRepository.existsByTechnicalCharacteristicId(id);
     }
 
     private boolean existsById(UUID id) {

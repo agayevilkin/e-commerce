@@ -9,8 +9,8 @@ import com.example.elcstore.domain.enums.UserStatus;
 import com.example.elcstore.dto.request.UserCustomerRequestDto;
 import com.example.elcstore.dto.request.UserEmployeeRequestDto;
 import com.example.elcstore.dto.response.UserResponseDto;
-import com.example.elcstore.exception.AlreadyExistsException;
 import com.example.elcstore.exception.NotFoundException;
+import com.example.elcstore.exception.UsernameAlreadyExistsException;
 import com.example.elcstore.repository.UserRepository;
 import com.example.elcstore.service.ImageService;
 import com.example.elcstore.service.RoleService;
@@ -27,7 +27,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.example.elcstore.domain.enums.AuthProvider.local;
-import static com.example.elcstore.exception.messages.AlreadyExistsExceptionMessages.USERNAME_ALREADY_EXISTS;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.USER_NOT_FOUND;
 
 @Service
@@ -134,7 +133,7 @@ public class UserServiceImpl implements UserService {
 
     public void checkAndThrowIfUsernameExists(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new AlreadyExistsException(USERNAME_ALREADY_EXISTS.getMessage());
+            throw new UsernameAlreadyExistsException();
         }
     }
 

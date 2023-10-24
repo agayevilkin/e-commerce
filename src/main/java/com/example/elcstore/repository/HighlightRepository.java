@@ -9,4 +9,5 @@ import java.util.UUID;
 public interface HighlightRepository extends JpaRepository<Highlight, UUID> {
 
     List<Highlight> findAllByProductIdentificationName(String productIdentificationName);
+    boolean existsByHighlightDefinitionId(UUID id);
 }

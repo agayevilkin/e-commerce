@@ -1,9 +1,10 @@
 package com.example.elcstore.exception;
 
-public class ImageUploadException extends RuntimeException {
+public class ImageUploadException extends ImageProcessingException {
 
-    public static final String FAILED_UPLOAD_IMAGE = "Image uploading is a failure!";
+    public static final String FAILED_UPLOAD_IMAGE = "Image uploading has failed: { %s }";
+
     public ImageUploadException(String message) {
-        super(message);
+        super(String.format(FAILED_UPLOAD_IMAGE, message));
     }
 }

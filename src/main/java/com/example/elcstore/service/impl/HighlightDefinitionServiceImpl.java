@@ -3,8 +3,10 @@ package com.example.elcstore.service.impl;
 import com.example.elcstore.domain.HighlightDefinition;
 import com.example.elcstore.dto.request.HighlightDefinitionRequestDto;
 import com.example.elcstore.dto.response.HighlightDefinitionResponseDto;
+import com.example.elcstore.exception.HighlightDefinitionInUseException;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.HighlightDefinitionRepository;
+import com.example.elcstore.repository.HighlightRepository;
 import com.example.elcstore.service.HighlightDefinitionService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,12 +20,13 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 @RequiredArgsConstructor
 public class HighlightDefinitionServiceImpl implements HighlightDefinitionService {
 
-    private final HighlightDefinitionRepository repository;
+    private final HighlightDefinitionRepository highlightDefinitionRepository;
+    private final HighlightRepository highlightRepository;
     private final ModelMapper mapper;
 
     @Override
     public void createHighlightDefinition(HighlightDefinitionRequestDto requestDto) {
-        repository.save(mapper.map(requestDto, HighlightDefinition.class));
+        highlightDefinitionRepository.save(mapper.map(requestDto, HighlightDefinition.class));
     }
 
     @Override
@@ -35,22 +38,28 @@ public class HighlightDefinitionServiceImpl implements HighlightDefinitionServic
     public void updateHighlightDefinition(UUID id, HighlightDefinitionRequestDto requestDto) {
         HighlightDefinition highlightDefinition = getHighlightDefinitionById(id);
         mapper.map(requestDto, highlightDefinition);
-        repository.save(highlightDefinition);
+        highlightDefinitionRepository.save(highlightDefinition);
     }
 
     @Override
     public void deleteHighlightDefinition(UUID id) {
         if (checkById(id)) {
-            repository.deleteById(id);
+            if (existsByHighlightDefinition(id)) {
+                throw new HighlightDefinitionInUseException();
+            } else highlightDefinitionRepository.deleteById(id);
         }
     }
 
     private boolean checkById(UUID id) {
-        return repository.existsById(id);
+        return highlightDefinitionRepository.existsById(id);
+    }
+
+    private boolean existsByHighlightDefinition(UUID id) {
+        return highlightRepository.existsByHighlightDefinitionId(id);
     }
 
     private HighlightDefinition getHighlightDefinitionById(UUID id) {
-        return repository.findById(id)
+        return highlightDefinitionRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(HIGHLIGHT_DEFINITION_NOT_FOUND.getMessage()));
     }
 }

@@ -4,9 +4,11 @@ import com.example.elcstore.domain.Color;
 import com.example.elcstore.domain.Event;
 import com.example.elcstore.dto.request.EventRequestDto;
 import com.example.elcstore.dto.response.EventResponseDto;
+import com.example.elcstore.exception.EventInUseException;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.ColorRepository;
 import com.example.elcstore.repository.EventRepository;
+import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.EventService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -25,6 +27,7 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final ColorRepository colorRepository;
+    private final ProductRepository productRepository;
     private final ModelMapper mapper;
 
     @Override
@@ -60,8 +63,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public void deleteEvent(UUID id) {
         if (existsById(id)) {
-            eventRepository.deleteById(id);
+            if (existsByEventId(id)) {
+                throw new EventInUseException(id);
+            } else eventRepository.deleteById(id);
         }
+    }
+
+    private boolean existsByEventId(UUID id) {
+        return productRepository.existsByEventsId(id);
     }
 
     private boolean existsById(UUID id) {

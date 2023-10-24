@@ -3,8 +3,11 @@ package com.example.elcstore.service.impl;
 import com.example.elcstore.domain.Category;
 import com.example.elcstore.dto.request.CategoryRequestDto;
 import com.example.elcstore.dto.response.CategoryResponseDto;
+import com.example.elcstore.exception.CategoryInUseException;
 import com.example.elcstore.exception.NotFoundException;
+import com.example.elcstore.repository.CampaignRepository;
 import com.example.elcstore.repository.CategoryRepository;
+import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,6 +24,8 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
+    private final CampaignRepository campaignRepository;
     private final ModelMapper mapper;
 
     @Override
@@ -69,7 +74,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public void deleteCategory(UUID id) {
         if (checkById(id)) {
-            categoryRepository.deleteById(id);
+            if (existsByCategoryId(id)) {
+                throw new CategoryInUseException(id);
+            } else categoryRepository.deleteById(id);
         }
     }
 
@@ -80,5 +87,9 @@ public class CategoryServiceImpl implements CategoryService {
     private Category getCategoryById(UUID id) {
         return categoryRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(CATEGORY_NOT_FOUND.getMessage()));
+    }
+
+    private boolean existsByCategoryId(UUID id) {
+        return productRepository.existsByCategoriesId(id) || campaignRepository.existsByCategoriesId(id);
     }
 }
