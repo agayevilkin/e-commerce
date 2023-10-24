@@ -38,44 +38,45 @@ public class GlobalExceptionHandler extends DefaultErrorAttributes {
 
     @ExceptionHandler(MaxUploadSizeExceededException.class)
     public final ResponseEntity<Map<String, Object>> handle(MaxUploadSizeExceededException ex, WebRequest request) {
-        log.trace("Maximum upload size exceeded {}", ex.getMessage());
+        log.trace("Maximum upload size exceeded: {}", ex.getMessage());
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
-    @ExceptionHandler(InvalidProductVideoUrlException.class)
-    public final ResponseEntity<Map<String, Object>> handle(InvalidProductVideoUrlException ex, WebRequest request) {
-        log.trace("Invalid Product Video Url {}", ex.getMessage());
-            return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    @ExceptionHandler(InvalidStateException.class)
+    public final ResponseEntity<Map<String, Object>> handle(InvalidStateException ex, WebRequest request) {
+        log.trace("Request is invalid state: {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(ImageProcessingException.class)
     public final ResponseEntity<Map<String, Object>> handle(ImageProcessingException ex, WebRequest request) {
-        log.trace("Image processing failed! {}", ex.getMessage());
+        log.trace("Image processing is failed: {}", ex.getMessage());
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(UnsupportedImageTypeException.class)
     public final ResponseEntity<Map<String, Object>> handle(UnsupportedImageTypeException ex, WebRequest request) {
-        log.trace("Unsupported image type {}", ex.getMessage());
+        log.trace("Unsupported image type: {}", ex.getMessage());
+        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InUseException.class)
+    public final ResponseEntity<Map<String, Object>> handle(InUseException ex, WebRequest request) {
+        log.trace("Data in use: {}", ex.getMessage());
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     // TODO: 9/25/2023 Change this message or change use place
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public final ResponseEntity<Map<String, Object>> handle(DataIntegrityViolationException ex, WebRequest request) {
-        log.trace("This data is used by other entity {}", ex.getMessage());
-        return ofType(request, HttpStatus.BAD_REQUEST, "This data cannot be deleted because it is used");
-    }
+//    @ExceptionHandler(DataIntegrityViolationException.class)
+//    public final ResponseEntity<Map<String, Object>> handle(DataIntegrityViolationException ex, WebRequest request) {
+//        log.trace("This data is used by other entity {}", ex.getMessage());
+//        return ofType(request, HttpStatus.BAD_REQUEST, "This data cannot be deleted because it is used");
+//    }
 
-    @ExceptionHandler(ImageUploadException.class)
-    public final ResponseEntity<Map<String, Object>> handle(ImageUploadException ex, WebRequest request) {
-        log.trace("Image uploading is a failure! {}", ex.getMessage());
-        return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
-    }
 
     @ExceptionHandler(AlreadyExistsException.class)
     public final ResponseEntity<Map<String, Object>> handle(AlreadyExistsException ex, WebRequest request) {
-        log.trace("Illegal state {}", ex.getMessage());
+        log.trace("Resource is already exists: {}", ex.getMessage());
         return ofType(request, HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 

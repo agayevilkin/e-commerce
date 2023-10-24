@@ -4,6 +4,7 @@ import com.example.elcstore.config.security.JwtService;
 import com.example.elcstore.config.security.MyUserPrincipal;
 import com.example.elcstore.dto.auth.AuthRequest;
 import com.example.elcstore.dto.auth.AuthResponse;
+import com.example.elcstore.exception.InvalidTokenException;
 import com.example.elcstore.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-
-import static com.example.elcstore.exception.messages.AuthExceptionMessages.INVALID_TOKEN;
 
 @Service
 @Slf4j
@@ -36,7 +35,6 @@ public class AuthServiceImpl implements AuthService {
         );
         log.info("successfully authenticate!");
         MyUserPrincipal myUserPrincipal = (MyUserPrincipal) authenticate.getPrincipal();
-        System.out.println(authenticate.getPrincipal());
         return jwtService.generateToken(myUserPrincipal);
     }
 
@@ -46,11 +44,18 @@ public class AuthServiceImpl implements AuthService {
         final String username;
 
         if (!refreshToken.startsWith("Bearer ")) {
-            throw new RuntimeException(INVALID_TOKEN.getMessage());  // TODO handle
+            log.trace("The token signature is invalid.");
+            throw new InvalidTokenException("The token signature is invalid.");  // okTODO handle
         }
 
         jwt = refreshToken.substring(7);
-        username = jwtService.extractUsername(jwt);
+
+        try {
+            username = jwtService.extractUsername(jwt);
+        } catch (RuntimeException e) {
+            log.trace("Invalid Token!:", e);
+            throw new InvalidTokenException(e.getMessage());
+        }
 
         if (username != null) {
             if (jwtService.isTokenValid(jwt)) {
@@ -59,7 +64,8 @@ public class AuthServiceImpl implements AuthService {
                 return jwtService.generateToken(userDetails);
 
             } else {
-                throw new RuntimeException(INVALID_TOKEN.getMessage());
+                log.trace("Token expired!");
+                throw new InvalidTokenException("Token expired!");
             }
         }
         return null;

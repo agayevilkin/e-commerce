@@ -7,6 +7,7 @@ import com.example.elcstore.dto.request.CampaignCreateRequestDto;
 import com.example.elcstore.dto.request.CampaignUpdateRequestDto;
 import com.example.elcstore.dto.response.CampaignDetailedResponseDto;
 import com.example.elcstore.dto.response.CampaignPreviewResponseDto;
+import com.example.elcstore.exception.ImageResizeException;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.CampaignRepository;
 import com.example.elcstore.repository.CategoryRepository;
@@ -107,7 +108,7 @@ public class CampaignServiceImpl implements CampaignService {
 
             return imageService.resizeImage(image.getBytes(), reducedWidth, reducedHeight);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ImageResizeException(e.getMessage());
         }
     }
 

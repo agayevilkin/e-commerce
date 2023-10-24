@@ -4,7 +4,10 @@ import com.example.elcstore.domain.Color;
 import com.example.elcstore.dto.request.ColorRequestDto;
 import com.example.elcstore.dto.response.ColorResponseDto;
 import com.example.elcstore.exception.NotFoundException;
+import com.example.elcstore.exception.ColorInUseException;
 import com.example.elcstore.repository.ColorRepository;
+import com.example.elcstore.repository.EventRepository;
+import com.example.elcstore.repository.ProductOptionRepository;
 import com.example.elcstore.service.ColorService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,6 +24,8 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class ColorServiceImpl implements ColorService {
 
     private final ColorRepository colorRepository;
+    private final EventRepository eventRepository;
+    private final ProductOptionRepository productOptionRepository;
     private final ModelMapper mapper;
 
     @Override
@@ -51,12 +56,18 @@ public class ColorServiceImpl implements ColorService {
     @Override
     public void deleteColor(UUID id) {
         if (checkById(id)) {
-            colorRepository.deleteById(id);
+            if (existsByColorId(id)) {
+                throw new ColorInUseException(id);
+            } else colorRepository.deleteById(id);
         }
     }
 
     private boolean checkById(UUID id) {
         return colorRepository.existsById(id);
+    }
+
+    private boolean existsByColorId(UUID id) {
+        return eventRepository.existsByColorId(id) || productOptionRepository.existsByColorId(id);
     }
 
     private Color getColorById(UUID id) {

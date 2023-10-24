@@ -14,7 +14,9 @@ import com.example.elcstore.dto.response.*;
 import com.example.elcstore.dto.request.ProductOptionImageDetailRequestDto;
 import com.example.elcstore.exception.ImageUploadException;
 import com.example.elcstore.exception.NotFoundException;
+import com.example.elcstore.exception.ProductOptionInUseException;
 import com.example.elcstore.repository.ColorRepository;
+import com.example.elcstore.repository.HomepageWeeklyOfferRepository;
 import com.example.elcstore.repository.ProductOptionRepository;
 import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.ImageService;
@@ -23,6 +25,7 @@ import com.example.elcstore.dto.search.SearchCriteria;
 import com.example.elcstore.service.search.GenericSearchSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,7 @@ import java.util.stream.Collectors;
 import static com.example.elcstore.exception.ImageUploadException.FAILED_UPLOAD_IMAGE;
 import static com.example.elcstore.exception.NotFoundException.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductOptionServiceImpl implements ProductOptionService {
@@ -45,6 +49,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     private final static int MAX_WIDTH = 315;
 
     private final ProductOptionRepository productOptionRepository;
+    private final HomepageWeeklyOfferRepository homepageWeeklyOfferRepository;
     private final ProductRepository productRepository;
     private final ColorRepository colorRepository;
     private final ImageService imageService;
@@ -129,8 +134,16 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     public void deleteProductOption(UUID id) {
         ProductOption productOption = getProductOptionById(id);
-        imageService.deleteImage(productOption.getThumbnailId());
-        productOptionRepository.delete(productOption);
+        if (existsByProductOptionId(id)) {
+            throw new ProductOptionInUseException(id);
+        } else {
+            imageService.deleteImage(productOption.getThumbnailId());
+            productOptionRepository.delete(productOption);
+        }
+    }
+
+    private boolean existsByProductOptionId(UUID id) {
+        return homepageWeeklyOfferRepository.existsByProductOptionId(id);
     }
 
     // TODO: 9/20/2023 this method is work according to
@@ -156,7 +169,8 @@ public class ProductOptionServiceImpl implements ProductOptionService {
             } else
                 return imageService.resizeImage(image.getBytes(), info.getWidth(), info.getHeight());
         } catch (IOException e) {
-            throw new ImageUploadException(FAILED_UPLOAD_IMAGE);
+            log.trace(FAILED_UPLOAD_IMAGE, e);
+            throw new ImageUploadException(e.getMessage());
         }
     }
 

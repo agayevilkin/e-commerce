@@ -13,4 +13,5 @@ public interface ProductOptionRepository extends JpaRepository<ProductOption, UU
 
     List<ProductOption> findAllByProduct_Id(UUID id);
     Page<ProductOption> findAllByProduct_Categories_Id(UUID categoryId, Pageable pageable);
+    boolean existsByColorId(UUID id);
 }

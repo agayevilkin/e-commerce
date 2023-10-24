@@ -1,15 +1,12 @@
 package com.example.elcstore.service.impl;
 
 import com.example.elcstore.domain.Image;
-import com.example.elcstore.util.ImageUtil;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.response.ImageResponseDto;
-import com.example.elcstore.exception.ImageProcessingException;
-import com.example.elcstore.exception.ImageUploadException;
-import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.exception.UnsupportedImageTypeException;
+import com.example.elcstore.exception.*;
 import com.example.elcstore.repository.ImageRepository;
 import com.example.elcstore.service.ImageService;
+import com.example.elcstore.util.ImageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +22,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.UUID;
 
-import static com.example.elcstore.exception.ImageProcessingException.FAILED_GET_IMAGE_DIMENSIONS;
-import static com.example.elcstore.exception.ImageProcessingException.FAILED_RESIZE_IMAGE;
-import static com.example.elcstore.exception.UnsupportedImageTypeException.UNSUPPORTED_IMAGE_TYPE;
+import static com.example.elcstore.exception.ImageUploadException.FAILED_UPLOAD_IMAGE;
 import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.IMAGE_NOT_FOUND;
 
 @Slf4j
@@ -59,6 +54,7 @@ public class ImageServiceImpl implements ImageService {
             Image image = createUpdateImageObject(id, file.getBytes());
             return mapper.map(image, ImageResponseDto.class);
         } catch (IOException e) {
+            log.trace(FAILED_UPLOAD_IMAGE, e);
             throw new ImageUploadException(e.getMessage());
         }
     }
@@ -103,11 +99,15 @@ public class ImageServiceImpl implements ImageService {
                 ImageIO.write(bufferedResizedImage, "jpg", currentImageByte);
 
                 return currentImageByte.toByteArray();
+            } else {
+                log.trace("Unsupported image type!");
+                throw new UnsupportedImageTypeException();
             }
-            throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
-        } catch (IOException | NullPointerException e) {
-            //todo specify correctly exception type
-            throw new ImageProcessingException(FAILED_RESIZE_IMAGE);
+
+        } catch (IOException | RuntimeException e) {
+            //oktodo specify correctly exception type
+            log.error("Image resizing has failed:", e);
+            throw new ImageResizeException(e.getMessage());
         }
     }
 
@@ -121,13 +121,13 @@ public class ImageServiceImpl implements ImageService {
                 int height = originalImage.getHeight();
                 return ImageInfoDto.builder().width(width).height(height).build();
 
-            } catch (IOException | NullPointerException e) {
-                //todo specify correctly exception type
-                throw new ImageProcessingException(FAILED_GET_IMAGE_DIMENSIONS + e.getMessage());
+            } catch (IOException | RuntimeException e) {
+                //oktodo specify correctly exception type
+                log.error("Failed to retrieve image dimensions:", e);
+                throw new ImageDimensionsRetrievalException(e.getMessage());
             }
         } else {
-            log.info("Unsupported image type!");
-            throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
+            throw new UnsupportedImageTypeException();
         }
     }
 
@@ -137,10 +137,8 @@ public class ImageServiceImpl implements ImageService {
             image.setImageData(ImageUtil.compressImage(bytes));
             return imageRepository.save(image);
         } else {
-            log.info("Unsupported image type!");
-            throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
+            throw new UnsupportedImageTypeException();
         }
-
     }
 
     private Image createUpdateImageObject(UUID id, byte[] bytes) {
@@ -148,8 +146,7 @@ public class ImageServiceImpl implements ImageService {
             Image image = getImageById(id);
             image.setImageData(ImageUtil.compressImage(bytes));
             return imageRepository.save(image);
-        } else throw new UnsupportedImageTypeException(UNSUPPORTED_IMAGE_TYPE);
-
+        } else throw new UnsupportedImageTypeException();
     }
 
     private boolean isSupportedImageFormat(byte[] file) {

@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RequestMapping("/images")
 @RequiredArgsConstructor
 public class ImageController {
-
+    // TODO: 10/23/2023 delete apis put create delete
     private final ImageService service;
 
     @GetMapping("/{id}")

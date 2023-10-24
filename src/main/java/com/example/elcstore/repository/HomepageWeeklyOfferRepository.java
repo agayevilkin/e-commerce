@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface HomepageWeeklyOfferRepository extends JpaRepository<HomepageWeeklyOffer, UUID> {
 
     List<HomepageWeeklyOffer> findAllByDeadlineAfter(LocalDateTime currentTime);
+    boolean existsByProductOptionId(UUID id);
 }

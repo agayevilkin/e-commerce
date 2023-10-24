@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface CampaignRepository extends JpaRepository<Campaign, UUID> {
 
+    boolean existsByCategoriesId(UUID id);
 }
