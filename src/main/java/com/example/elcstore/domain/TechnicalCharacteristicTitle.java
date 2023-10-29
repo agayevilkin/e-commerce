@@ -9,17 +9,18 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "technical_characteristics_title")
+@Table(name = "technical_characteristic_titles")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class TechnicalCharacteristicTitle {
 
     @Id
-    @Column(name = "title_id")
+    @Column(name = "technical_characteristic_title_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "name")
     private String name;
+
 }

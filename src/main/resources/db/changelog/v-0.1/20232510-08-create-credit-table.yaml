@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-08
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: credits_PK
+                  name: credit_id
+                  type: uuid
+              - column:
+                  name: credit_period
+                  type: integer
+              - column:
+                  name: current_price
+                  type: double precision
+              - column:
+                  name: initial_payment_amount
+                  type: double precision
+              - column:
+                  name: interest
+                  type: double precision
+              - column:
+                  name: monthly_payment_amount
+                  type: double precision
+              - column:
+                  name: product_id
+                  type: uuid
+            tableName: credits
+        - addForeignKeyConstraint:
+            baseTableName: credits
+            baseColumnNames: product_id
+            constraintName: fk_in_credits_product_id
+            referencedTableName: products
+            referencedColumnNames: product_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

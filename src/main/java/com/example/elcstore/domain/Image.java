@@ -26,7 +26,7 @@ public class Image {
     private UUID id;
 
     @Lob
-    @Column(name = "file_data")
+    @Column(name = "image_data")
     private byte[] imageData;
 }
 

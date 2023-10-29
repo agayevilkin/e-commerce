@@ -10,19 +10,20 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "product_videos")
+@Table(name = "product_youtube_videos")
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductYouTube {
 
     @Id
-    @Column(name = "product_video_id")
+    @Column(name = "product_youtube_video_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "title")
     private String title;
 
+    @Lob
     @Column(name = "description")
     private String description;
 

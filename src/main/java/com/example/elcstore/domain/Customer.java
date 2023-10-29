@@ -28,6 +28,9 @@ public class Customer {
     @Column(name = "image_id")
     private UUID imageId;
 
+    // TODO: 10/26/2023 delete profil pic and image id fields and add this field
+//    @Column(name = "user_id")
+//    private UUID userId;
 
 //    @OneToMany(mappedBy = "customer", orphanRemoval = true, fetch = FetchType.EAGER)
 //    private List<Order> orders;

@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-06
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: colors_PK
+                  name: color_id
+                  type: uuid
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: color_code
+                  type: VARCHAR(255)
+            tableName: colors

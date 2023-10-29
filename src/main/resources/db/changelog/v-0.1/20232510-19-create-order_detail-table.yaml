@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-19
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: order_details_PK
+                  name: order_detail_id
+                  type: uuid
+              - column:
+                  name: quantity
+                  type: integer
+              - column:
+                  name: product_id
+                  type: uuid
+              - column:
+                  name: product_option_id
+                  type: uuid
+              - column:
+                  name: order_id
+                  type: uuid
+            tableName: order_details
+        - addForeignKeyConstraint:
+            baseTableName: order_details
+            baseColumnNames: order_id
+            constraintName: fk_in_order_details_order_id
+            referencedTableName: orders
+            referencedColumnNames: order_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

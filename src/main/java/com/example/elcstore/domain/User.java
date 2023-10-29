@@ -31,7 +31,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "username")
     private String username;
 
     @JsonIgnore
@@ -58,6 +58,13 @@ public class User {
 
     @Column(name = "provider_id")
     private String providerId;
+
+    // TODO: 10/26/2023 add this fields and delete employee and customer relationships
+//    @Column(name = "image_id")
+//    private UUID imageId;
+//
+//    @Column(name = "profile_picture")
+//    private String profilePicture;
 
     @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE})
     @JoinColumn(name = "employee_id")

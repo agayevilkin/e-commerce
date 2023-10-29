@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-13
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: categories_PK
+                  name: category_id
+                  type: uuid
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: parent_id
+                  type: uuid
+            tableName: categories
+        - addForeignKeyConstraint:
+            baseTableName: categories
+            baseColumnNames: parent_id
+            constraintName: fk_in_category_parent_id
+            referencedTableName: categories
+            referencedColumnNames: category_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

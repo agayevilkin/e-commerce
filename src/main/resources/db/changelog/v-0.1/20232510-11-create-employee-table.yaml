@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-11
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: employee_PK
+                  name: employee_id
+                  type: uuid
+              - column:
+                  name: first_name
+                  type: VARCHAR(255)
+              - column:
+                  name: last_name
+                  type: VARCHAR(255)
+              - column:
+                  name: user_description
+                  type: VARCHAR(255)
+              - column:
+                  name: profile_pic
+                  type: VARCHAR(255)
+              - column:
+                  name: image_id
+                  type: uuid
+            tableName: employee

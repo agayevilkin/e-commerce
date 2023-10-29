@@ -15,7 +15,7 @@ import java.util.UUID;
 public class TechnicalCharacteristic {
 
     @Id
-    @Column(name = "tc_id")
+    @Column(name = "technical_characteristic_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 

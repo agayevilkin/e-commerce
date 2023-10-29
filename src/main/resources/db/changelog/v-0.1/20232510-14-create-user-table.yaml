@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-14
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKeyName: users_pk
+                    primaryKey: true
+                  name: user_id
+                  type: uuid
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+              - column:
+                  name: user_account_state_status
+                  type: VARCHAR(255)
+              - column:
+                  name: user_status
+                  type: VARCHAR(255)
+              - column:
+                  name: auth_provider
+                  type: VARCHAR(255)
+              - column:
+                  name: provider_id
+                  type: VARCHAR(255)
+              - column:
+                  name: employee_id
+                  type: uuid
+              - column:
+                  name: customer_id
+                  type: uuid
+            tableName: users
+
+#  deferrable: false - after adding a value, you cannot delete the associated value
+#  initiallyDeferred: false - the value you want to add cannot be empty
+#  validate: true - the value you want to add must exist

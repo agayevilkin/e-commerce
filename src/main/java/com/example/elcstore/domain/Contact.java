@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "contact")
+@Table(name = "contacts")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Employee {
 
     @Id
-    @Column(name = "employe_id")
+    @Column(name = "employee_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
@@ -40,4 +40,8 @@ public class Employee {
 
     @Column(name = "profile_pic")
     private String profilePic;
+
+    // TODO: 10/26/2023 delete profilepic and imageid fileds and add this filed with liquibase
+//    @Column(name = "user_id")
+//    private UUID userId;
 }

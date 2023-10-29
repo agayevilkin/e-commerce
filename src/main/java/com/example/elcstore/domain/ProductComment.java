@@ -29,6 +29,7 @@ public class ProductComment extends Audit {
     @Column(name = "star")
     private int star;
 
+    @Lob
     @Column(name = "content", length = 1000)
     private String content;
 

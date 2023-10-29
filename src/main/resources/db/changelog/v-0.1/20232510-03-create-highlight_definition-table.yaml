@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-03
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: highlight_definitions_PK
+                  name: highlight_definition_id
+                  type: uuid
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: highlight_definitions

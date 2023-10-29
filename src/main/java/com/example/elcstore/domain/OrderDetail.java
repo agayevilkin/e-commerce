@@ -16,7 +16,7 @@ import java.util.UUID;
 public class OrderDetail {
 
     @Id
-    @Column(name = "order_details_id")
+    @Column(name = "order_detail_id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 

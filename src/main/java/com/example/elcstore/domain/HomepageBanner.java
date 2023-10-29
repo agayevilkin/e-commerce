@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "homepage_banner")
+@Table(name = "homepage_banners")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
