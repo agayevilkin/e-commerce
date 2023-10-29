@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-25
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: product_youtube_videos_PK
+                  name: product_youtube_video_id
+                  type: uuid
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+              - column:
+                  name: video_link
+                  type: VARCHAR(255)
+              - column:
+                  name: video_thumbnail
+                  type: VARCHAR(255)
+              - column:
+                  name: video_type_status
+                  type: VARCHAR(255)
+              - column:
+                  name: is_new
+                  type: boolean
+            tableName: product_youtube_videos

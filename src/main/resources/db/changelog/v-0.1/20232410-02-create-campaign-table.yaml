@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232410-02
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: campaigns_PK
+                  name: campaign_id
+                  type: uuid
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+              - column:
+                  name: note
+                  type: VARCHAR(255)
+              - column:
+                  name: starting_date
+                  type: datetime
+              - column:
+                  name: ending_date
+                  type: datetime
+              - column:
+                  name: image_id
+                  type: uuid
+              - column:
+                  name: thumbnail_image_id
+                  type: uuid
+            tableName: campaigns

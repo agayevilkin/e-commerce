@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-04
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: highlights_PK
+                  name: highlight_id
+                  type: uuid
+              - column:
+                  name: product_identification_name
+                  type: VARCHAR(255)
+              - column:
+                  name: value
+                  type: VARCHAR(255)
+              - column:
+                  name: highlight_definition_id
+                  type: uuid
+            tableName: highlights
+        - addForeignKeyConstraint:
+            baseTableName: highlights
+            baseColumnNames: highlight_definition_id
+            constraintName: fk_in_highlights_highlight_definition_id
+            referencedTableName: highlight_definitions
+            referencedColumnNames: highlight_definition_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

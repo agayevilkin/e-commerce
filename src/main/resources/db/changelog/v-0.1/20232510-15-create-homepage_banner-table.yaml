@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-15
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: homepage_banners_pk
+                  name: homepage_banner_id
+                  type: uuid
+              - column:
+                  name: link
+                  type: VARCHAR(255)
+              - column:
+                  name: order_num
+                  type: integer
+              - column:
+                  name: image_id
+                  type: uuid
+            tableName: homepage_banners

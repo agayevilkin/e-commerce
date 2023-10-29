@@ -27,4 +27,8 @@ public class HomepageWeeklyOffer {
     @OneToOne
     @JoinColumn(name = "product_option_id")
     private ProductOption productOption;
+
+    // TODO: 10/26/2023 add this and delete productoption field
+//    @Column(name = "product_option_id")
+//    private UUID productOptionId;
 }

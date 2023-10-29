@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232610-32
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: event_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+            tableName: product_event
+        - addForeignKeyConstraint:
+            baseTableName: product_event
+            baseColumnNames: product_id
+            constraintName: fk_in_product_event_product_id
+            referencedTableName: products
+            referencedColumnNames: product_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: product_event
+            baseColumnNames: event_id
+            constraintName: fk_in_product_category_event_id
+            referencedTableName: events
+            referencedColumnNames: event_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

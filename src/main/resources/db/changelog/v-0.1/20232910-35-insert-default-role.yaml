@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232910-35
+      author: aghayevilkin
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: role_id
+                  value: '133fd975-3bfd-4d41-bc52-a2ae73939b3d'
+              - column:
+                  name: role_name
+                  value: 'USER'
+            tableName: roles

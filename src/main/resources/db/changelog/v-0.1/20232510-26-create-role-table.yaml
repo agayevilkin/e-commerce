@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-26
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKeyName: roles_pk
+                    primaryKey: true
+                  name: role_id
+                  type: uuid
+              - column:
+                  name: role_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+            tableName: roles

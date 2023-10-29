@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232410-30
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: campaign_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: category_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+            tableName: campaign_category
+        - addForeignKeyConstraint:
+            baseTableName: campaign_category
+            baseColumnNames: campaign_id
+            constraintName: fk_campaign_id
+            referencedTableName: campaigns
+            referencedColumnNames: campaign_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: campaign_category
+            baseColumnNames: category_id
+            constraintName: fk_category_id
+            referencedTableName: categories
+            referencedColumnNames: category_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

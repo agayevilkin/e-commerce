@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "product_image_detail")
+@Table(name = "product_image_details")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +24,7 @@ public class ProductImageDetail {
     @JoinColumn(name = "relational_image_id")
     private Image image;
 
+    // TODO: 10/26/2023 change duplicate image
     @Column(name = "image_id")
     private UUID imageId;
 

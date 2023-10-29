@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-22
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: product_comments_PK
+                  name: product_comment_id
+                  type: uuid
+              - column:
+                  name: author_full_name
+                  type: VARCHAR(255)
+              - column:
+                  name: comment_status
+                  type: VARCHAR(255)
+              - column:
+                  name: star
+                  type: integer
+              - column:
+                  name: product_id
+                  type: uuid
+            tableName: product_comments
+        - addForeignKeyConstraint:
+            baseTableName: product_comments
+            baseColumnNames: product_id
+            constraintName: fk_in_product_comments_product_id
+            referencedTableName: products
+            referencedColumnNames: product_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

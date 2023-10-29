@@ -1,4 +1,2 @@
-1. TODO handle foreign key exception for every service
-2. TODO add liquibase and all tables (delete auto create table config)
 3. TODO add log for all service layer
 4. TODO plug-in the Elastic search

@@ -1,51 +1,9 @@
-#spring:
-#  datasource:
-#    type: com.zaxxer.hikari.HikariDataSource
-#    url: &connectionUrl jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3306}/elc_product?createDatabaseIfNotExist=true&useSSL=false&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8
-#    username: &username ${DB_CONNECTION_USERNAME:root}
-#    password: &password ${DB_CONNECTION_PASSWORD:password}
-#  jpa:
-#    show-sql: true
-
 spring:
   application:
     name: elc-product
   profiles:
-    active: oauth
-
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/elcproduct?stringtype=unspecified
-    username: elcproduct
-    password: elcproduct!@#
-
-  jpa:
-    open-in-view: false
-    show-sql: true
-    properties:
-      hibernate:
-        hbm2ddl:
-          auto: update
-      #        default_schema: elcproduct
-      schema: elcproduct
-
-  liquibase:
-    enabled: false
-    liquibase-schema: elcproduct
-
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 1MB
-      max-request-size: 1MB
-      file-size-threshold: 5MB
-
-server:
-  port: 9095
-
-logging:
-  level:
-#    this is log level for generic spring boot file
-    root: "INFO"
-#    this is log level for only you code package
-    com.example.elcstore: "INFO"
+    active:
+    - oauth
+    - db
+    - logging
+    - common

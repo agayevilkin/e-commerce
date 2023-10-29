@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232410-01
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: brands_PK
+                  name: brand_id
+                  type: uuid
+              - column:
+                  name: brand_name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: image_id
+                  type: uuid
+            tableName: brands

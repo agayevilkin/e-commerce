@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-12
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: events_PK
+                  name: event_id
+                  type: uuid
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: color_id
+                  type: uuid
+            tableName: events
+        - addForeignKeyConstraint:
+            baseTableName: events
+            baseColumnNames: color_id
+            constraintName: fk_in_events_color_id
+            referencedTableName: colors
+            referencedColumnNames: color_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

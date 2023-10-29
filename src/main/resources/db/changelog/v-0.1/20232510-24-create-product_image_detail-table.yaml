@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-24
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: product_image_details_PK
+                  name: product_image_detail_id
+                  type: uuid
+              - column:
+                  name: order_num
+                  type: integer
+              - column:
+                  name: image_id
+                  type: uuid
+              - column:
+                  name: product_option_id
+                  type: uuid
+              - column:
+                  name: relational_image_id
+                  type: uuid
+            tableName: product_image_details
+        - addForeignKeyConstraint:
+            baseTableName: product_image_details
+            baseColumnNames: product_option_id
+            constraintName: fk_in_product_image_details_product_option_id
+            referencedTableName: product_options
+            referencedColumnNames: product_option_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: product_image_details
+            baseColumnNames: relational_image_id
+            constraintName: fk_in_product_image_details_relational_image_id
+            referencedTableName: images
+            referencedColumnNames: image_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true
+

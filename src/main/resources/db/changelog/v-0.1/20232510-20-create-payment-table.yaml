@@ -1,0 +1,47 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-20
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: payment_result_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: payment_results_PK
+              - column:
+                  name: payment_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_status
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_amount
+                  type: double precision
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_method
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reference_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message
+                  type: VARCHAR(255)
+            tableName: payment_results

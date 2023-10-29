@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232610-33
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: product_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: technical_characteristic_id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+            tableName: product_technical_characteristic
+        - addForeignKeyConstraint:
+            baseTableName: product_technical_characteristic
+            baseColumnNames: product_id
+            constraintName: fk_in_product_technical_characteristic_product_id
+            referencedTableName: products
+            referencedColumnNames: product_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true
+        - addForeignKeyConstraint:
+            baseTableName: product_technical_characteristic
+            baseColumnNames: technical_characteristic_id
+            constraintName: fk_in_product_technical_characteristic_technical_characteristic_id
+            referencedTableName: technical_characteristics
+            referencedColumnNames: technical_characteristic_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

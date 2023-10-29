@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Table(name = "highlight")
+@Table(name = "highlights")
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

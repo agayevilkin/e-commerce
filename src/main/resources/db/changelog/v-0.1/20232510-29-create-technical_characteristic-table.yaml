@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-29
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: technical_characteristics_PK
+                  name: technical_characteristic_id
+                  type: uuid
+              - column:
+                  name: characteristic_name
+                  type: VARCHAR(255)
+              - column:
+                  name: value
+                  type: VARCHAR(255)
+              - column:
+                  name: technical_characteristic_title_id
+                  type: uuid
+            tableName: technical_characteristics
+        - addForeignKeyConstraint:
+            baseTableName: technical_characteristics
+            baseColumnNames: technical_characteristic_title_id
+            constraintName: fk_in_technical_characteristics_technical_characteristic_title_id
+            referencedTableName: technical_characteristic_titles
+            referencedColumnNames: technical_characteristic_title_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

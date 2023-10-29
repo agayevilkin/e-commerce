@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20232510-10
+      author: aghayevilkin
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: discounts_PK
+                  name: discount_id
+                  type: uuid
+              - column:
+                  name: current_price
+                  type: double precision
+              - column:
+                  name: discount_percentage
+                  type: integer
+              - column:
+                  name: product_id
+                  type: uuid
+            tableName: discounts
+        - addForeignKeyConstraint:
+            baseTableName: discounts
+            baseColumnNames: product_id
+            constraintName: fk_in_discounts_product_id
+            referencedTableName: products
+            referencedColumnNames: product_id
+            deferrable: false
+            initiallyDeferred: false
+            validate: true

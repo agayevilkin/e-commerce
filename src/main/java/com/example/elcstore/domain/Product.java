@@ -56,7 +56,7 @@ public class Product extends Audit {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "product_technical_characteristic",
             joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "product_id")},
-            inverseJoinColumns = {@JoinColumn(name = "tc_id", referencedColumnName = "tc_id")})
+            inverseJoinColumns = {@JoinColumn(name = "technical_characteristic_id", referencedColumnName = "technical_characteristic_id")})
     private List<TechnicalCharacteristic> technicalCharacteristic;
 
     @OneToMany(mappedBy = "product", orphanRemoval = true)
