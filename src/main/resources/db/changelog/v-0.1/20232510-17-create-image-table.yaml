@@ -15,5 +15,5 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   name: image_data
-                  type: bytea
+                  type: oid
             tableName: images

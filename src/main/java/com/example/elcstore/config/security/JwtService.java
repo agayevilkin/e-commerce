@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
-    //todo change secret
+    //todo change secret (*don`t need for now*)
     // TODO: 10/10/2023 can be change JWT generate methods and to make more simple
     //  and look at all methods and fix if all is not good
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";

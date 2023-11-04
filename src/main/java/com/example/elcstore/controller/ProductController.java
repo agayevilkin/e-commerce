@@ -26,9 +26,6 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 public class ProductController {
 
     private final ProductService productService;
-    // TODO: 10/18/2023 (completed this but must test related APIs)
-    // completed task: add "status" field to Product entity and
-    //  change relational repo method in the productRepo
 
     @PostMapping
     @ResponseStatus(CREATED)
@@ -74,25 +71,24 @@ public class ProductController {
         return productService.getAllProducts(pageIndex, pageSize);
     }
 
-    @GetMapping("/category/{id}")
+    @GetMapping("/all/by-category/{category_id}")
     @Operation(summary = "getAllProductsByCategory")
     @PreAuthorize("permitAll()")
     public CustomPage<ProductPreviewResponseDto> getAllProductsByCategory(
-            @PathVariable UUID id,
+            @PathVariable UUID category_id,
             @RequestParam Integer pageIndex,
             @RequestParam Integer pageSize) {
-        return productService.getAllProductsByCategoryId(id, pageIndex, pageSize);
+        return productService.getAllProductsByCategoryId(category_id, pageIndex, pageSize);
     }
-    // TODO: 9/23/2023 add get ALl Product By Category for Category banner image (with difference DTO)
 
-    @GetMapping("/all/brand/{id}")
+    @GetMapping("/all/by-brand/{brand_id}")
     @Operation(summary = "getAllProductsByBrandId")
     @PreAuthorize("permitAll()")
     public CustomPage<ProductPreviewResponseDto> getAllProductsByBrandId(
-            @PathVariable UUID id,
+            @PathVariable UUID brand_id,
             @RequestParam Integer pageIndex,
             @RequestParam Integer pageSize) {
-        return productService.getAllProductsByBrandId(id, pageIndex, pageSize);
+        return productService.getAllProductsByBrandId(brand_id, pageIndex, pageSize);
     }
 
     @GetMapping("/discounted/all")
@@ -121,7 +117,7 @@ public class ProductController {
     }
 
 
-    // TODO: 9/23/2023 change logic
+    // TODO: 9/23/2023 change logic, and add @Transactional for this to work
     @GetMapping("/{identification_name}/{highlight}")
     @Operation(summary = "findByProductIdentificationNameAndHighlight")
     @PreAuthorize("permitAll()")

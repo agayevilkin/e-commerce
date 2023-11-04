@@ -12,6 +12,7 @@ databaseChangeLog:
                   name: product_id
                   type: uuid
               - column:
+#                  name: product_name     //change with this
                   name: name
                   type: VARCHAR(255)
                   constraints:
@@ -32,6 +33,18 @@ databaseChangeLog:
               - column:
                   name: highlight_id
                   type: uuid
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: created_by
+                  type: VARCHAR(255)
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: last_modified_by
+                  type: VARCHAR(255)
             tableName: products
         - addForeignKeyConstraint:
             baseTableName: products

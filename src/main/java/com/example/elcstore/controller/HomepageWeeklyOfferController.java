@@ -38,8 +38,6 @@ public class HomepageWeeklyOfferController {
         return service.getAllHomepageWeeklyOffers();
     }
 
-    // TODO: 9/25/2023 add get all method with criteria
-
     @PutMapping("/{id}")
     @Operation(summary = "update")
     public void update(@PathVariable UUID id, @Valid @RequestBody HomepageWeeklyOfferRequestDto requestDto) {

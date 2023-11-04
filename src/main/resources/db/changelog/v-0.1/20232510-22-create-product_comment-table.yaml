@@ -23,6 +23,18 @@ databaseChangeLog:
               - column:
                   name: product_id
                   type: uuid
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: created_by
+                  type: VARCHAR(255)
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: last_modified_by
+                  type: VARCHAR(255)
             tableName: product_comments
         - addForeignKeyConstraint:
             baseTableName: product_comments

@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
         product.setCategories(getCategoryList(productRequestDto.getCategoryIds()));
-        if (product.getHighlight() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
+        if (productRequestDto.getHighlightId() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setEvents(getEventList(productRequestDto.getEventIds()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristicsIds()));
 
@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductById(id);
         mapper.map(productRequestDto, product);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
-        if (product.getHighlight() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
+        if (productRequestDto.getHighlightId() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setCategories(getCategoryList(productRequestDto.getCategoryIds()));
         product.setEvents(getEventList(productRequestDto.getEventIds()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristicsIds()));
@@ -75,7 +75,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDetailedResponseDto findByProductIdentificationNameAndHighlight(String idName, String highlight) {
-        Product product = productRepository.findByHighlight_ProductIdentificationNameAndHighlight_ValueAndStatusIsTrue(idName, highlight).orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
+        Product product = productRepository.findByHighlight_ProductIdentificationNameAndHighlight_ValueAndStatusIsTrue(idName, highlight)
+                .orElseThrow(() -> new NotFoundException(PRODUCT_NOT_FOUND.getMessage()));
         return mapper.map(product, ProductDetailedResponseDto.class);
     }
 
@@ -93,6 +94,7 @@ public class ProductServiceImpl implements ProductService {
                 .map(product -> mapper.map(product, ProductPreviewResponseDto.class)));
     }
 
+    // TODO: 10/15/2023 get all product by category List (change getAllProductByCategory or add new method)
     @Override
     public CustomPage<ProductPreviewResponseDto> getAllProductsByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize) {
         return new CustomPage<>(productRepository.findAllByCategoriesIdAndStatusIsTrue(categoryId, PageRequest.of(pageIndex, pageSize))
@@ -106,7 +108,6 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
-    // TODO: 10/15/2023 get all product by category List (change getAllProductByCategory or add new method)
     @Override
     public CustomPage<ProductPreviewResponseDto> filteredSearchProduct(ProductSearchCriteriaDto productSearchCriteriaDto, Integer pageIndex, Integer pageSize) {
         return new CustomPage<>(productRepository.findAll(new ProductSearchSpecification(productSearchCriteriaDto.getCriteriaList()), PageRequest.of(pageIndex, pageSize))
