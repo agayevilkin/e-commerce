@@ -14,5 +14,4 @@ public class ProductPreviewResponseDto {
     private List<ProductOptionPreviewResponseDto> productOptions;
     private double price;
     private DiscountResponseDto discount;
-    // TODO: 9/18/2023 add product comment star and count or use other api for these
 }

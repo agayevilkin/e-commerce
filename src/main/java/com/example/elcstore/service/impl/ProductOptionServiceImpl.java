@@ -15,10 +15,7 @@ import com.example.elcstore.dto.response.ProductOptionRealTimeSearchResponseDto;
 import com.example.elcstore.dto.search.SearchCriteria;
 import com.example.elcstore.exception.ImageUploadException;
 import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.repository.ColorRepository;
-import com.example.elcstore.repository.HomepageWeeklyOfferRepository;
-import com.example.elcstore.repository.ProductOptionRepository;
-import com.example.elcstore.repository.ProductRepository;
+import com.example.elcstore.repository.*;
 import com.example.elcstore.service.ImageService;
 import com.example.elcstore.service.ProductOptionService;
 import com.example.elcstore.service.search.GenericSearchSpecification;
@@ -48,6 +45,7 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     private final static int MAX_WIDTH = 315;
 
     private final ProductOptionRepository productOptionRepository;
+    private final CreditRepository creditRepository;
     private final HomepageWeeklyOfferRepository homepageWeeklyOfferRepository;
     private final ProductRepository productRepository;
     private final ColorRepository colorRepository;
@@ -118,13 +116,18 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     }
 
     @Override
-    @Transactional    // TODO: 10/2/2023 check again for maybe too send many queries to DB
+    @Transactional
     public CustomPage<ProductOptionCategoryBannerResponseDto> findAllByCategoryId(UUID categoryId, Integer pageIndex, Integer pageSize) {
         return new CustomPage<>(productOptionRepository.findAllByProduct_Categories_Id(categoryId, PageRequest.of(pageIndex, pageSize))
                 .map((productOption -> {
+                    UUID productId = productOption.getProduct().getId();
                     ProductOptionCategoryBannerResponseDto responseDto = mapper.map(productOption, ProductOptionCategoryBannerResponseDto.class);
-                    responseDto.setProductId(productOption.getProduct().getId());
+                    responseDto.setProductId(productId);
                     responseDto.setBrandImageId(productOption.getProduct().getBrand().getImageId());
+                    Credit credit = creditRepository.findByProduct_Id(productId);
+                    if (credit != null) {
+                        responseDto.setMonthlyPrice(credit.getMonthlyPaymentAmount());
+                    }
                     return responseDto;
                 })));
     }

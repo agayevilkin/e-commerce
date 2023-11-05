@@ -17,7 +17,4 @@ public class ProductDetailedResponseDto {
     private HighlightResponseDto highlight;
     private List<EventResponseDto> events;
     private List<ProductOptionDetailedResponseDto> productOptions;
-    // TODO: 9/18/2023 can be add List<TechnicalCharacteristic> or use other api for this
-    // TODO: 9/18/2023 can be add product comment List or use other api for this
-
 }

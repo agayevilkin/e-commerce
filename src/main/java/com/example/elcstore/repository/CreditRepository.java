@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface CreditRepository extends JpaRepository<Credit, UUID> {
 
     List<Credit> findAllByProduct_Id(UUID productId);
+
+    Credit findByProduct_Id(UUID productId);
 }

@@ -117,15 +117,6 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.existsById(id);
     }
 
-
-    private ProductOption getProductOptionById(UUID id) {
-        return null; // TODO: 9/26/2023 complete if you need
-    }
-
-    private Product getProductById(UUID id) {
-        return null; // TODO: 9/26/2023 complete if you need
-    }
-
     private User getUser() {
         return userRepository.findById(userInfo.getUserId())
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND.getMessage()));

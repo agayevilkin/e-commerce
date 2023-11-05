@@ -30,10 +30,11 @@ public class ProductOptionController {
 
     private final ProductOptionService service;
 
-    @PostMapping
+//    @PostMapping
+        @PostMapping(value = "/create", consumes = {"multipart/form-data"})
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "create")
-    public void create(@Valid @RequestBody ProductOptionCreateRequestDto requestDto) {
+    public void create(@Valid @ModelAttribute ProductOptionCreateRequestDto requestDto) {
         service.createProductOption(requestDto);
     }
 

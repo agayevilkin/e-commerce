@@ -13,6 +13,5 @@ public class ProductOptionCategoryBannerResponseDto {
     private UUID thumbnailId;
     private UUID productId;
     private UUID brandImageId;;
-    // TODO: 10/2/2023  monthly price
-
+    private Double monthlyPrice;
 }
