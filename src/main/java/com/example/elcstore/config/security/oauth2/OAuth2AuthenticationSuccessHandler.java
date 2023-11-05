@@ -1,5 +1,6 @@
 package com.example.elcstore.config.security.oauth2;
 
+import com.example.elcstore.config.security.GenericUserPrincipal;
 import com.example.elcstore.config.security.JwtService;
 import com.example.elcstore.dto.auth.AuthResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +40,14 @@ public class OAuth2AuthenticationSuccessHandler implements AuthenticationSuccess
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json");
 
-        AuthResponse authResponse = jwtService.generateTokenForOAuth(authentication);
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        GenericUserPrincipal oAuth2UserPrincipal = GenericUserPrincipal
+                .builder()
+                .authorities(userPrincipal.getAuthorities())
+                .userId(userPrincipal.getId())
+                .username(userPrincipal.getUsername())
+                .build();
+        AuthResponse authResponse = jwtService.generateToken(oAuth2UserPrincipal);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonResponse = objectMapper.writeValueAsString(authResponse);

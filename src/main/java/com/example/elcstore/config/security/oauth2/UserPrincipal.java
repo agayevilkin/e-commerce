@@ -14,14 +14,14 @@ import java.util.*;
 @Getter
 public class UserPrincipal implements OAuth2User, UserDetails {
     private UUID id;
-    private String email;
+    private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private Map<String, Object> attributes;
 
-    public UserPrincipal(UUID id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(UUID id, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.authorities = authorities;
     }
@@ -51,7 +51,7 @@ public class UserPrincipal implements OAuth2User, UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

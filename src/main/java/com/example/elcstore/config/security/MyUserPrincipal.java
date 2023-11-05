@@ -20,5 +20,4 @@ public class MyUserPrincipal extends User {
     }
 
     private UUID userId;
-
 }

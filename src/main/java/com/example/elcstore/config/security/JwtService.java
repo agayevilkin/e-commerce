@@ -1,33 +1,23 @@
 package com.example.elcstore.config.security;
 
 import com.example.elcstore.dto.auth.AuthResponse;
-import com.example.elcstore.config.security.oauth2.UserPrincipal;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.*;
+import java.util.function.Function;
 
 @Service
 public class JwtService {
 
     //todo change secret (*don`t need for now*)
-    // TODO: 10/10/2023 can be change JWT generate methods and to make more simple
-    //  and look at all methods and fix if all is not good
+
     private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
 
     public String generateAccessToken(Claims extraClaims, String username) {
@@ -52,17 +42,9 @@ public class JwtService {
                 .compact();
     }
 
-    public AuthResponse generateToken(MyUserPrincipal user) {
-        String accessToken = generateAccessToken(extraClaims(user), user.getUsername());
-        String refreshToken = generateRefreshToken(userId(user.getUserId()), user.getUsername());
-
-        return AuthResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
-    }
-
-    public AuthResponse generateTokenForOAuth(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        String accessToken = generateAccessToken(extraClaims(userPrincipal), userPrincipal.getUsername());
-        String refreshToken = generateRefreshToken(userId(userPrincipal.getId()), userPrincipal.getUsername());
+    public AuthResponse generateToken(GenericUserPrincipal genericUserPrincipal) {
+        String accessToken = generateAccessToken(extraClaims(genericUserPrincipal), genericUserPrincipal.getUsername());
+        String refreshToken = generateRefreshToken(userId(genericUserPrincipal.getUserId()), genericUserPrincipal.getUsername());
 
         return AuthResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
@@ -107,9 +89,7 @@ public class JwtService {
                 .getBody();
     }
 
-
-    // TODO: 10/10/2023 fix these two same structural methods
-    private Claims extraClaims(MyUserPrincipal userPrincipal) {
+    private Claims extraClaims(GenericUserPrincipal userPrincipal) {
         Map<String, Object> claims = new HashMap<>();
         Set<String> userRoles = new HashSet<>();
         for (GrantedAuthority role : userPrincipal.getAuthorities()) {
@@ -117,17 +97,6 @@ public class JwtService {
         }
         claims.put("roles", userRoles);
         claims.put("user-id", userPrincipal.getUserId());
-        return Jwts.claims(claims);
-    }
-
-    private Claims extraClaims(UserPrincipal userPrincipal) {
-        Map<String, Object> claims = new HashMap<>();
-        Set<String> userRoles = new HashSet<>();
-        for (GrantedAuthority role : userPrincipal.getAuthorities()) {
-            userRoles.add("ROLE_" + role.getAuthority());
-        }
-        claims.put("roles", userRoles);
-        claims.put("user-id", userPrincipal.getId());
         return Jwts.claims(claims);
     }
 
@@ -141,6 +110,4 @@ public class JwtService {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
-
-
 }

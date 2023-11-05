@@ -1,5 +1,6 @@
 package com.example.elcstore.service.impl;
 
+import com.example.elcstore.config.security.GenericUserPrincipal;
 import com.example.elcstore.config.security.JwtService;
 import com.example.elcstore.config.security.MyUserPrincipal;
 import com.example.elcstore.dto.auth.AuthRequest;
@@ -35,7 +36,14 @@ public class AuthServiceImpl implements AuthService {
         );
         log.info("successfully authenticate!");
         MyUserPrincipal myUserPrincipal = (MyUserPrincipal) authenticate.getPrincipal();
-        return jwtService.generateToken(myUserPrincipal);
+        GenericUserPrincipal userPrincipal = GenericUserPrincipal
+                .builder()
+                .authorities(myUserPrincipal.getAuthorities())
+                .userId(myUserPrincipal.getUserId())
+                .username(myUserPrincipal.getUsername())
+                .build();
+
+        return jwtService.generateToken(userPrincipal);
     }
 
     public AuthResponse refreshToken(String refreshToken) {
@@ -61,7 +69,13 @@ public class AuthServiceImpl implements AuthService {
             if (jwtService.isTokenValid(jwt)) {
 
                 MyUserPrincipal userDetails = (MyUserPrincipal) userDetailService.loadUserByUsername(username);
-                return jwtService.generateToken(userDetails);
+                GenericUserPrincipal userPrincipal = GenericUserPrincipal
+                        .builder()
+                        .authorities(userDetails.getAuthorities())
+                        .userId(userDetails.getUserId())
+                        .username(userDetails.getUsername())
+                        .build();
+                return jwtService.generateToken(userPrincipal);
 
             } else {
                 log.trace("Token expired!");
