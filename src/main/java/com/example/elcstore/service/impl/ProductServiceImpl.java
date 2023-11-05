@@ -8,6 +8,7 @@ import com.example.elcstore.dto.response.ProductPreviewResponseDto;
 import com.example.elcstore.dto.search.ProductSearchCriteriaDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.*;
+import com.example.elcstore.service.ProductOptionService;
 import com.example.elcstore.service.ProductService;
 import com.example.elcstore.service.search.ProductSearchSpecification;
 import jakarta.transaction.Transactional;
@@ -28,6 +29,7 @@ import static com.example.elcstore.exception.messages.NotFoundExceptionMessages.
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductOptionService productOptionService;
     private final ProductSearchSpecification searchSpecification;
     private final HighlightRepository highlightRepository;
     private final TechnicalCharacteristicRepository technicalCharacteristicRepository;
@@ -41,7 +43,8 @@ public class ProductServiceImpl implements ProductService {
         Product product = mapper.map(productRequestDto, Product.class);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
         product.setCategories(getCategoryList(productRequestDto.getCategoryIds()));
-        if (productRequestDto.getHighlightId() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
+        if (productRequestDto.getHighlightId() != null)
+            product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setEvents(getEventList(productRequestDto.getEventIds()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristicsIds()));
 
@@ -53,7 +56,8 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductById(id);
         mapper.map(productRequestDto, product);
         product.setBrand(getBrandById(productRequestDto.getBrandId()));
-        if (productRequestDto.getHighlightId() != null) product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
+        if (productRequestDto.getHighlightId() != null)
+            product.setHighlight(getHighlightById(productRequestDto.getHighlightId()));
         product.setCategories(getCategoryList(productRequestDto.getCategoryIds()));
         product.setEvents(getEventList(productRequestDto.getEventIds()));
         product.setTechnicalCharacteristic(getTechnicalCharacteristicsList(productRequestDto.getTechnicalCharacteristicsIds()));
@@ -123,13 +127,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(UUID id) {
-        if (existsById(id)) {
-            productRepository.deleteById(id);
-        }
-    }
-
-    private boolean existsById(UUID id) {
-        return productRepository.existsById(id);
+        Product product = getProductById(id);
+        List<ProductOption> productOptions = product.getProductOptions();
+        productOptions.forEach(productOption -> {
+            productOptionService.deleteProductOption(productOption.getId());
+        });
+        productRepository.delete(product);
     }
 
     private List<TechnicalCharacteristic> getTechnicalCharacteristicsList(List<UUID> technicalCharacteristics) {

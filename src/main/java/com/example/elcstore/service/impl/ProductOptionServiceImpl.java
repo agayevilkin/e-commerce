@@ -1,27 +1,26 @@
 package com.example.elcstore.service.impl;
 
-import com.example.elcstore.domain.Color;
-import com.example.elcstore.domain.Product;
-import com.example.elcstore.domain.ProductImageDetail;
-import com.example.elcstore.domain.ProductOption;
+import com.example.elcstore.domain.*;
 import com.example.elcstore.domain.enums.SearchOperation;
 import com.example.elcstore.domain.enums.StockStatus;
 import com.example.elcstore.domain.pagination.CustomPage;
 import com.example.elcstore.dto.ImageInfoDto;
 import com.example.elcstore.dto.request.ProductOptionCreateRequestDto;
-import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
-import com.example.elcstore.dto.response.*;
 import com.example.elcstore.dto.request.ProductOptionImageDetailRequestDto;
+import com.example.elcstore.dto.request.ProductOptionUpdateRequestDto;
+import com.example.elcstore.dto.response.ProductOptionAdminPreviewResponseDto;
+import com.example.elcstore.dto.response.ProductOptionCategoryBannerResponseDto;
+import com.example.elcstore.dto.response.ProductOptionDetailedResponseDto;
+import com.example.elcstore.dto.response.ProductOptionRealTimeSearchResponseDto;
+import com.example.elcstore.dto.search.SearchCriteria;
 import com.example.elcstore.exception.ImageUploadException;
 import com.example.elcstore.exception.NotFoundException;
-import com.example.elcstore.exception.ProductOptionInUseException;
 import com.example.elcstore.repository.ColorRepository;
 import com.example.elcstore.repository.HomepageWeeklyOfferRepository;
 import com.example.elcstore.repository.ProductOptionRepository;
 import com.example.elcstore.repository.ProductRepository;
 import com.example.elcstore.service.ImageService;
 import com.example.elcstore.service.ProductOptionService;
-import com.example.elcstore.dto.search.SearchCriteria;
 import com.example.elcstore.service.search.GenericSearchSpecification;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -134,16 +133,16 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     @Transactional
     public void deleteProductOption(UUID id) {
         ProductOption productOption = getProductOptionById(id);
-        if (existsByProductOptionId(id)) {
-            throw new ProductOptionInUseException(id);
-        } else {
-            imageService.deleteImage(productOption.getThumbnailId());
-            productOptionRepository.delete(productOption);
-        }
+        List<HomepageWeeklyOffer> homepageWeeklyOffers = getAllHomepageWeeklyOffersByProductOptionId(id);
+        homepageWeeklyOffers.forEach(offer -> {
+            homepageWeeklyOfferRepository.deleteById(offer.getId());
+        });
+        imageService.deleteImage(productOption.getThumbnailId());
+        productOptionRepository.delete(productOption);
     }
 
-    private boolean existsByProductOptionId(UUID id) {
-        return homepageWeeklyOfferRepository.existsByProductOptionId(id);
+    private List<HomepageWeeklyOffer> getAllHomepageWeeklyOffersByProductOptionId(UUID id) {
+        return homepageWeeklyOfferRepository.findAllByProductOptionId(id);
     }
 
     // TODO: 9/20/2023 this method is work according to

@@ -63,6 +63,6 @@ public class Product extends Audit {
     private List<ProductComment> productComment;
 
     // TODO: 10/15/2023 make LAZY and test related apis
-    @OneToMany(mappedBy = "product", orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private List<ProductOption> productOptions;
 }

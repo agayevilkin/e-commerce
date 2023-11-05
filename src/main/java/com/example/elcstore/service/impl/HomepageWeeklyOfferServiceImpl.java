@@ -4,6 +4,7 @@ import com.example.elcstore.domain.HomepageWeeklyOffer;
 import com.example.elcstore.domain.ProductOption;
 import com.example.elcstore.dto.request.HomepageWeeklyOfferRequestDto;
 import com.example.elcstore.dto.response.HomepageWeeklyOfferResponseDto;
+import com.example.elcstore.dto.response.ProductOptionWeeklyOfferResponseDto;
 import com.example.elcstore.exception.NotFoundException;
 import com.example.elcstore.repository.HomepageWeeklyOfferRepository;
 import com.example.elcstore.repository.ProductOptionRepository;
@@ -33,23 +34,41 @@ public class HomepageWeeklyOfferServiceImpl implements HomepageWeeklyOfferServic
     @Override
     public void createHomepageWeeklyOffer(HomepageWeeklyOfferRequestDto requestDto) {
         HomepageWeeklyOffer homepageWeeklyOffer = mapper.map(requestDto, HomepageWeeklyOffer.class);
-        homepageWeeklyOffer.setProductOption(getProductOptionById(requestDto.getProductOptionId()));
+        homepageWeeklyOffer.setProductOptionId(getProductOptionById(requestDto.getProductOptionId()).getId());
 
         homepageWeeklyOfferRepository.save(homepageWeeklyOffer);
     }
 
     @Override
-    @Transactional // TODO: 9/25/2023 check again lazy state and remove Transactional or use other way
+    @Transactional
     public HomepageWeeklyOfferResponseDto findById(UUID id) {
-        return mapper.map(getHomepageWeeklyOfferById(id), HomepageWeeklyOfferResponseDto.class);
+        HomepageWeeklyOffer homepageWeeklyOffer = getHomepageWeeklyOfferById(id);
+
+        HomepageWeeklyOfferResponseDto homepageWeeklyOfferResponseDto =
+                mapper.map(homepageWeeklyOffer, HomepageWeeklyOfferResponseDto.class);
+        ProductOptionWeeklyOfferResponseDto productOptionWeeklyOfferResponseDto =
+                mapper.map(getProductOptionById(homepageWeeklyOffer.getProductOptionId()), ProductOptionWeeklyOfferResponseDto.class);
+
+        homepageWeeklyOfferResponseDto.setProductOption(productOptionWeeklyOfferResponseDto);
+        return homepageWeeklyOfferResponseDto;
     }
 
     @Override
-    @Transactional // TODO: 9/25/2023 check again lazy state and remove Transactional or use other way
+    @Transactional
     public List<HomepageWeeklyOfferResponseDto> getAllHomepageWeeklyOffers() {
         return homepageWeeklyOfferRepository.findAllByDeadlineAfter(LocalDateTime.now())
                 .stream()
-                .map((homepageWeeklyOffer -> mapper.map(homepageWeeklyOffer, HomepageWeeklyOfferResponseDto.class)))
+                .map((homepageWeeklyOffer -> {
+                    HomepageWeeklyOfferResponseDto homepageWeeklyOfferResponseDto =
+                            mapper.map(homepageWeeklyOffer, HomepageWeeklyOfferResponseDto.class);
+
+                    ProductOptionWeeklyOfferResponseDto productOptionWeeklyOfferResponseDto =
+                            mapper.map(getProductOptionById(homepageWeeklyOffer.getProductOptionId()), ProductOptionWeeklyOfferResponseDto.class);
+
+                    homepageWeeklyOfferResponseDto.setProductOption(productOptionWeeklyOfferResponseDto);
+
+                    return homepageWeeklyOfferResponseDto;
+                }))
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +76,7 @@ public class HomepageWeeklyOfferServiceImpl implements HomepageWeeklyOfferServic
     public void updateHomepageWeeklyOffer(UUID id, HomepageWeeklyOfferRequestDto requestDto) {
         HomepageWeeklyOffer homepageWeeklyOffer = getHomepageWeeklyOfferById(id);
         mapper.map(requestDto, homepageWeeklyOffer);
-        homepageWeeklyOffer.setProductOption(getProductOptionById(requestDto.getProductOptionId()));
+        homepageWeeklyOffer.setProductOptionId(getProductOptionById(requestDto.getProductOptionId()).getId());
 
         homepageWeeklyOfferRepository.save(homepageWeeklyOffer);
     }
