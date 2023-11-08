@@ -54,10 +54,10 @@ public class ProductOptionServiceImpl implements ProductOptionService {
 
     @Override
     @Transactional
-    // TODO: 9/20/2023  ProductOptionImageDetailRequestDto list wait test
     public void createProductOption(ProductOptionCreateRequestDto requestDto) {
         ProductOption productOption = mapper.map(requestDto, ProductOption.class);
         productOption.setThumbnailId(imageService.uploadImageWithByteArray(resizeImage(requestDto.getThumbnail())).getId());
+        //ProductOptionImageDetailRequestDto list wait test
         productOption.setImageDetails(getImageDetailList(requestDto.getImageDetailRequestDtoList(), productOption));
         productOption.setProduct(getProductById(requestDto.getProductId()));
         productOption.setColor(getColorById(requestDto.getColorId()));
@@ -80,12 +80,12 @@ public class ProductOptionServiceImpl implements ProductOptionService {
     }
 
     @Override
-    // TODO: 9/20/2023  ProductOptionImageDetailRequestDto list wait test
     public void updateProductOption(UUID id, ProductOptionUpdateRequestDto requestDto) {
         ProductOption productOption = getProductOptionById(id);
         mapper.map(requestDto, productOption);
         productOption.setProduct(getProductById(requestDto.getProductId()));
         productOption.setColor(getColorById(requestDto.getColorId()));
+//        ProductOptionImageDetailRequestDto list wait test
         productOption.getImageDetails().addAll(getImageDetailList(requestDto.getImageDetailRequestDtoList(), productOption));
 
         productOptionRepository.save(productOption);
