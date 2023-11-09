@@ -1,6 +1,6 @@
-logging:
-  level:
-#    this is log level for generic spring boot file
-    root: "INFO"
-#    this is log level for only you code package
-    com.example.elcstore: "INFO"
+#logging:
+#  level:
+##    this is log level for generic spring boot file
+#    root: "INFO"
+##    this is log level for only you code package
+#    com.example.elcstore: "INFO"

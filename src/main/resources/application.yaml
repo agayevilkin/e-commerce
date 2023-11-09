@@ -5,5 +5,5 @@ spring:
     active:
     - oauth
     - db
-    - logging
+#    - logging
     - common
