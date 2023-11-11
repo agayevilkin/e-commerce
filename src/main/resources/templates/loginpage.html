@@ -147,8 +147,7 @@
         <form class="login-form" method="post">
             <input type="text" placeholder="username"/>
             <input type="password" placeholder="password"/>
-            <button>login</button>
-            <p class="message">Not registered? <a href="register.html">Create an account</a></p>
+            <button type="button" onclick="login()">login</button>
         </form>
         <div class="social-buttons">
             <a href="http://localhost:9095/oauth2/authorization/google" class="google"><i class="fa fa-google"></i></a>
@@ -156,5 +155,49 @@
         </div>
     </div>
 </div>
+<script>
+    function login() {
+        var username = document.querySelector('input[type="text"]').value;
+        var password = document.querySelector('input[type="password"]').value;
+
+        // Prepare the request options
+        var requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: username, password: password })
+        };
+
+        // Make the fetch request
+        fetch('http://localhost:9095/api/v1/auth/login', requestOptions)
+            .then(response => {
+                // Check if the login was unsuccessful
+                if (!response.ok) {
+                    return response.text().then(errorMessage => {
+                        throw new Error("Login failed: " + errorMessage);
+                    });
+                }
+
+                // If successful, extract tokens from headers
+                console.log("Login successful");
+
+                // Extract tokens from headers
+                var accessToken = response.headers.get("access-token");
+                var refreshToken = response.headers.get("refresh-token");
+
+                // Do something with the tokens, like storing them in localStorage
+                localStorage.setItem("access_token", accessToken);
+                localStorage.setItem("refresh_token", refreshToken);
+
+                // Redirect or perform other actions as needed
+                window.location.href = "/token";
+            })
+            .catch(error => {
+                // Display an alert with the error message
+                alert("Incorrect username or password. Please check your credentials and try again.");
+            });
+    }
+</script>
 </body>
 </html>

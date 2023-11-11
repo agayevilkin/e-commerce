@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Token Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .token-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            border: 2px solid #333; /* Added border for the box effect */
+            padding: 15px; /* Added padding for spacing */
+            border-radius: 10px; /* Added border-radius for rounded corners */
+        }
+
+        .token-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .token {
+            font-size: 18px;
+            margin-right: 5px;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .token-full {
+            font-size: 14px;
+            margin-top: 5px;
+            white-space: normal;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        button {
+            background: url('https://cdn-icons-png.flaticon.com/512/1621/1621635.png') no-repeat;
+            background-size: contain;
+            width: 40px;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Tokens:</h1>
+<div class="token-box"> <!-- Added a div to create the token box -->
+    <div class="token-container">
+        <p class="token" id="accessToken" onclick="copyToken('accessToken')"></p>
+        <button class="access" onclick="copyToken('accessToken')" title="Copy Access Token"></button>
+    </div>
+    <div class="token-container">
+        <p class="token" id="refreshToken" onclick="copyToken('refreshToken')"></p>
+        <button class="refresh" onclick="copyToken('refreshToken')" title="Copy Refresh Token"></button>
+    </div>
+</div>
+
+<script>
+    // Retrieve the tokens from localStorage
+    var accessToken = localStorage.getItem("access_token");
+    var refreshToken = localStorage.getItem("refresh_token");
+
+    // Update the content of the <p> elements
+    document.getElementById("accessToken").innerText = "Access Token: " + shortenToken(accessToken);
+    document.getElementById("refreshToken").innerText = "Refresh Token: " + shortenToken(refreshToken);
+
+    function copyToken(tokenType) {
+        var token = tokenType === 'accessToken' ? accessToken : refreshToken;
+
+        navigator.clipboard.writeText(token)
+            .then(function() {
+                alert(tokenType === 'accessToken' ? "Access Token Copied!" : "Refresh Token Copied!");
+            })
+            .catch(function(err) {
+                console.error('Unable to copy text to clipboard. ' + err);
+            });
+    }
+
+    function shortenToken(token) {
+        return token.length > 40 ? token.substring(0, 40) + "..." : token;
+    }
+</script>
+</body>
+</html>
