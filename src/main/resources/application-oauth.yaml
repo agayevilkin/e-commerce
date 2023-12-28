@@ -4,13 +4,9 @@ spring:
       client:
         registration:
           google:
-            clientId: "1081931668583-g7enih2266rpkg69rfkdh735c0691mli.apps.googleusercontent.com"
-            clientSecret: "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"
+            clientId: "XXXXXX"
+            clientSecret: "XXXXXX"
             redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
-#            authorizationUri: "https://accounts.google.com/o/oauth2/v2/auth"
-#            tokenUri: "https://www.googleapis.com/oauth2/v4/token"
-#            userInfoUri: "https://www.googleapis.com/oauth2/v3/userinfo"
-#            jwkSetUri: "https://www.googleapis.com/oauth2/v3/certs"
             clientName: "Google"
             scope:
               - email
